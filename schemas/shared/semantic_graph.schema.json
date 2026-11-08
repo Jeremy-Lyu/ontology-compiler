@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ontology-unified.local/schemas/shared/semantic_graph.schema.json",
+  "title": "Semantic Graph Intermediate Representation Schema",
+  "description": "Shared IR schema for nodes, edges, and evidence across all skills",
+  "type": "object",
+  "properties": {
+    "nodes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {"type": "string"},
+          "kind": {"type": "string", "enum": ["Entity", "Relation", "Attribute", "Process", "Rule", "Scenario", "Role"]},
+          "type": {"type": "string"},
+          "surface": {"type": "string"},
+          "canonical_id": {"type": "string"},
+          "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+          "attributes": {"type": "object"},
+          "layer": {"type": "string", "enum": ["L0", "L1", "L2", "L2.5", "L3"]},
+          "evidence_ref": {"type": "string"},
+          "source_file": {"type": "string"},
+          "span": {
+            "type": "object",
+            "properties": {
+              "start": {"type": "integer"},
+              "end": {"type": "integer"}
+            }
+          }
+        },
+        "required": ["id", "kind", "type"]
+      }
+    },
+    "edges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {"type": "string"},
+          "kind": {"type": "string", "enum": ["Relation", "ControlFlow", "Dependency", "Causality", "Mapping"]},
+          "type": {"type": "string"},
+          "head": {"type": "string"},
+          "tail": {"type": "string"},
+          "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+          "evidence_ref": {"type": "string"},
+          "evidence_span": {"type": "string"},
+          "direction": {"type": "string", "enum": ["forward", "backward", "bidirectional"]},
+          "relation_scope": {"type": "string"}
+        },
+        "required": ["id", "kind", "type", "head", "tail"]
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "$ref": "evidence.schema.json"
+      }
+    },
+    "quality": {
+      "$ref": "skill_envelope.schema.json#/definitions/quality"
+    },
+    "trace": {
+      "$ref": "skill_envelope.schema.json#/definitions/trace"
+    }
+  }
+}

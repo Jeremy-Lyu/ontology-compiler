@@ -1,0 +1,168 @@
+{
+  "name": "drift_detector",
+  "description": "Compute drift metrics between ontology run directories",
+  "command": "python scripts/check_ontology_output_baseline.py --mode diff",
+  "script_path": "scripts/check_ontology_output_baseline.py",
+  "category": "ontology",
+  "enabled": true,
+  "args_schema": {},
+  "layer_scope": [
+    "L0",
+    "L1",
+    "L2",
+    "L2.5",
+    "L3"
+  ],
+  "version": "2.0.0",
+  "business_domain": [
+    "SUPPLY_CHAIN",
+    "MANUFACTURING",
+    "DATA_MESH",
+    "MASTER_DATA"
+  ],
+  "output_schema": {
+    "type": "object",
+    "required": [
+      "drift_report",
+      "impact_analysis"
+    ],
+    "properties": {
+      "drift_report": {
+        "type": "object",
+        "properties": {
+          "drift_level": {
+            "type": "string",
+            "enum": [
+              "none",
+              "low",
+              "medium",
+              "high",
+              "critical"
+            ]
+          },
+          "drift_score": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "changes": {
+            "type": "object",
+            "properties": {
+              "added_entities": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "removed_entities": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "modified_entities": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "added_relations": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "removed_relations": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "modified_relations": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "schema_changes": {
+                "type": "array",
+                "items": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "change_summary": {
+            "type": "object",
+            "properties": {
+              "total_changes": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "entity_changes": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "relation_changes": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "schema_changes": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          }
+        },
+        "required": [
+          "drift_level",
+          "drift_score"
+        ]
+      },
+      "impact_analysis": {
+        "type": "object",
+        "properties": {
+          "breaking_changes": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "affected_downstream_systems": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "affected_queries": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "recommendations": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "validation_status": {
+        "type": "string",
+        "enum": [
+          "valid",
+          "warning",
+          "error"
+        ]
+      }
+    }
+  },
+  "quality_thresholds": {},
+  "trace_config": {
+    "log_model_name": true,
+    "log_prompt_version": true,
+    "log_execution_time": true,
+    "log_retries": true
+  }
+}

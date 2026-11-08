@@ -1,0 +1,145 @@
+{
+  "name": "consensus_resolver",
+  "description": "Resolve conservative consensus from ontology payloads",
+  "command": "python scripts/regenerate_l2_scenarios.py --run-dir <run_dir>",
+  "script_path": "scripts/regenerate_l2_scenarios.py",
+  "category": "ontology",
+  "enabled": true,
+  "args_schema": {
+    "run_dir": {
+      "type": "string",
+      "required": true
+    }
+  },
+  "layer_scope": [
+    "L0",
+    "L1",
+    "L2",
+    "L2.5",
+    "L3"
+  ],
+  "version": "2.0.0",
+  "business_domain": [
+    "SUPPLY_CHAIN",
+    "MANUFACTURING",
+    "DATA_MESH",
+    "MASTER_DATA"
+  ],
+  "output_schema": {
+    "type": "object",
+    "required": [
+      "resolved_entities",
+      "unresolved_conflicts",
+      "consensus_summary"
+    ],
+    "properties": {
+      "resolved_entities": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "entity_id": {
+              "type": "string"
+            },
+            "resolved_data": {
+              "type": "object"
+            },
+            "resolution_strategy": {
+              "type": "string",
+              "enum": [
+                "consensus",
+                "highest_confidence",
+                "most_recent",
+                "manual"
+              ]
+            },
+            "consensus_score": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "source_candidates": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "entity_id",
+            "resolved_data"
+          ]
+        }
+      },
+      "unresolved_conflicts": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "conflict_id": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string"
+            },
+            "entities": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "reason": {
+              "type": "string"
+            },
+            "review_required": {
+              "type": "boolean",
+              "default": true
+            }
+          },
+          "required": [
+            "conflict_id",
+            "type"
+          ]
+        }
+      },
+      "consensus_summary": {
+        "type": "object",
+        "properties": {
+          "total_candidates": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "total_conflicts": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "resolved_count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "unresolved_count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "resolution_rate": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "average_consensus_score": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          }
+        }
+      }
+    }
+  },
+  "quality_thresholds": {},
+  "trace_config": {
+    "log_model_name": true,
+    "log_prompt_version": true,
+    "log_execution_time": true,
+    "log_retries": true
+  }
+}

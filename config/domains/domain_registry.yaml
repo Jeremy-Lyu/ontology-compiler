@@ -1,0 +1,94 @@
+# Domain Registry Configuration
+# This file defines supported domains for ontology compilation
+# Add new domains here without modifying code
+
+domains:
+  SUPPLY_CHAIN:
+    description: "供应链与库存管理域"
+    rules:
+      - rule_id: "RULE_CS_001"
+        rule_name: "Cycle Stock计算规则"
+        formula: "cycle_stock = avg_order_qty_60days /2"
+        limiting_factors:
+          - "ShippingFrequency"
+          - "ShippingQty"
+          - "PalletizedUnitLoad"
+          - "UnitLoad"
+
+  LOGISTICS:
+    description: "工厂内物流与拉动系统域"
+    rules:
+      - rule_id: "RULE_LOG_001"
+        rule_name: "Line Back 拉动规则"
+        formula: "line_side_stock = takt_time * lane_factor"
+        limiting_factors:
+          - "TaktTime"
+          - "LaneCapacity"
+
+  PERFORMANCE:
+    description: "绩效管理与指标治理域"
+    rules:
+      - rule_id: "RULE_PERF_001"
+        rule_name: "Performance KPI跟踪"
+        formula: "performance_index = weighted(kpi_set)"
+        limiting_factors:
+          - "FTT"
+          - "DPV"
+          - "Output"
+
+  SWDL:
+    description: "软件下载与ECU编程域 — 覆盖 OTA/VIDA/VCATS 软件下载、UDS 诊断协议、ECU 固件管理"
+    rules:
+      - rule_id: "RULE_SWDL_001"
+        rule_name: "软件完整性与兼容性校验"
+        formula: "install_valid = complete_check AND compatible_check AND authenticity_check"
+        limiting_factors:
+          - "VBF"
+          - "VariantSpec"
+          - "UDS_0x31010205"
+      - rule_id: "RULE_SWDL_002"
+        rule_name: "双内存回退规则"
+        formula: "fallback_triggered = NOT commit_status AND install_failed"
+        limiting_factors:
+          - "CommitStatus"
+          - "BackupStatus"
+          - "FallbackRoutine"
+
+  MANUFACTURING:
+    description: "制造执行与生产管理域 — 覆盖生产线执行、工艺规划、车间管理"
+    rules: []
+
+  BOM:
+    description: "物料清单域 — 覆盖 EBOM/MBOM/BOP 结构管理与配置"
+    rules: []
+
+  PRODUCT_ENGINEERING:
+    description: "产品工程域 — 覆盖产品设计、工程变更、变型管理"
+    rules: []
+
+  QUALITY:
+    description: "质量管理域 — 覆盖质量检测、缺陷管理、质量追溯"
+    rules: []
+
+  DATA_FLOW:
+    description: "数据流转域 — 覆盖系统间数据集成、数据流向、数据治理"
+    rules: []
+
+  PROCUREMENT:
+    description: "采购管理域 — 覆盖供应商管理、采购订单、物料采购"
+    rules: []
+
+  AUTO:
+    description: "汽车行业通用域 — AUTOMOTIVE 的短别名"
+    rules: []
+
+  AUTOMOTIVE:
+    description: "汽车行业域 — 覆盖整车工程、车型管理、汽车合规"
+    rules: []
+
+  VEHICLE:
+    description: "整车域 — 覆盖车辆配置、整车测试、车辆生命周期"
+    rules: []
+
+# Default domain to use when fragment domain is not specified
+default_domain: "SUPPLY_CHAIN"

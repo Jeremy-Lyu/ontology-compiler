@@ -1,0 +1,61 @@
+{
+  "version": "1.1.0",
+  "created_at": "2026-04-05T14:08:23.544537",
+  "updated_at": "2026-06-20T00:00:00.000000",
+  "spec_source": "schemas/ontology_schema.yaml",
+  "main_classes": [
+    "Capability",
+    "System",
+    "Actor",
+    "Asset",
+    "Data",
+    "Process"
+  ],
+  "subclasses": {
+    "Capability": [
+      "Domain",
+      "SubDomain",
+      "Actionable",
+      "L1_Domain",
+      "L2_SubDomain",
+      "L3_Actionable"
+    ],
+    "System": [
+      "Enterprise_Platform",
+      "Microservice_App",
+      "Test_Environment",
+      "External_Portal"
+    ],
+    "Actor": [
+      "Internal_Department",
+      "Business_Function",
+      "Equipment_Infra",
+      "Equipment_Infrastructure"
+    ],
+    "Asset": [
+      "Product_Definition",
+      "Software_Asset",
+      "Tooling_Asset",
+      "Consumable_Material",
+      "Vehicle_Instance",
+      "Physical_Instance",
+      "Digital_Twin_Instance"
+    ],
+    "Data": [
+      "Document_Artifact",
+      "Rule_Logic",
+      "Data_Record",
+      "Table_Schema"
+    ],
+    "Process": [
+      "Business_Process"
+    ]
+  },
+  "legacy_subclass_aliases": {
+    "L1_Domain": "Domain",
+    "L2_SubDomain": "SubDomain",
+    "L3_Actionable": "Actionable",
+    "Equipment_Infrastructure": "Equipment_Infra"
+  },
+  "nodes": []
+}

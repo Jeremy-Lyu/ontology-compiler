@@ -1,0 +1,278 @@
+{
+  "skill_id": "l25_logistics_extraction",
+  "name": "物流与供应链场景提取",
+  "description": "从文档中提取物流流程、库存管理、物料移动相关实体",
+  "version": "1.0.0",
+  "category": "cross_layer",
+  "tags": [
+    "物流",
+    "库存",
+    "供应链",
+    "STO",
+    "kanban",
+    "补货"
+  ],
+  "trigger": {
+    "keywords": [
+      "物流",
+      "warehouse",
+      "replenishment",
+      "STO",
+      "kanban",
+      "IVMIX",
+      "storage",
+      "goods issue",
+      "库存",
+      "goods receipt",
+      "物料移动"
+    ],
+    "file_patterns": [
+      "*logistics*",
+      "*inventory*",
+      "*stock*"
+    ],
+    "min_confidence": 0.7,
+    "supported_layers": [
+      "L1",
+      "L2",
+      "L2.5"
+    ],
+    "domain_tags": [
+      "SUPPLY_CHAIN"
+    ],
+    "regex_patterns": []
+  },
+  "input_schema": {
+    "type": "object",
+    "description": "文档内容输入",
+    "fields": [
+      {
+        "name": "content",
+        "type": "string",
+        "required": true,
+        "description": "文档文本内容"
+      },
+      {
+        "name": "domain",
+        "type": "string",
+        "required": false,
+        "description": "业务域提示"
+      }
+    ]
+  },
+  "output_schema": {
+    "type": "object",
+    "description": "提取的实体和关系",
+    "fields": [
+      {
+        "name": "entities",
+        "type": "array",
+        "required": true,
+        "description": "实体列表"
+      },
+      {
+        "name": "relationships",
+        "type": "array",
+        "required": false,
+        "description": "关系列表"
+      },
+      {
+        "name": "confidence",
+        "type": "float",
+        "required": false,
+        "description": "置信度"
+      }
+    ]
+  },
+  "preconditions": [],
+  "postconditions": [],
+  "supported_layers": [
+    "L1",
+    "L2",
+    "L2.5"
+  ],
+  "dependencies": [],
+  "business_domain": [
+    "SUPPLY_CHAIN"
+  ],
+  "status": "active",
+  "classification_contract": {
+    "name": "物流分类契约",
+    "description": "物流相关文档分类规则",
+    "applicable_domains": [
+      "SUPPLY_CHAIN"
+    ],
+    "applicable_document_types": [],
+    "file_patterns": [
+      {
+        "type": "contains",
+        "value": "logistics"
+      },
+      {
+        "type": "contains",
+        "value": "inventory"
+      },
+      {
+        "type": "contains",
+        "value": "stock"
+      }
+    ],
+    "priority_main_classes": [
+      "Asset",
+      "Process",
+      "Capability",
+      "System",
+      "Actor",
+      "Data"
+    ],
+    "ignored_classes": [],
+    "noise_patterns": [],
+    "required_keywords": []
+  },
+  "entity_contracts": [
+    {
+      "entity_type": "stock_transfer",
+      "required_fields": [
+        {
+          "field_name": "document_type",
+          "severity": "required",
+          "description": "单据类型"
+        },
+        {
+          "field_name": "movement_type",
+          "severity": "required",
+          "description": "移动类型"
+        }
+      ],
+      "optional_fields": [],
+      "priority": 1,
+      "description": "库存转移",
+      "examples": [
+        "库存转移",
+        "STO",
+        "移库"
+      ]
+    },
+    {
+      "entity_type": "logistic_process",
+      "required_fields": [
+        {
+          "field_name": "process_name",
+          "severity": "required",
+          "description": "流程名称"
+        },
+        {
+          "field_name": "trigger_event",
+          "severity": "required",
+          "description": "触发事件"
+        }
+      ],
+      "optional_fields": [],
+      "priority": 1,
+      "description": "物流流程",
+      "examples": [
+        "kanban",
+        "补货",
+        "拉动系统"
+      ]
+    },
+    {
+      "entity_type": "inventory_status",
+      "required_fields": [
+        {
+          "field_name": "status_code",
+          "severity": "required",
+          "description": "状态代码"
+        },
+        {
+          "field_name": "status_desc",
+          "severity": "required",
+          "description": "状态描述"
+        }
+      ],
+      "optional_fields": [],
+      "priority": 2,
+      "description": "库存状态",
+      "examples": [
+        "unrestricted",
+        "blocked",
+        "in transit"
+      ]
+    },
+    {
+      "entity_type": "special_scenario",
+      "required_fields": [
+        {
+          "field_name": "rule_name",
+          "severity": "required",
+          "description": "规则名称"
+        },
+        {
+          "field_name": "condition",
+          "severity": "required",
+          "description": "触发条件"
+        },
+        {
+          "field_name": "action",
+          "severity": "required",
+          "description": "执行动作"
+        }
+      ],
+      "optional_fields": [],
+      "priority": 2,
+      "description": "特殊业务规则",
+      "examples": [
+        "无料不排产",
+        "非移动物料",
+        "呆滞件识别"
+      ]
+    }
+  ],
+  "relation_contracts": [
+    {
+      "relation_type": "HAS_MOVEMENT",
+      "allowed": true,
+      "description": "移动关系"
+    },
+    {
+      "relation_type": "STORED_AT",
+      "allowed": true,
+      "description": "存储关系"
+    },
+    {
+      "relation_type": "TRANSFERS_TO",
+      "allowed": true,
+      "description": "转移关系"
+    },
+    {
+      "relation_type": "REPLENISHES",
+      "allowed": true,
+      "description": "补货关系"
+    },
+    {
+      "relation_type": "PART_OF",
+      "allowed": true,
+      "description": "属于关系"
+    },
+    {
+      "relation_type": "USED_BY",
+      "allowed": true,
+      "description": "使用关系"
+    }
+  ],
+  "llm_prompt_template": "你是一位物流与供应链专家。请从以下文档中提取物流和库存管理相关实体。\n\n文档内容：\n{content}\n\n特别关注：\n1. 库存转移单据（STO）及其状态\n2. 物流流程（kanban、补货、拉动系统）\n3. 特殊业务规则（如无料不排产、呆滞件识别）\n4. 库存状态代码及其含义\n5. 报表和查询功能（如Stock Balance Report、Part Location）\n\n对于每个实体，请说明：\n- 实体类型和名称\n- 业务含义和用途\n- 相关系统或报表\n- 上下游关联",
+  "author": "Ontology Team",
+  "created_at": "2026-07-10T00:00:00Z",
+  "layer_scope": [
+    "L1",
+    "L2",
+    "L2.5"
+  ],
+  "quality_thresholds": {},
+  "trace_config": {
+    "log_model_name": false,
+    "log_prompt_version": false,
+    "log_execution_time": true,
+    "log_retries": false
+  }
+}

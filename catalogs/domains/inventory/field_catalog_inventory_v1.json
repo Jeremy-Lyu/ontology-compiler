@@ -1,0 +1,3891 @@
+{
+  "schema_version": "v1.0",
+  "catalog_version": "inventory_v1",
+  "domain": "inventory",
+  "generated_at": "2026-04-30T09:53:16.170949",
+  "source_files": [
+    "data/IbP Tool Definitions.csv",
+    "data/Inventorybypurpose.csv"
+  ],
+  "summary": {
+    "source_rows": 228,
+    "canonical_fields": 228,
+    "alias_count": 228
+  },
+  "fields": [
+    {
+      "canonical_name": "3_months_avg_daily_demand",
+      "aliases": [
+        "3 Months Avg Daily Demand"
+      ],
+      "description": "Shows the average daily demand over three months, starting from the the current date plus lead time. If the part’s introduction date is later than that, the average starts from the introduction date instead.",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Part Classification\",\"Premium Balancing\"]"
+      ]
+    },
+    {
+      "canonical_name": "3_months_avg_shift_demand",
+      "aliases": [
+        "3 Months Avg Shift Demand"
+      ],
+      "description": "Shows the average shift demand over three months, starting from the the current date plus lead time. If the part’s introduction date is later than that, the average starts from the introduction date instead.",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Inventory Calculation Matrix\",\"Part Classification\"]"
+      ]
+    },
+    {
+      "canonical_name": "actual_delivery",
+      "aliases": [
+        "Actual Delivery"
+      ],
+      "description": "The date and time when the delivery actually arrived",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Delivery Fluctuation\"]"
+      ]
+    },
+    {
+      "canonical_name": "actual_delivery_frequency",
+      "aliases": [
+        "Actual Delivery Frequency"
+      ],
+      "description": "Weekly delivery frequency based on real pick up. Calculated through getting the daily pick-up frequency and multiplying it by 7. The daily pick-up frequency is based on call offs 63 days ahead (9 weeks). ​",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Cycle Stock Analysis\"]"
+      ]
+    },
+    {
+      "canonical_name": "actual_transport_leadtime_calendar_days",
+      "aliases": [
+        "Actual Transport Leadtime (Calendar Days)"
+      ],
+      "description": "Leadtime in Calender days between planned pickup and actual arrival",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Delivery Fluctuation\"]"
+      ]
+    },
+    {
+      "canonical_name": "adl_value",
+      "aliases": [
+        "ADL Value"
+      ],
+      "description": "Value of ADL, goods at the delivery location but still not Goods Received in the plant",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Finance Inventory Overview\"]"
+      ]
+    },
+    {
+      "canonical_name": "amount_planned",
+      "aliases": [
+        "Amount Planned"
+      ],
+      "description": "The planned demand in pieces for a specific production day based on the chosen planning day",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Planned Demand Comparison\"]"
+      ]
+    },
+    {
+      "canonical_name": "apc",
+      "aliases": [
+        "APC"
+      ],
+      "description": "Percentage of Business, called APC in PLUS",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Demand Trend\"]"
+      ]
+    },
+    {
+      "canonical_name": "asn_id",
+      "aliases": [
+        "ASN ID"
+      ],
+      "description": "Advanced Shipping Notice, same as Delivery Note number.",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Delivery Fluctuation\"]"
+      ]
+    },
+    {
+      "canonical_name": "at_delivery_location_adl",
+      "aliases": [
+        "At Delivery Location (ADL)"
+      ],
+      "description": "ADL = At Delivery Location BUT still not Goods Received in the plant. ​ ​ Flows where parts have arrived, but we are no making GR as this is a PULL flow. ​ ​ VCT: This applies for the VCBC flow and the supplier´ ’BSNRA’ & ’A76VA’ in Torslanda. The number of parts/goods that have arrived at the factory (GAT but not GR) [Goods at yard house but not Goods Received) *see next slide.​ VCCH: This applies to all flows with GAT value. ​ VCDQ: All flows longer then 11 days, except normal air. How to identify Normal air need to be sorted out.​ VCCD & VCTZ: to be defined. Most likely for all Yard flows (container and trailer).​ VCG: Parts that have status code 45 but not yet 50​",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Finance Inventory Overview\"]"
+      ]
+    },
+    {
+      "canonical_name": "average_daily_demand",
+      "aliases": [
+        "Average Daily Demand"
+      ],
+      "description": "The total planned demand (with planningtime= startdate of the ordercycle) for all production days in the ordercycle divided by the number of production days in the ordercycle",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Demand Trend\"]"
+      ]
+    },
+    {
+      "canonical_name": "average_daily_git_whereof_adl_value",
+      "aliases": [
+        "Average daily - GIT Whereof ADL Value"
+      ],
+      "description": "The daily average of the At Delivery Location (ADL) Value",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Finance Inventory Overview\"]"
+      ]
+    },
+    {
+      "canonical_name": "average_daily_total_goods_in_transit_value",
+      "aliases": [
+        "Average daily - Total Goods in Transit Value"
+      ],
+      "description": "The daily average of the Goods in Transit (GIT) Value",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Finance Inventory Overview\"]"
+      ]
+    },
+    {
+      "canonical_name": "average_daily_total_value",
+      "aliases": [
+        "Average daily - Total Value"
+      ],
+      "description": "The daily average of the total value",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Finance Inventory Overview\"]"
+      ]
+    },
+    {
+      "canonical_name": "average_daily_wip_before_line_value",
+      "aliases": [
+        "Average daily - WIP (before line) Value"
+      ],
+      "description": "The daily average of the WIP (before line) Value",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Finance Inventory Overview\"]"
+      ]
+    },
+    {
+      "canonical_name": "average_delivery_deviation_days",
+      "aliases": [
+        "Average Delivery Deviation (days)"
+      ],
+      "description": "Average number of work days difference between the planned delivery and actual delivery​",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Premium Balancing\"]"
+      ]
+    },
+    {
+      "canonical_name": "average_delivery_deviation_shift",
+      "aliases": [
+        "Average Delivery Deviation (shift)"
+      ],
+      "description": "Average value of the difference between planned arrival time and actual arrival time (in shifts). In the Delivery fluctuation this value is based on the selected time span and in the Inventory Matrix it is a set time span (see Calculation Matrix tool details for more information on the set time span)",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Inventory Calculation Matrix\",\"Delivery Fluctuation\"]"
+      ]
+    },
+    {
+      "canonical_name": "average_demand_deviation_days",
+      "aliases": [
+        "Average Demand Deviation (days)"
+      ],
+      "description": "Average Difference between consumed and planned quantity expressed in calender days",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Premium Balancing\"]"
+      ]
+    },
+    {
+      "canonical_name": "average_demand_deviation_shift",
+      "aliases": [
+        "Average Demand Deviation (shift)"
+      ],
+      "description": "Average deviation between consumed and planned quantities in one ordercycle divided by the average demand per shift. In the Demand fluctuation this value is based on the selected timespan and in the Inventory Matrix it is a set time span (see Calculation Matrix tool details for more information on the set timespan)",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Inventory Calculation Matrix\",\"Demand Fluctuation\"]"
+      ]
+    },
+    {
+      "canonical_name": "average_lead_time_calendar_days",
+      "aliases": [
+        "Average Lead time (Calendar days)"
+      ],
+      "description": "The lead time here is calculated as an average of the call-off lead time (difference between expected shipment and expected arrival) for the call-offs that are planned in the period. Bank holidays and chosen pickups may skew this from theoretical average lead time of TTT.​",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Goods In Transit\"]"
+      ]
+    },
+    {
+      "canonical_name": "average_shift_demand_pcs",
+      "aliases": [
+        "Average Shift Demand (pcs)"
+      ],
+      "description": "Calculating the average demand per shift (prog, ord and extra) for the coming 63 days (9 weeks)​",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Cycle Stock Analysis\"]"
+      ]
+    },
+    {
+      "canonical_name": "average_shift_length_hours",
+      "aliases": [
+        "Average Shift Length (Hours)"
+      ],
+      "description": "Average Production shift length for the coming 63 days (9 weeks)​",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Cycle Stock Analysis\"]"
+      ]
+    },
+    {
+      "canonical_name": "average_shift_per_week",
+      "aliases": [
+        "Average Shift Per Week"
+      ],
+      "description": "Number of Production Shifts in coming 63 days/63 days * 7 days per week",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Cycle Stock Analysis\"]"
+      ]
+    },
+    {
+      "canonical_name": "avg_actual_transport_leadtime_calendar_days",
+      "aliases": [
+        "Avg Actual Transport Leadtime (Calendar Days)"
+      ],
+      "description": "Average Leadtime in Calender days between planned pickup and actual arrival",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Delivery Fluctuation\"]"
+      ]
+    },
+    {
+      "canonical_name": "avg_delivery_deviation_calendar_days",
+      "aliases": [
+        "Avg Delivery Deviation (Calendar days)"
+      ],
+      "description": "Average value of the difference between planned arrival time and actual arrival time (in calendar days)",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Delivery Fluctuation\"]"
+      ]
+    },
+    {
+      "canonical_name": "avg_delivery_deviation_calendar_hours",
+      "aliases": [
+        "Avg Delivery Deviation (Calendar  hours)"
+      ],
+      "description": "Average value of the difference between planned arrival time and actual arrival time (in calendar hours)",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Delivery Fluctuation\"]"
+      ]
+    },
+    {
+      "canonical_name": "avg_delivery_deviation_production_days",
+      "aliases": [
+        "Avg Delivery Deviation (Production days)"
+      ],
+      "description": "Average value of the difference between planned arrival time and actual arrival time (in work days)",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Delivery Fluctuation\"]"
+      ]
+    },
+    {
+      "canonical_name": "avg_delivery_deviation_production_hours",
+      "aliases": [
+        "Avg Delivery Deviation (Production hours)"
+      ],
+      "description": "Average value of the difference between planned arrival time and actual arrival time (in work hours)",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Delivery Fluctuation\"]"
+      ]
+    },
+    {
+      "canonical_name": "avg_leadtime_calendar_days",
+      "aliases": [
+        "Avg Leadtime (Calendar days)"
+      ],
+      "description": "Average leadtime between planned pickup time and actual arrival time in calender days",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Delivery Fluctuation\"]"
+      ]
+    },
+    {
+      "canonical_name": "avg_planned_transport_leadtime_calendar_days",
+      "aliases": [
+        "Avg Planned Transport Leadtime (Calendar Days)"
+      ],
+      "description": "Average Leadtime in Calender Days between planned pickup and planned arrival",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Delivery Fluctuation\"]"
+      ]
+    },
+    {
+      "canonical_name": "avg_safety_stock_value",
+      "aliases": [
+        "Avg Safety Stock Value"
+      ],
+      "description": "The average of the Theoretical Min Stock value (in local currency) calculated over the selected timeframe",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Plant Inventory Health\"]"
+      ]
+    },
+    {
+      "canonical_name": "avg_shift_daily_demand_from_date",
+      "aliases": [
+        "Avg Shift/Daily Demand from (date)"
+      ],
+      "description": "The date from when the \"3 Months Avg Shift/Daily Demand\" is calculated from in the Calculation Matrix",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Inventory Calculation Matrix\"]"
+      ]
+    },
+    {
+      "canonical_name": "avg_standard_price",
+      "aliases": [
+        "Avg Standard Price"
+      ],
+      "description": "The average of the Standard Price (in local currrency), calculated over the selected timeframe",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Plant Inventory Health\"]"
+      ]
+    },
+    {
+      "canonical_name": "avg_stock_amount",
+      "aliases": [
+        "Avg Stock Amount"
+      ],
+      "description": "The average inventory amount (in number of parts), calculated over the selected timeframe",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Plant Inventory Health\"]"
+      ]
+    },
+    {
+      "canonical_name": "avg_stock_value",
+      "aliases": [
+        "Avg Stock Value"
+      ],
+      "description": "The average of the inventory value (in local currency) calculated over the selected timeframe",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Plant Inventory Health\"]"
+      ]
+    },
+    {
+      "canonical_name": "avg_stock_volume_m3",
+      "aliases": [
+        "Avg Stock volume (m3)"
+      ],
+      "description": "The average of Stock Volume (in m³), calculated over the selected timeframe",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Plant Inventory Health\"]"
+      ]
+    },
+    {
+      "canonical_name": "call_off_amount_pcs",
+      "aliases": [
+        "Call off Amount (pcs)"
+      ],
+      "description": "The amount of parts that are in the call off",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Plant Inventory Health\"]"
+      ]
+    },
+    {
+      "canonical_name": "call_off_value_local_currency",
+      "aliases": [
+        "Call off value (local currency)"
+      ],
+      "description": "Amount of parts in call off, multiplied by the standard price",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Plant Inventory Health\"]"
+      ]
+    },
+    {
+      "canonical_name": "carriage_to_id",
+      "aliases": [
+        "Carriage TO id"
+      ],
+      "description": "To id for carriage leg",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Delivery Fluctuation\"]"
+      ]
+    },
+    {
+      "canonical_name": "code_for_end_delivery_point",
+      "aliases": [
+        "Code for End Delivery Point"
+      ],
+      "description": "The code for the delivery location that we measure to in delivery fluctuation. Could be a port, trailer yard or the plant, depending on where the plant pulls the material from.",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Delivery Fluctuation\"]"
+      ]
+    },
+    {
+      "canonical_name": "col_pou_shift",
+      "aliases": [
+        "COL - POU (shift)"
+      ],
+      "description": "Parts are deducted from the stock at COL but are not used until they reach the actual POU (Point Of Use) at the line. If the part has a POU later than COL, the actual stock will be consumed later, creating an extra buffer that can be deducted from the Suggested Safety buffer. This parameter will show the time (in shift) between Car on line (COL) and Point of use (POU) for a specific part.",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Inventory Calculation Matrix\"]"
+      ]
+    },
+    {
+      "canonical_name": "consolidator",
+      "aliases": [
+        "Consolidator"
+      ],
+      "description": "The consolidator code, as defined in PLUS",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Plant Inventory Health\"]"
+      ]
+    },
+    {
+      "canonical_name": "consumed_quantity",
+      "aliases": [
+        "Consumed Quantity"
+      ],
+      "description": "The number of consumed quantity during the orderycle",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Demand Fluctuation\"]"
+      ]
+    },
+    {
+      "canonical_name": "current_cycle_stock_pcs",
+      "aliases": [
+        "Current Cycle Stock (pcs)"
+      ],
+      "description": "Average order quantity here represents the average of the call offs 63 days ahead",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Cycle Stock Analysis\"]"
+      ]
+    },
+    {
+      "canonical_name": "current_safety_stock_fls_minutes",
+      "aliases": [
+        "Current Safety Stock FLS (minutes)"
+      ],
+      "description": "For the FLS flows on minute level the parameter Yard Lead Time given in minutes is visible in the Current Safety Stock FLS (minutes) parameter. If there is a value in this column, these minutes will be converted into shifts and visible in the Current Safety Stock (shifts).",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Inventory Calculation Matrix\"]"
+      ]
+    },
+    {
+      "canonical_name": "current_safety_stock_pcs",
+      "aliases": [
+        "Current Safety Stock (pcs)"
+      ],
+      "description": "The current setting of the safety stock parameter (given in pcs) in PLUS and CMP",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Inventory Calculation Matrix\",\"Part Classification\"]"
+      ]
+    },
+    {
+      "canonical_name": "current_safety_stock_shift",
+      "aliases": [
+        "Current Safety Stock (shift)"
+      ],
+      "description": "The current setting of the safety stock parameter (given in shift) in PLUS and CMP. If Safety Buffer FLS (minutes) have a value this will be converted into shifts and also be shown here.",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Inventory Calculation Matrix\",\"Part Classification\"]"
+      ]
+    },
+    {
+      "canonical_name": "current_service_level_calculated",
+      "aliases": [
+        "Current Service Level (calculated)"
+      ],
+      "description": "This field indicates the service level associated with the current safety stock",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Inventory Calculation Matrix\"]"
+      ]
+    },
+    {
+      "canonical_name": "date",
+      "aliases": [
+        "Date"
+      ],
+      "description": "Selected dates the user wants to look at. The data and visuals will reflect the selected timespan.",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Finance Inventory Overview\"]"
+      ]
+    },
+    {
+      "canonical_name": "date_range_of_actual_arrival",
+      "aliases": [
+        "Date range of Actual Arrival"
+      ],
+      "description": "Allows the user to define a specific date range for actual arrivals. The data displayed in the tool will reflect only the deliveries that fall within the selected timeframe.",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Delivery Fluctuation\"]"
+      ]
+    },
+    {
+      "canonical_name": "days_by_unit_load",
+      "aliases": [
+        "Days by Unit Load"
+      ],
+      "description": "Describes how many days a unit load will last. This field is calculated by taking the unit load divided by the 3 Months Avg Daily Demand",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Part Classification\"]"
+      ]
+    },
+    {
+      "canonical_name": "delivered_as_promised",
+      "aliases": [
+        "Delivered as promised"
+      ],
+      "description": "Early = Actual delivery arriving before delivery window On time = Actual delivery arriving within the delivery window Late = Actual delivery arriving after the end of delivery window",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Delivery Fluctuation\"]"
+      ]
+    },
+    {
+      "canonical_name": "deliveries_included_since",
+      "aliases": [
+        "Deliveries Included Since"
+      ],
+      "description": "Indicates the start date from which Transport Orders (TOs) are included in the calculation of standard deviations, averages, and minimum/maximum delivery deviations, as part of the data feeding into the Inventory Calculation Matrix.",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Delivery Fluctuation\",\"Inventory Calculation Matrix\"]"
+      ]
+    },
+    {
+      "canonical_name": "deliveries_per_shift",
+      "aliases": [
+        "Deliveries per Shift"
+      ],
+      "description": "Weekly delivery frequencies / Average shifts per week",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Cycle Stock Analysis\"]"
+      ]
+    },
+    {
+      "canonical_name": "delivery_deviation_calendar_days",
+      "aliases": [
+        "Delivery Deviation (Calendar Days)"
+      ],
+      "description": "Number of calender days difference between the planned delivery and actual delivery​",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Delivery Fluctuation\"]"
+      ]
+    },
+    {
+      "canonical_name": "delivery_deviation_calendar_hours",
+      "aliases": [
+        "Delivery Deviation (Calendar hours)"
+      ],
+      "description": "Number of calender hours difference between the planned delivery and actual delivery​",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Delivery Fluctuation\"]"
+      ]
+    },
+    {
+      "canonical_name": "delivery_deviation_production_days",
+      "aliases": [
+        "Delivery Deviation (Production days)"
+      ],
+      "description": "Number of production days difference in active factory time between planned delivery and actual delivery",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Delivery Fluctuation\"]"
+      ]
+    },
+    {
+      "canonical_name": "delivery_deviation_production_hours",
+      "aliases": [
+        "Delivery Deviation (Production hours)"
+      ],
+      "description": "Number of production hours difference in active factory time between planned delivery and actual delivery",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Delivery Fluctuation\"]"
+      ]
+    },
+    {
+      "canonical_name": "delivery_deviation_shift",
+      "aliases": [
+        "Delivery Deviation (shift)"
+      ],
+      "description": "Difference between planned arrival and actual arrival in shifts. In the Delivery fluctuation this value is based on the selected time span and in the Inventory Matrix it is a set time span (see Calculation Matrix tool details for more information on the set time span) The shifts are calculated as the sum of percentages of the planned work shifts that are between the planned and actual arrival time.",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Delivery Fluctuation\"]"
+      ]
+    },
+    {
+      "canonical_name": "delivery_unit_type",
+      "aliases": [
+        "Delivery unit type"
+      ],
+      "description": "This field can have 4 different values: ”batch”, ”module”, ”ingoing part” or ”both” in case the part can be ”batch” and ”ingoing part”. In tool Inventory Health, only parts of type \"BATCH\" and \"BOTH\" are included",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Plant Inventory Health\"]"
+      ]
+    },
+    {
+      "canonical_name": "delivery_window_length_hours",
+      "aliases": [
+        "Delivery Window Length (Hours)"
+      ],
+      "description": "The length of the delivery window expressed in hours",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Delivery Fluctuation\"]"
+      ]
+    },
+    {
+      "canonical_name": "demand_deviation_pcs",
+      "aliases": [
+        "Demand Deviation (pcs)"
+      ],
+      "description": "The difference between the number of consumed quantity during the orderycle and the number of planned quantity during the ordercycle",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Demand Fluctuation\"]"
+      ]
+    },
+    {
+      "canonical_name": "demand_deviation_shifts",
+      "aliases": [
+        "Demand Deviation (shifts)"
+      ],
+      "description": "Difference between consumed and planned quantity expressed in average shifts. See tool details for further explanation and calculation.",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Demand Fluctuation\"]"
+      ]
+    },
+    {
+      "canonical_name": "demand_per_delivery_pcs",
+      "aliases": [
+        "Demand Per Delivery (pcs)"
+      ],
+      "description": "Average shift demand/Deliveries per shift",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Cycle Stock Analysis\"]"
+      ]
+    },
+    {
+      "canonical_name": "demand_trend_future",
+      "aliases": [
+        "Demand Trend (future)"
+      ],
+      "description": "A categorization of parts based on the future demand:​ Obsolete: Stock on hand + Goods in transit + Frozen Call-offs > 0, And future demand = 0. Parts with no demand in the future, yet with in-transit and on-hand inventory. Surplus is generated. ​ Need to disposal them (Sell, Rework, Change configuration, Scrap) ​ Potential obsolete: Stock on hand + Goods in transit + Frozen Call-offs > Future demand, And future demand>0. Parts with lower total demand then parts in-transit and on-hand inventory, indicating that we will generate surplus in the future. We need to always monitor such parts and take measures to avoid scrapping them.​ N/A: none of the above categories apply",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Demand Trend\"]"
+      ]
+    },
+    {
+      "canonical_name": "demand_trend_past",
+      "aliases": [
+        "Demand Trend (past)"
+      ],
+      "description": "Categorise past demand in categories based on lineair regression/ or trendline: - Slope=0 gives 'constant demand'​ - Slope between 0 and 0.5 gives 'slowly increasing demand'​ - Slope > 0.5 gives 'increasing demand'​ - Slope between 0 -0.5 gives 'slowly decreasing demand'​ - Slope <-0.5 gives 'decreasing demand'",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Demand Trend\",\"Inventory Calculation Matrix\"]"
+      ]
+    },
+    {
+      "canonical_name": "demand_type",
+      "aliases": [
+        "Demand Type"
+      ],
+      "description": "PROG=Forecast based demand, ORD=Order based demand. Only VCT that shows both Demand types, the other factories are only showing ORD.",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Planned Demand Comparison\"]"
+      ]
+    },
+    {
+      "canonical_name": "earliest_delivery_deviation_calendar_days",
+      "aliases": [
+        "Earliest Delivery Deviation (Calendar days)"
+      ],
+      "description": "The difference between planned arrival and actual arrival for the delivery that was most early (in calendar days)",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Delivery Fluctuation\"]"
+      ]
+    },
+    {
+      "canonical_name": "earliest_delivery_deviation_calendar_hours",
+      "aliases": [
+        "Earliest Delivery Deviation (Calendar  hours)"
+      ],
+      "description": "The difference between planned arrival and actual arrival for the delivery that was most early (in calendar hours)",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Delivery Fluctuation\"]"
+      ]
+    },
+    {
+      "canonical_name": "earliest_delivery_deviation_production_days",
+      "aliases": [
+        "Earliest Delivery Deviation (Production days)"
+      ],
+      "description": "The difference between planned arrival and actual arrival for the delivery that was most early (in work days)",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Delivery Fluctuation\"]"
+      ]
+    },
+    {
+      "canonical_name": "earliest_delivery_deviation_production_hours",
+      "aliases": [
+        "Earliest Delivery Deviation (Production hours)"
+      ],
+      "description": "The difference between planned arrival and actual arrival for the delivery that was most early (in work hours)",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Delivery Fluctuation\"]"
+      ]
+    },
+    {
+      "canonical_name": "earliest_delivery_deviation_shifts",
+      "aliases": [
+        "Earliest Delivery Deviation (Shifts)"
+      ],
+      "description": "The difference between planned arrival and actual arrival for the delivery that was most early (shift).",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Delivery Fluctuation\"]"
+      ]
+    },
+    {
+      "canonical_name": "end_date_ordercycle",
+      "aliases": [
+        "End Date Ordercycle"
+      ],
+      "description": "Date at which order would arrive (fastest theoretical arrival time based on the logic of the ordercycle)",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Demand Fluctuation\",\"Demand Trend\"]"
+      ]
+    },
+    {
+      "canonical_name": "end_of_delivery_window_time_shift",
+      "aliases": [
+        "End of Delivery Window Time (shift)"
+      ],
+      "description": "The time between the end of the delivery window and the start of the shift, in which the delivery window ends. ​",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Inventory Calculation Matrix\"]"
+      ]
+    },
+    {
+      "canonical_name": "factory",
+      "aliases": [
+        "Factory"
+      ],
+      "description": "The available manufacturing plants in the tool",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Plant Inventory Health\",\"Demand Fluctuation\",\"Demand Trend\",\"Planned Demand Comparison\",\"Delivery Fluctuation\",\"Goods In Transit\",\"Finance Inventory Overview\",\"Inventory Calculation Matrix\",\"Premium Balancing\",\"Part Classification\",\"Cycle Stock Analysis\"]"
+      ]
+    },
+    {
+      "canonical_name": "final_arrival_load",
+      "aliases": [
+        "Final Arrival Load"
+      ],
+      "description": "Load id connected to the carriage leg",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Delivery Fluctuation\"]"
+      ]
+    },
+    {
+      "canonical_name": "final_delivery_country",
+      "aliases": [
+        "Final Delivery Country"
+      ],
+      "description": "The country to which the parts are being delivered",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Delivery Fluctuation\"]"
+      ]
+    },
+    {
+      "canonical_name": "final_load_to_lc",
+      "aliases": [
+        "Final Load to LC"
+      ],
+      "description": "Load id connected to the pre-carriage leg into LC",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Delivery Fluctuation\"]"
+      ]
+    },
+    {
+      "canonical_name": "first_delivery_point",
+      "aliases": [
+        "First Delivery Point"
+      ],
+      "description": "Delivery Location of the first load after pick-up at supplier.",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Goods In Transit\"]"
+      ]
+    },
+    {
+      "canonical_name": "flow_classification",
+      "aliases": [
+        "Flow classification"
+      ],
+      "description": "This is a classification into different kinds of flows based on the lead-time (Supplier to Plant). The classifications are tried to be as Global as possible but still not have too many classifications in order to be able to visualize it. Current Flow Classification is:​ Day 0 Flows (arrive same day as shipped), ​ Day 1-3 – Local/Regional Lead-times within 1 to 3 days. (And air) ​ Day 4-10 – Regional/Intra continental. Lead-times withing 4-10 days. (And normal air)​ Day 11-28 – Road/Barge/Short sea flows (And normal air)​ Above 28 – Overseas flows.​ * See more in slide “Lead time Definition & how we sat the Global limits”​",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Plant Inventory Health\",\"Finance Inventory Overview\"]"
+      ]
+    },
+    {
+      "canonical_name": "fls_flag",
+      "aliases": [
+        "FLS flag"
+      ],
+      "description": "Indicates if part is having centralized call offs or not",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Plant Inventory Health\"]"
+      ]
+    },
+    {
+      "canonical_name": "fls_flow_flag",
+      "aliases": [
+        "FLS flow flag"
+      ],
+      "description": "Describe if it is a FLS flow or not",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Inventory Calculation Matrix\"]"
+      ]
+    },
+    {
+      "canonical_name": "ftl_flag",
+      "aliases": [
+        "FTL flag"
+      ],
+      "description": "Indicates if a part is supplied via a FTL (full truck load) or not​",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Plant Inventory Health\"]"
+      ]
+    },
+    {
+      "canonical_name": "future_demand_pcs",
+      "aliases": [
+        "Future Demand (pcs)"
+      ],
+      "description": "Future demand next 60 weeks",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Demand Trend\"]"
+      ]
+    },
+    {
+      "canonical_name": "git_value",
+      "aliases": [
+        "GIT Value"
+      ],
+      "description": "The value of the number of parts/goods that have left the supplier and are on the way to the factory (ASN but not yet Material Goods Received in Plant)",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Finance Inventory Overview\"]"
+      ]
+    },
+    {
+      "canonical_name": "goods_in_transit_git",
+      "aliases": [
+        "Goods in Transit (GIT)"
+      ],
+      "description": "The number of parts/goods that have left the supplier and are on the way to the factory (ASN but not yet Material Goods Received in Plant)",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Finance Inventory Overview\"]"
+      ]
+    },
+    {
+      "canonical_name": "goods_receive_gate",
+      "aliases": [
+        "Goods Receive Gate"
+      ],
+      "description": "Code of gate where goods are received",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Inventory Calculation Matrix\"]"
+      ]
+    },
+    {
+      "canonical_name": "highest_stock_value",
+      "aliases": [
+        "Highest Stock Value"
+      ],
+      "description": "The highest inventory value in the selected timeframe",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Plant Inventory Health\"]"
+      ]
+    },
+    {
+      "canonical_name": "include_faulty_uploads",
+      "aliases": [
+        "Include Faulty Uploads?"
+      ],
+      "description": "Possible to include TOs that have not yet reached final destination. N = no (the data will not include any TOs that have not yet reached their final destination)",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Delivery Fluctuation\"]"
+      ]
+    },
+    {
+      "canonical_name": "introduction_date",
+      "aliases": [
+        "Introduction Date"
+      ],
+      "description": "The part number introduction day according to change order. If the date is listed as 1900, it indicates that no introduction date is defined in CPAM, and the part has been in use since data collection began.",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Plant Inventory Health\",\"Demand Trend\",\"Inventory Calculation Matrix\"]"
+      ]
+    },
+    {
+      "canonical_name": "inventory_by_purpose",
+      "aliases": [
+        "# Inventory by Purpose - 工具定义表格"
+      ],
+      "description": "",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/Inventorybypurpose.csv"
+      ],
+      "used_in_tools": []
+    },
+    {
+      "canonical_name": "inventory_main_storage",
+      "aliases": [
+        "Inventory Main Storage"
+      ],
+      "description": "Main storage location code",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Inventory Calculation Matrix\"]"
+      ]
+    },
+    {
+      "canonical_name": "latest_delivery_deviation_calendar_days",
+      "aliases": [
+        "Latest Delivery Deviation (Calendar days)"
+      ],
+      "description": "The difference between planned arrival and actual arrival for the delivery that was the most late (in calendar days)",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Delivery Fluctuation\"]"
+      ]
+    },
+    {
+      "canonical_name": "latest_delivery_deviation_calendar_hours",
+      "aliases": [
+        "Latest Delivery Deviation (Calendar  hours)"
+      ],
+      "description": "The difference between planned arrival and actual arrival for the delivery that was the most late (in calendar hours)",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Delivery Fluctuation\"]"
+      ]
+    },
+    {
+      "canonical_name": "latest_delivery_deviation_production_days",
+      "aliases": [
+        "Latest Delivery Deviation (Production days)"
+      ],
+      "description": "The difference between planned arrival and actual arrival for the delivery that was the most late (in Production days)",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Delivery Fluctuation\"]"
+      ]
+    },
+    {
+      "canonical_name": "latest_delivery_deviation_production_hours",
+      "aliases": [
+        "Latest Delivery Deviation (Production hours)"
+      ],
+      "description": "The difference between planned arrival and actual arrival for the delivery that was the most late (in production hours)",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Delivery Fluctuation\"]"
+      ]
+    },
+    {
+      "canonical_name": "latest_delivery_deviation_shifts",
+      "aliases": [
+        "Latest Delivery Deviation (Shifts)"
+      ],
+      "description": "The difference between planned arrival and actual arrival for the delivery that was the most late (in shift).",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Delivery Fluctuation\"]"
+      ]
+    },
+    {
+      "canonical_name": "lc_flow_code",
+      "aliases": [
+        "LC Flow Code"
+      ],
+      "description": "Existing LC codes: AD9VU (LC2, Ghent), AIEMS (LCGOT, Gothenburg), AEXY1 (Shanghai)",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Delivery Fluctuation\"]"
+      ]
+    },
+    {
+      "canonical_name": "lead_time",
+      "aliases": [
+        "Lead Time"
+      ],
+      "description": "This is the time taken for the shipping supplier to send the part from Supplier to Plant measured in Calendar Days.​ This is calculated by taking the minimum value of the TTT in plus combined with the LC to plant leadtime for the supplier if relevant. If no TTT is available for the supplier, the default TTT of the plant is taken. ​",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Finance Inventory Overview\"]"
+      ]
+    },
+    {
+      "canonical_name": "limiting_factor",
+      "aliases": [
+        "Limiting Factor"
+      ],
+      "description": "The highest values of shipping quantity, minimum order quantity (MOQ), unit load, and demand per delivery determine the amount that needs to be ordered to meet each requirement​",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Cycle Stock Analysis\"]"
+      ]
+    },
+    {
+      "canonical_name": "load_equipment_type",
+      "aliases": [
+        "Load Equipment Type"
+      ],
+      "description": "The name of the transport equipment being used for this load.",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Delivery Fluctuation\"]"
+      ]
+    },
+    {
+      "canonical_name": "load_id",
+      "aliases": [
+        "Load id"
+      ],
+      "description": "Id for the load being transported the End Delivery Point",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Delivery Fluctuation\"]"
+      ]
+    },
+    {
+      "canonical_name": "load_leg",
+      "aliases": [
+        "Load Leg"
+      ],
+      "description": "101 = first leg, 201 = second leg, 301= third leg etc..",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Delivery Fluctuation\"]"
+      ]
+    },
+    {
+      "canonical_name": "lowest_stock_value",
+      "aliases": [
+        "Lowest Stock Value"
+      ],
+      "description": "The lowest inventory value in the selected timeframe",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Plant Inventory Health\"]"
+      ]
+    },
+    {
+      "canonical_name": "max_delivery_deviation_days",
+      "aliases": [
+        "Max Delivery Deviation (days)"
+      ],
+      "description": "The max work days difference between planned arrival and actual arrival",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Premium Balancing\"]"
+      ]
+    },
+    {
+      "canonical_name": "max_demand_deviation_days",
+      "aliases": [
+        "Max Demand Deviation (days)"
+      ],
+      "description": "The maximum deviation between consumed and planned quantity expressed in days",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Premium Balancing\"]"
+      ]
+    },
+    {
+      "canonical_name": "max_of_deviation_shift",
+      "aliases": [
+        "Max of Deviation (shift)"
+      ],
+      "description": "The maximum deviation between consumed and planned quantity expressed in average shifts.",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Demand Fluctuation\"]"
+      ]
+    },
+    {
+      "canonical_name": "min_of_deviation_shift",
+      "aliases": [
+        "Min of Deviation (shift)"
+      ],
+      "description": "The minimum deviation between consumed and planned quantity expressed in average shifts.",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Demand Fluctuation\"]"
+      ]
+    },
+    {
+      "canonical_name": "minimum_order_quantity",
+      "aliases": [
+        "Minimum Order Quantity"
+      ],
+      "description": "The smallest number of parts that must be ordered at one time from a supplier.",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Premium Balancing\"]"
+      ]
+    },
+    {
+      "canonical_name": "minimum_order_quantity_moq_pcs",
+      "aliases": [
+        "Minimum Order Quantity MOQ (pcs)"
+      ],
+      "description": "Minimum order quantity",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Cycle Stock Analysis\"]"
+      ]
+    },
+    {
+      "canonical_name": "multiple_pou_pcs",
+      "aliases": [
+        "Multiple POU (pcs)"
+      ],
+      "description": "When a part is used at multiple stations, an additional safety buffer is set, to avoid stock.outs. The logic to calculate the extra safety buffer: Multiple POU (pcs) = 0.25* Box UL*no. of POU",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Inventory Calculation Matrix\"]"
+      ]
+    },
+    {
+      "canonical_name": "new_parts",
+      "aliases": [
+        "New parts"
+      ],
+      "description": "If GILTIGFRAN (effective date when part starts to be used in production) is after today and APC > 0 the part is considered New Part. ​",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Demand Trend\"]"
+      ]
+    },
+    {
+      "canonical_name": "next_limiting_factory",
+      "aliases": [
+        "Next Limiting Factory"
+      ],
+      "description": "The second highest values of shipping quantity, minimum order quantity (MOQ), unit load, and demand per delivery determine the amount that needs to be ordered to meet each requirement.​",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Cycle Stock Analysis\"]"
+      ]
+    },
+    {
+      "canonical_name": "nr_of_unit_loads_in_stock",
+      "aliases": [
+        "Nr of unit loads in stock"
+      ],
+      "description": "The number of unit loads in stock of a specific part number, obtained by dividing the Stock Amount by the Unit Load (rounded up to the nearest whole number)​",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Plant Inventory Health\"]"
+      ]
+    },
+    {
+      "canonical_name": "number_of_deliveries",
+      "aliases": [
+        "Number of Deliveries"
+      ],
+      "description": "The number of TOs (transportation orders) included in the calculations of Delivery Fluctuation. For delivery fluctuation the number of TO's depends on the selected time span, when it comes to the Inventory Matrix there is already a set time span (see further in tool details)",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Delivery Fluctuation\",\"Inventory Calculation Matrix\"]"
+      ]
+    },
+    {
+      "canonical_name": "number_of_ordercycles",
+      "aliases": [
+        "Number of Ordercycles"
+      ],
+      "description": "Number of completed ordercycles inlcuded in the calculations of Demand Deviation For Demand fluctation the number of ordercycles depends on the selected time span, when it comes to the Inventory Matrix there is already a set time span (see further in tool details)",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Demand Fluctuation\",\"Inventory Calculation Matrix\"]"
+      ]
+    },
+    {
+      "canonical_name": "number_of_pou",
+      "aliases": [
+        "Number of POU"
+      ],
+      "description": "The number of stations on the line the part is being used",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Inventory Calculation Matrix\"]"
+      ]
+    },
+    {
+      "canonical_name": "number_of_unit_loads_ordered_through_premiums",
+      "aliases": [
+        "Number of Unit Loads ordered through Premiums"
+      ],
+      "description": "Based on the given service level this shows how many Unit Loads that we are risking to send through premiums.",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Premium Balancing\"]"
+      ]
+    },
+    {
+      "canonical_name": "operation_lead_time_shift",
+      "aliases": [
+        "Operation Lead time (shift)"
+      ],
+      "description": "Operation lead time from start of unloading goods to parts delivered at line side. Not including storage time in storage area. This safety buffer is added to cover for the handling time needed in the plant to ensure that the parts are in time for usage on the line. ​",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Inventory Calculation Matrix\"]"
+      ]
+    },
+    {
+      "canonical_name": "ordercycle_startdates_included_since",
+      "aliases": [
+        "Ordercycle Startdates included since"
+      ],
+      "description": "The start date from when the order cyles are included into the calculation of Demand Fluctuation into the Inventory Calculation Matrix",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Inventory Calculation Matrix\"]"
+      ]
+    },
+    {
+      "canonical_name": "outgoing_date",
+      "aliases": [
+        "Outgoing Date"
+      ],
+      "description": "The part number outgoing date according to change order. If the date is listed as 2100, it means no outgoing date has been defined in CPAM.",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Plant Inventory Health\",\"Demand Trend\"]"
+      ]
+    },
+    {
+      "canonical_name": "outliers",
+      "aliases": [
+        "Outliers"
+      ],
+      "description": "Outliers are unusual values in your data that stand out significantly because they're much higher or lower than the typical range. For Demand Fluctuation: Outliers are defined as a value more than 3 standard deviations away from the mean , except when Demand Deviation (average shift) is in the interval -0.5 to 0.5 (then it would not be considered an outlier). For Delivery Fluctuation: Outliers are based on the planned leadtime and the difference between the actual leadtime and the planned leadtime. For example, If the planned leadtime is 2 days then it is reasonable the delivery to be 4 days late (of course not good but not outlier), however if it is a day 0 flow it should never be for example 5 days late. It is considered an outlier if the delivery is late by more than this equation: Planned leadtime (days) * (2.2-(ln(planned leadtime (days))/3)​",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Demand Fluctuation\",\"Delivery Fluctuation\"]"
+      ]
+    },
+    {
+      "canonical_name": "overseas_flag",
+      "aliases": [
+        "Overseas flag"
+      ],
+      "description": "This indicates if a certain part supplied to a certain plant is an overseas part or not. This flag will be ”Y” (yes) when: For VCT, VCDQ, VCCD, VCG and TTT > 20 days For VCTZ and TTT > 15 days For VCCH and TTT >=28 days",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Plant Inventory Health\"]"
+      ]
+    },
+    {
+      "canonical_name": "packaging_number",
+      "aliases": [
+        "Packaging number"
+      ],
+      "description": "The packaging number of the part, as defined in FLS​",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Plant Inventory Health\",\"Cycle Stock Analysis\"]"
+      ]
+    },
+    {
+      "canonical_name": "packaging_type",
+      "aliases": [
+        "Packaging type"
+      ],
+      "description": "The packaging type of the part, as defined in PLUS​",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Plant Inventory Health\",\"Inventory Calculation Matrix\"]"
+      ]
+    },
+    {
+      "canonical_name": "part_classification",
+      "aliases": [
+        "Part Classification"
+      ],
+      "description": "Describes which classification the part belongs to based on take-rate and part-price.",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Inventory Calculation Matrix\",\"Premium Balancing\",\"Part Classification\"]"
+      ]
+    },
+    {
+      "canonical_name": "part_description",
+      "aliases": [
+        "Part Description"
+      ],
+      "description": "The description of the part",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Inventory Calculation Matrix\",\"Premium Balancing\",\"Goods In Transit\",\"Plant Inventory Health\",\"Finance Inventory Overview\",\"Part Classification\"]"
+      ]
+    },
+    {
+      "canonical_name": "part_number",
+      "aliases": [
+        "Part Number"
+      ],
+      "description": "The number code for a part",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Demand Fluctuation\",\"Demand Trend\",\"Planned Demand Comparison\",\"Inventory Calculation Matrix\",\"Premium Balancing\",\"Plant Inventory Health\",\"Goods In Transit\",\"Finance Inventory Overview\",\"Cycle Stock Analysis\",\"Part Classification\"]"
+      ]
+    },
+    {
+      "canonical_name": "part_type",
+      "aliases": [
+        "Part type"
+      ],
+      "description": "A part typ description. Follow the link for more info.: KDP - Part Type Descriptions (corp.example.com)​ http://zlinvcvp.corp.example.com/veds/public/uploads/external/kdp_part_type_descriptions.html",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Plant Inventory Health\"]"
+      ]
+    },
+    {
+      "canonical_name": "percentage_safety_stock",
+      "aliases": [
+        "Percentage safety stock"
+      ],
+      "description": "The percentage of the safety stock amount for a part number compared to the total stock amount for all part numbers​",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Plant Inventory Health\"]"
+      ]
+    },
+    {
+      "canonical_name": "percentage_stock_value",
+      "aliases": [
+        "Percentage stock value"
+      ],
+      "description": "The percentage of the stock value for a part number compared to the total stock value for all part numbers​",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Plant Inventory Health\"]"
+      ]
+    },
+    {
+      "canonical_name": "percentage_stock_volume",
+      "aliases": [
+        "Percentage stock volume"
+      ],
+      "description": "The percentage of the stock volume for a part number compared to the total stock volume for all part numbers​",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Plant Inventory Health\"]"
+      ]
+    },
+    {
+      "canonical_name": "pickup_country",
+      "aliases": [
+        "Pickup Country"
+      ],
+      "description": "The country from which the parts are collected for transport.",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Inventory Calculation Matrix\",\"Premium Balancing\",\"Delivery Fluctuation\",\"Goods In Transit\",\"Cycle Stock Analysis\"]"
+      ]
+    },
+    {
+      "canonical_name": "planned_delivery",
+      "aliases": [
+        "Planned Delivery"
+      ],
+      "description": "The date and time when the delivery was planned to arrived",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Delivery Fluctuation\"]"
+      ]
+    },
+    {
+      "canonical_name": "planned_delivery_end",
+      "aliases": [
+        "Planned Delivery (End)"
+      ],
+      "description": "Planned Delivery at end of delivery window",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Delivery Fluctuation\"]"
+      ]
+    },
+    {
+      "canonical_name": "planned_pickup_end",
+      "aliases": [
+        "Planned Pickup (End)"
+      ],
+      "description": "Planned pickup at end of pickup window",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Delivery Fluctuation\"]"
+      ]
+    },
+    {
+      "canonical_name": "planned_production_day",
+      "aliases": [
+        "Planned Production Day"
+      ],
+      "description": "Choose which production days the user wants to look at. These production date will then be reflected in the tables in the tool.",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Planned Demand Comparison\"]"
+      ]
+    },
+    {
+      "canonical_name": "planned_quantity_pcs",
+      "aliases": [
+        "Planned Quantity (pcs)"
+      ],
+      "description": "The number of planned quantity during the ordercycle",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Demand Fluctuation\",\"Inventory Calculation Matrix\"]"
+      ]
+    },
+    {
+      "canonical_name": "planned_transport_leadtime_calendar_days",
+      "aliases": [
+        "Planned Transport Leadtime (Calendar Days)"
+      ],
+      "description": "Leadtime in Calender Days between planned pickup and planned arrival",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Delivery Fluctuation\"]"
+      ]
+    },
+    {
+      "canonical_name": "planning_day",
+      "aliases": [
+        "Planning Day"
+      ],
+      "description": "A chosen planning day, where the user can see how much was planned/will be produced in the chosen production day span",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Planned Demand Comparison\"]"
+      ]
+    },
+    {
+      "canonical_name": "planning_point",
+      "aliases": [
+        "Planning Point"
+      ],
+      "description": "The planning point for the selected manufacturing plant",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Plant Inventory Health\",\"Inventory Calculation Matrix\",\"Premium Balancing\",\"Finance Inventory Overview\",\"Cycle Stock Analysis\",\"Part Classification\"]"
+      ]
+    },
+    {
+      "canonical_name": "possible_pickups_per_week",
+      "aliases": [
+        "Possible Pickups Per Week"
+      ],
+      "description": "Possible contracted weekly delivery frequency. Counting how many pickups are available per week ​",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Inventory Calculation Matrix\",\"Cycle Stock Analysis\"]"
+      ]
+    },
+    {
+      "canonical_name": "potential_future_cycle_stock_pcs",
+      "aliases": [
+        "Potential Future Cycle Stock (pcs)"
+      ],
+      "description": "Here we look at the theoretical average order quantities based on the next limiting factor (second largest factor). Assuming that we can change the limiting factor to no longer be the limiting factor.​",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Cycle Stock Analysis\"]"
+      ]
+    },
+    {
+      "canonical_name": "potential_inventory_change_local_currency",
+      "aliases": [
+        "Potential Inventory Change (Local Currency)"
+      ],
+      "description": "The potential Inventory value Change (in local currency) if changing from the current safety buffer to the new suggested one.",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Inventory Calculation Matrix\"]"
+      ]
+    },
+    {
+      "canonical_name": "potential_savings",
+      "aliases": [
+        "Potential Savings"
+      ],
+      "description": "Difference between Cycle stock and Potential future cycle stock multipled by standard price of part expressed in local currency",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Cycle Stock Analysis\"]"
+      ]
+    },
+    {
+      "canonical_name": "pre_carriage_to_id",
+      "aliases": [
+        "Pre-carriage TO id"
+      ],
+      "description": "TO id for the pre-carrige transport",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Delivery Fluctuation\"]"
+      ]
+    },
+    {
+      "canonical_name": "premium_freight_cost",
+      "aliases": [
+        "Premium Freight Cost"
+      ],
+      "description": "The risk of having premium freight cost for a specific service level. This cost will decrease with an increased service level as you don't risk premium as much if you have more safety stock.",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Premium Balancing\"]"
+      ]
+    },
+    {
+      "canonical_name": "route_from",
+      "aliases": [
+        "Route From"
+      ],
+      "description": "Origin code that the transport leg is planned from (e.g. supplier, cross-dock)",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Delivery Fluctuation\"]"
+      ]
+    },
+    {
+      "canonical_name": "route_to",
+      "aliases": [
+        "Route To"
+      ],
+      "description": "Destination code that the transport leg is planned to (e.g. cross-dock)",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Delivery Fluctuation\"]"
+      ]
+    },
+    {
+      "canonical_name": "safety_buffer_fluctuation_shift",
+      "aliases": [
+        "Safety Buffer Fluctuation (shift)"
+      ],
+      "description": "Calculated Safety buffer in shifts to hold based on Demand and Delivery fluctuation (see tool details for calculations)",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Inventory Calculation Matrix\"]"
+      ]
+    },
+    {
+      "canonical_name": "safety_buffer_other_pcs",
+      "aliases": [
+        "Safety Buffer Other (pcs)"
+      ],
+      "description": "Calculated Safety buffer in pieces that is added if the part has several POU (point of use) or if the part has a Very Low Take rate.",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Inventory Calculation Matrix\"]"
+      ]
+    },
+    {
+      "canonical_name": "safety_buffer_other_pcs_converted_to_shifts",
+      "aliases": [
+        "Safety buffer other (pcs converted to shifts)"
+      ],
+      "description": "This field is converting the \"Safety Buffer Other (pcs)\" to shifts. This value is not used in the calculation but for the user to see how many shifts the suggested safety buffer in pieces would be.",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Inventory Calculation Matrix\"]"
+      ]
+    },
+    {
+      "canonical_name": "safety_buffer_other_shift",
+      "aliases": [
+        "Safety Buffer Other (shift)"
+      ],
+      "description": "Calculated Safety buffer in shifts to hold based on adding \"other\" parameters, such as the operation leadtime and end of delivery window together.",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Inventory Calculation Matrix\"]"
+      ]
+    },
+    {
+      "canonical_name": "safety_stock_leadtime_shift",
+      "aliases": [
+        "Safety Stock Leadtime (shift)"
+      ],
+      "description": "The setting of the safety stock parameter (given in shift) in PLUS and CMP, on that specific stock day",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Plant Inventory Health\"]"
+      ]
+    },
+    {
+      "canonical_name": "safety_stock_parameter_pcs",
+      "aliases": [
+        "Safety Stock Parameter (pcs)"
+      ],
+      "description": "The setting of the safety stock parameter (given in pcs) in PLUS and CMP, on that specific stock day",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Plant Inventory Health\"]"
+      ]
+    },
+    {
+      "canonical_name": "sb_delivery_balancing_shift",
+      "aliases": [
+        "SB Delivery Balancing (shift)"
+      ],
+      "description": "The calculated Safety buffer for Delivery Fluctuation when using the service level from the balancing method",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Inventory Calculation Matrix\"]"
+      ]
+    },
+    {
+      "canonical_name": "sb_delivery_classification_shift",
+      "aliases": [
+        "SB Delivery Classification (shift)"
+      ],
+      "description": "The calculated Safety buffer for Delivery Fluctuation when using the service level from the classification method",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Inventory Calculation Matrix\"]"
+      ]
+    },
+    {
+      "canonical_name": "sb_delivery_fluctuation_days",
+      "aliases": [
+        "SB Delivery Fluctuation (days)"
+      ],
+      "description": "The calculated safety buffer given in days to hold due to the delivery fluctuation",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Premium Balancing\"]"
+      ]
+    },
+    {
+      "canonical_name": "sb_demand_balancing_shift",
+      "aliases": [
+        "SB Demand Balancing (shift)"
+      ],
+      "description": "The calculated Safety buffer for Demand Fluctuation when using the service level from the balancing method",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Inventory Calculation Matrix\"]"
+      ]
+    },
+    {
+      "canonical_name": "sb_demand_classification_shift",
+      "aliases": [
+        "SB Demand Classification (shift)"
+      ],
+      "description": "The calculated Safety buffer for Demand Fluctuation when using the service level from the classification method",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Inventory Calculation Matrix\"]"
+      ]
+    },
+    {
+      "canonical_name": "sb_demand_fluctuation_days",
+      "aliases": [
+        "SB Demand Fluctuation (days)"
+      ],
+      "description": "The calculated safety buffer given in days to hold due to the demand fluctuation",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Premium Balancing\"]"
+      ]
+    },
+    {
+      "canonical_name": "sb_fluctuation_days",
+      "aliases": [
+        "SB Fluctuation (days)"
+      ],
+      "description": "The total safety buffer given in number of days to hold considering both delivery and demand fluctuation. (for more calculation details see the Inventory Calculation Matrix Tool Details)",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Premium Balancing\"]"
+      ]
+    },
+    {
+      "canonical_name": "sb_tied_up_capital_cost",
+      "aliases": [
+        "SB Tied Up Capital Cost"
+      ],
+      "description": "The tied up capital cost of holding the safety buffer for a specific service level. The cost of holding stock will increase with an increased service level.",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Premium Balancing\"]"
+      ]
+    },
+    {
+      "canonical_name": "scc_supply_chain_coordinator",
+      "aliases": [
+        "SCC (Supply Chain Coordinator)"
+      ],
+      "description": "The responsible Supply Chain Coordinator for the supplier/part number",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Inventory Calculation Matrix\"]"
+      ]
+    },
+    {
+      "canonical_name": "selection_over_under_planning",
+      "aliases": [
+        "Selection Over/Under planning"
+      ],
+      "description": "Overplanning: Demand Deviation (avg shifts) >0​ Underplanning: Demand Deviation (avg shifts) <0​ No Deviation: Demand Deviation (avg shifts) =0​",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Demand Fluctuation\"]"
+      ]
+    },
+    {
+      "canonical_name": "seq_flag",
+      "aliases": [
+        "Seq flag"
+      ],
+      "description": "Indicates if a part is sequenced or not",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Plant Inventory Health\"]"
+      ]
+    },
+    {
+      "canonical_name": "service_level",
+      "aliases": [
+        "Service Level"
+      ],
+      "description": "Service level refers to the probability of not reaching a stockout situation. Safety Buffer to cover fluctuations depends on a set service level, this service level can either come from the classification method or the premium balancing method.",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Inventory Calculation Matrix\",\"Premium Balancing\"]"
+      ]
+    },
+    {
+      "canonical_name": "shift",
+      "aliases": [
+        "Shift"
+      ],
+      "description": "Describes which shift the amount of parts is planned for.",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Planned Demand Comparison\"]"
+      ]
+    },
+    {
+      "canonical_name": "shifts_in_ordercycle",
+      "aliases": [
+        "Shifts in Ordercycle"
+      ],
+      "description": "Number of shifts within the ordercycle",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Demand Fluctuation\"]"
+      ]
+    },
+    {
+      "canonical_name": "shipping_quantity_pcs",
+      "aliases": [
+        "Shipping Quantity (pcs)"
+      ],
+      "description": "Parameter set by SCC in PLUS to order a certain number of parts whenever you order",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Cycle Stock Analysis\"]"
+      ]
+    },
+    {
+      "canonical_name": "speed_up_transports_inclusion",
+      "aliases": [
+        "Speed up transports inclusion"
+      ],
+      "description": "If speed up flag exists in TMS, it will be possible to decide if these transportation should be part of the data set or not.",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Delivery Fluctuation\"]"
+      ]
+    },
+    {
+      "canonical_name": "stable_plan_flag",
+      "aliases": [
+        "Stable plan flag"
+      ],
+      "description": "This field indicated if a part has a stable plan or not. Stable plan intends to keep call-off to suppliers unchanged instead of adjusting call-offs daily depending on production deviation.",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Plant Inventory Health\"]"
+      ]
+    },
+    {
+      "canonical_name": "standard_price_local_currency",
+      "aliases": [
+        "Standard Price (local currency)"
+      ],
+      "description": "The price of the part as it is in PLUS/CMP (field: std pris), always in local currency and expressed in cents. Therefore, the value is divided by 100 before it is shown in the PowerBI report",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Finance Inventory Overview\",\"Plant Inventory Health\",\"Inventory Calculation Matrix\",\"Part Classification\",\"Cycle Stock Analysis\"]"
+      ]
+    },
+    {
+      "canonical_name": "start_date_ordercycle",
+      "aliases": [
+        "Start Date Ordercycle"
+      ],
+      "description": "Date at which order can be placed, the start date of the ordercycle",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Demand Fluctuation\",\"Demand Trend\",\"Inventory Calculation Matrix\"]"
+      ]
+    },
+    {
+      "canonical_name": "std_deviation_of_delivery_deviation_by_country_unit",
+      "aliases": [
+        "Std Deviation of Delivery Deviation by country (unit)"
+      ],
+      "description": "Standard deviation of the of Delivery Deviation by country, by the chosen Unit (Calender days, Calender hours, Production days, Production hours, Production shifts)",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Delivery Fluctuation\"]"
+      ]
+    },
+    {
+      "canonical_name": "std_deviation_of_delivery_deviation_calendar_days",
+      "aliases": [
+        "Std Deviation of Delivery Deviation (Calendar days)"
+      ],
+      "description": "Standard Deviation of the difference between planned arrival time and actual arrival time (in calendar days)",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Delivery Fluctuation\"]"
+      ]
+    },
+    {
+      "canonical_name": "std_deviation_of_delivery_deviation_calendar_hours",
+      "aliases": [
+        "Std Deviation of Delivery Deviation (Calendar hours)"
+      ],
+      "description": "Standard Deviation of the difference between planned arrival time and actual arrival time (in calendar hours)",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Delivery Fluctuation\"]"
+      ]
+    },
+    {
+      "canonical_name": "std_deviation_of_delivery_deviation_days",
+      "aliases": [
+        "Std Deviation of Delivery Deviation (days)"
+      ],
+      "description": "Standard Deviation of the number of work days difference between planned arrival time and actual arrival time",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Premium Balancing\"]"
+      ]
+    },
+    {
+      "canonical_name": "std_deviation_of_delivery_deviation_production_days",
+      "aliases": [
+        "Std Deviation of Delivery Deviation (Production days)"
+      ],
+      "description": "Standard Deviation of the difference between planned arrival time and actual arrival time (in work days) The work days are calcualted as the sum of percentages of the planned work days that are in the period",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Delivery Fluctuation\"]"
+      ]
+    },
+    {
+      "canonical_name": "std_deviation_of_delivery_deviation_production_hours",
+      "aliases": [
+        "Std Deviation of Delivery Deviation (Production hours)"
+      ],
+      "description": "Standard Deviation of the difference between planned arrival time and actual arrival time (in work hours)",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Delivery Fluctuation\"]"
+      ]
+    },
+    {
+      "canonical_name": "std_deviation_of_delivery_deviation_shift",
+      "aliases": [
+        "Std Deviation of Delivery Deviation (shift)"
+      ],
+      "description": "Standard Deviation of the difference between planned arrival time and actual arrival time (shifts). In the Delivery fluctuation this value is based on the selected time span and in the Inventory Matrix it is based on a set time span (see Calculation Matrix tool details for more information on the set time span)",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Inventory Calculation Matrix\",\"Delivery Fluctuation\"]"
+      ]
+    },
+    {
+      "canonical_name": "std_deviation_of_demand_deviation_days",
+      "aliases": [
+        "Std Deviation of Demand Deviation (days)"
+      ],
+      "description": "Meassure for the scatteredness of the Demand Deviation given in days. If the number is high there is a lot of/big fluctuation in the differences between the planned demand and consumption, if the number is low the differences between planned demand and consumption are relatively stable over time. ​",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Premium Balancing\"]"
+      ]
+    },
+    {
+      "canonical_name": "std_deviation_of_demand_deviation_shift",
+      "aliases": [
+        "Std Deviation of Demand Deviation (shift)"
+      ],
+      "description": "Meassure for the scatteredness of the Demand Deviation (avg shifts). If the number is high there is a lot of/big fluctuation in the differences between the planned demand and consumption, if the number is low the differences between planned demand and consumption are relatively stable over time. ​ For Demand fluctation the calculation of the std deciation depends on the selected time span, when it comes to the Inventory Matrix there is already a set time span (see further in tool details)",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Demand Fluctuation\",\"Inventory Calculation Matrix\"]"
+      ]
+    },
+    {
+      "canonical_name": "stock_amount_pcs",
+      "aliases": [
+        "Stock Amount (pcs)"
+      ],
+      "description": "The stock level (= financial stock balance) on that specific stock day.",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Plant Inventory Health\"]"
+      ]
+    },
+    {
+      "canonical_name": "stock_coverage_comment",
+      "aliases": [
+        "Stock coverage Comment"
+      ],
+      "description": "This field shows the comment about the value seen in the column Stock Coverage (shifts)​ & Stock Coverage Run Out Date If the comment is < 3 months, We only have 3 months ahead of Demand data to check so the Stock coverage can be beyond 3 months. If the comment is 0 demand, we do not have any demand data to calculate and show the value for the Stock Coverage (shifts)​ & Stock Coverage Run Out Date If you do not see any comment, then you can check the value in the column Stock Coverage (shifts)​ & Stock Coverage Run Out Date which is explained in the above row",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Plant Inventory Health\"]"
+      ]
+    },
+    {
+      "canonical_name": "stock_coverage_run_out_date",
+      "aliases": [
+        "Stock coverage Run Out Date"
+      ],
+      "description": "This field shows the date at which is current stock is going to run out.",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Plant Inventory Health\"]"
+      ]
+    },
+    {
+      "canonical_name": "stock_coverage_shift",
+      "aliases": [
+        "Stock coverage (shift)"
+      ],
+      "description": "To calculate the Stock Coverage, we start with the available stock and subtract the demand for each shift, one by one, until the stock reaches zero. The number of shifts it takes until the stock reach zeros will be the stock coverage (shift)",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Plant Inventory Health\"]"
+      ]
+    },
+    {
+      "canonical_name": "stock_day",
+      "aliases": [
+        "Stock Day"
+      ],
+      "description": "The chosen stock date the user wants to look at. The data and visuals will reflect the chosen dates.",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Plant Inventory Health\"]"
+      ]
+    },
+    {
+      "canonical_name": "stock_value_local_currency",
+      "aliases": [
+        "Stock value (local currency)"
+      ],
+      "description": "The value of the stock, expressed in local currency. Obtained by multiplying the stock amount (inventory level) with the standard price that is valid on that stock day.",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Plant Inventory Health\"]"
+      ]
+    },
+    {
+      "canonical_name": "stock_volume_m",
+      "aliases": [
+        "Stock volume (m³)"
+      ],
+      "description": "The volume of the stock in m³, obtained by multiplying the number of Unit Loads In Stock with the Packaging Type Volume (length x height x width)​",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Plant Inventory Health\"]"
+      ]
+    },
+    {
+      "canonical_name": "suggested_safety_buffer_pcs",
+      "aliases": [
+        "Suggested safety buffer (pcs)"
+      ],
+      "description": "The calculated suggested safety buffer given in pcs, consisting of the Safety Buffer (pcs)",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Inventory Calculation Matrix\"]"
+      ]
+    },
+    {
+      "canonical_name": "suggested_safety_buffer_shift",
+      "aliases": [
+        "Suggested safety buffer (shift)"
+      ],
+      "description": "The calculated suggested safety buffer given in shifts, adding Safety Buffer Fluctuation (shift) and Safety Buffer Other (shift) together.",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Inventory Calculation Matrix\"]"
+      ]
+    },
+    {
+      "canonical_name": "supplier_code_mfg",
+      "aliases": [
+        "Supplier code (MFG)"
+      ],
+      "description": "The Manufacturing Supplier code In case of a dual sourced part (2 mfg suppliers for 1 part numbers), only 1 supplier is displayed, being the supplier that supplies the most of the parts (i.e. the supplier with the highest apc-value).",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Plant Inventory Health\",\"Inventory Calculation Matrix\",\"Premium Balancing\",\"Finance Inventory Overview\",\"Part Classification\"]"
+      ]
+    },
+    {
+      "canonical_name": "supplier_code_shp",
+      "aliases": [
+        "Supplier code (SHP)"
+      ],
+      "description": "Shipping/Pick-up point code",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Plant Inventory Health\",\"Inventory Calculation Matrix\",\"Premium Balancing\",\"Goods In Transit\",\"Finance Inventory Overview\",\"Part Classification\"]"
+      ]
+    },
+    {
+      "canonical_name": "supplier_country_mfg",
+      "aliases": [
+        "Supplier country (MFG)"
+      ],
+      "description": "Manufacturings site country",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Plant Inventory Health\",\"Inventory Calculation Matrix\"]"
+      ]
+    },
+    {
+      "canonical_name": "supplier_country_shp",
+      "aliases": [
+        "Supplier country (SHP)"
+      ],
+      "description": "Shipping/Pick-up point country",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Plant Inventory Health\",\"Finance Inventory Overview\",\"Inventory Calculation Matrix\"]"
+      ]
+    },
+    {
+      "canonical_name": "supplier_mfg",
+      "aliases": [
+        "Supplier (MFG)"
+      ],
+      "description": "Manufacturings site code",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Demand Fluctuation\",\"Demand Trend\",\"Planned Demand Comparison\",\"Delivery Fluctuation\",\"Cycle Stock Analysis\",\"Inventory Calculation Matrix\",\"Premium Balancing\",\"Part Classification\"]"
+      ]
+    },
+    {
+      "canonical_name": "supplier_name_mfg",
+      "aliases": [
+        "Supplier name (MFG)"
+      ],
+      "description": "Name of the Manufacturing site supplier",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Plant Inventory Health\"]"
+      ]
+    },
+    {
+      "canonical_name": "supplier_name_shp",
+      "aliases": [
+        "Supplier name (SHP)"
+      ],
+      "description": "Shipping/Pick-up supplier name",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Plant Inventory Health\",\"Finance Inventory Overview\"]"
+      ]
+    },
+    {
+      "canonical_name": "supplier_shp",
+      "aliases": [
+        "Supplier (SHP)"
+      ],
+      "description": "Shipping/Pick-up point code",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Demand Fluctuation\",\"Demand Trend\",\"Planned Demand Comparison\",\"Delivery Fluctuation\",\"Cycle Stock Analysis\",\"Inventory Calculation Matrix\",\"Premium Balancing\",\"Goods In Transit\",\"Part Classification\"]"
+      ]
+    },
+    {
+      "canonical_name": "take_rate",
+      "aliases": [
+        "Take rate"
+      ],
+      "description": "Total Planned Demand of Part Number/Total Planned Number of Cars Produced",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Inventory Calculation Matrix\",\"Part Classification\"]"
+      ]
+    },
+    {
+      "canonical_name": "theoretical_max_amount_pcs",
+      "aliases": [
+        "Theoretical MAX Amount (pcs)"
+      ],
+      "description": "​The theoretical max is the calculated amounts of parts that the actual stock level normally should not be above as this is the minimum stock plus what have been ordered for that selected date. Calculation: Theoretical min amount and add the amount of parts that are in the call-off for the selected date.​",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Plant Inventory Health\"]"
+      ]
+    },
+    {
+      "canonical_name": "theoretical_max_stock_value_local_currency",
+      "aliases": [
+        "Theoretical MAX stock value (local currency)"
+      ],
+      "description": "​The theoretical max is the calculated value of parts that the actual stock level normally should not be above as this is the minimum stock plus what have been ordered for that selected date. Calculation: Theoretical min amount and add the amount of parts that are in the call-off for the selected date. and mutiply with the standard price",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Plant Inventory Health\"]"
+      ]
+    },
+    {
+      "canonical_name": "theoretical_min_stock_amount_pcs",
+      "aliases": [
+        "Theoretical MIN Stock Amount (pcs)"
+      ],
+      "description": "Showing the Safety Stock for every stock day expressed in \"amount of parts\". The calculation to get the total amount of part = (Safety stock parameter in shift * by the planned consumption in corresponding production shifts) + Safety stock parameter given in pcs",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Plant Inventory Health\"]"
+      ]
+    },
+    {
+      "canonical_name": "theoretical_min_stock_value_local_currency",
+      "aliases": [
+        "Theoretical MIN stock value (local currency)"
+      ],
+      "description": "Showing the Safety Stock value for every stock day. Calculation: Theoretical MIN stock amount multiplied with the standard price for the part",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Plant Inventory Health\"]"
+      ]
+    },
+    {
+      "canonical_name": "tied_up_capital_forecast_lead_time_day_local_currency",
+      "aliases": [
+        "Tied up Capital Forecast / Lead Time Day (Local Currency)"
+      ],
+      "description": "Calculated taking the Tied up Capital Forecast divided by Average Leadtime (Calender days) given in local currency",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Goods In Transit\"]"
+      ]
+    },
+    {
+      "canonical_name": "tied_up_capital_forecast_lead_time_day_sek",
+      "aliases": [
+        "Tied up Capital Forecast / Lead Time Day (SEK)"
+      ],
+      "description": "Calculated taking the Tied up Capital Forecast divided by Average Leadtime (Calender days) given in SEK",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Goods In Transit\"]"
+      ]
+    },
+    {
+      "canonical_name": "tied_up_capital_forecast_local_currency",
+      "aliases": [
+        "Tied up Capital Forecast  (Local Currency)"
+      ],
+      "description": "This is the sum of the tied up capital per part number or per supplier (depending on which page you’re on) for the given period (90 days standard). The Tied up captial is calculated as the ​ Cost per part* number of parts in call off * leadtime of calloff/90. This column is in local currency for each plant to do their own analysis",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Goods In Transit\"]"
+      ]
+    },
+    {
+      "canonical_name": "tied_up_capital_forecast_sek",
+      "aliases": [
+        "Tied up Capital Forecast (SEK)"
+      ],
+      "description": "This is the sum of the tied up capital per part number or per supplier (depending on which page you’re on) for the given period. The Tied up captial is calculated as the ​ Cost per part* number of parts in call off * leadtime of calloff/90. This column is in SEK in order to compare globally",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Goods In Transit\"]"
+      ]
+    },
+    {
+      "canonical_name": "to_delivery_location",
+      "aliases": [
+        "TO Delivery Location"
+      ],
+      "description": "The Delivery Location, where the Transport Order (TO) is delivered",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Delivery Fluctuation\"]"
+      ]
+    },
+    {
+      "canonical_name": "to_id",
+      "aliases": [
+        "TO id"
+      ],
+      "description": "Transport Order (TO) ids. If the TO is considered an outlier the TO id will be shown in red color.",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Delivery Fluctuation\"]"
+      ]
+    },
+    {
+      "canonical_name": "total_cost",
+      "aliases": [
+        "Total Cost"
+      ],
+      "description": "The total cost of holding safety stock (tied up capital cost) and the risk cost for premium freight for a specific service level.",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Premium Balancing\"]"
+      ]
+    },
+    {
+      "canonical_name": "total_inventory_quantity",
+      "aliases": [
+        "Total Inventory Quantity"
+      ],
+      "description": "The total inventory quantity inlcuding both the quantity in GIT (goods in transit) and WIP before line (work in process)",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Demand Trend\"]"
+      ]
+    },
+    {
+      "canonical_name": "total_inventory_value",
+      "aliases": [
+        "Total Inventory Value"
+      ],
+      "description": "The total value of the goods in GIT (goods in transit) and WIP before line (work in process), given in local currency",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Demand Trend\",\"Finance Inventory Overview\"]"
+      ]
+    },
+    {
+      "canonical_name": "total_no_of_parts",
+      "aliases": [
+        "Total No of Parts"
+      ],
+      "description": "The total number of parts for the chosen filters in the Parts Classification tool",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Part Classification\"]"
+      ]
+    },
+    {
+      "canonical_name": "transport_lead_time_calender_days",
+      "aliases": [
+        "Transport Lead time (Calender Days)"
+      ],
+      "description": "Leadtime in Calender days between planned pickup and actual arrival",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Inventory Calculation Matrix\"]"
+      ]
+    },
+    {
+      "canonical_name": "transport_mode",
+      "aliases": [
+        "Transport Mode"
+      ],
+      "description": "The transport mode for the specific flow",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Goods In Transit\"]"
+      ]
+    },
+    {
+      "canonical_name": "transportation_lead_time",
+      "aliases": [
+        "Transportation Lead Time"
+      ],
+      "description": "Transportation Leadtime from supplier to plant, based on planned pickup and actual delivery time stamp in TMS. Using the average for each SHP, based on current data points. Calculated in the delivery fluctuation tool.",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Inventory Calculation Matrix\",\"Premium Balancing\",\"Part Classification\"]"
+      ]
+    },
+    {
+      "canonical_name": "type_of_flow",
+      "aliases": [
+        "Type of Flow"
+      ],
+      "description": "LC flow = Transport Orders that have a delivery to/from AD9VU, AIEMS, AEXY1 Otherwise, it is called Non-LC flow in the tool",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Delivery Fluctuation\",\"Inventory Calculation Matrix\"]"
+      ]
+    },
+    {
+      "canonical_name": "unit",
+      "aliases": [
+        "Unit"
+      ],
+      "description": "Choose between the units: Calender days, Calender hours, Production days, Production hours or Production shifts",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Delivery Fluctuation\"]"
+      ]
+    },
+    {
+      "canonical_name": "unit_load",
+      "aliases": [
+        "Unit load"
+      ],
+      "description": "The number of parts in one Unit Load, as defined in PLUS.",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Plant Inventory Health\",\"Inventory Calculation Matrix\",\"Premium Balancing\",\"Cycle Stock Analysis\"]"
+      ]
+    },
+    {
+      "canonical_name": "very_low_take_rate_parts_pcs",
+      "aliases": [
+        "Very Low Take Rate Parts (pcs)"
+      ],
+      "description": "These parts will not have a lead time-based safety stock for demand fluctuation; instead, they will have a safety buffer in pieces based on the average shift demand and demand fluctuation. To avoid excessive stock, the stock value in pieces will be limited to one week's average demand. (See tool details for logic/calculation)",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Inventory Calculation Matrix\"]"
+      ]
+    },
+    {
+      "canonical_name": "volume_impact_m3",
+      "aliases": [
+        "Volume Impact (m3)"
+      ],
+      "description": "The Volume impact (m3) if changing from the current safety buffer to the new suggested one.",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Inventory Calculation Matrix\"]"
+      ]
+    },
+    {
+      "canonical_name": "weight_of_one_unit_load_packaging_parts_kg",
+      "aliases": [
+        "Weight of One Unit load [packaging + parts] (kg)"
+      ],
+      "description": "The total weight of a Unit Load including both the packaging and part weight.",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Premium Balancing\"]"
+      ]
+    },
+    {
+      "canonical_name": "wip_before_line",
+      "aliases": [
+        "WIP Before Line"
+      ],
+      "description": "Financial Stock balance: The number of parts/goods in stock (before the line) at the Plants (that is the available Inventory levels). This is equal to Inventory Quantity + Inventory Deviation Quantity – Blocked Quantity (in PLUS= Saldo + Favvik – sparrat)",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Finance Inventory Overview\"]"
+      ]
+    },
+    {
+      "canonical_name": "wip_before_line_value",
+      "aliases": [
+        "WIP Before Line Value"
+      ],
+      "description": "The value of parts/goods in stock (before the line) at the Plants (that is the available Inventory levels). This is equal to (Inventory Quantity + Inventory Deviation Quantity – Blocked Quantity (in PLUS= Saldo + Favvik – sparrat)) mutiplied with standard price",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Finance Inventory Overview\"]"
+      ]
+    },
+    {
+      "canonical_name": "z_value",
+      "aliases": [
+        "z value"
+      ],
+      "description": "The z value represents the number of standard deviations a data point is from the mean in a normal distribution. In inventory planning, it corresponds to the desired service level and is used to calculate the safety stock. A higher z value indicates a higher service level and more safety stock to buffer against demand and supply variability.",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Inventory Calculation Matrix\",\"Premium Balancing\"]"
+      ]
+    },
+    {
+      "canonical_name": "zip_code",
+      "aliases": [
+        "Zip Code"
+      ],
+      "description": "Zip code for collection of goods",
+      "unit": "",
+      "formula": "",
+      "refresh_cadence": "",
+      "owner": "INVENTORY",
+      "sources": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "used_in_tools": [
+        "[\"Goods In Transit\"]"
+      ]
+    }
+  ]
+}

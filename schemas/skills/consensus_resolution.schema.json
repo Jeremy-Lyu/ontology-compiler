@@ -1,0 +1,129 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ontology-unified.local/schemas/skills/consensus_resolution.schema.json",
+  "title": "Consensus Resolution Skill Schema",
+  "type": "object",
+  "required": ["skill_name", "skill_version", "context", "input", "output", "quality", "trace"],
+  "properties": {
+    "skill_name": {"type": "string", "const": "consensus_resolution"},
+    "skill_version": {"type": "string"},
+    "context": {"$ref": "../shared/skill_envelope.schema.json#/definitions/context"},
+    "input": {
+      "type": "object",
+      "required": ["candidates"],
+      "properties": {
+        "candidates": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "candidate_id": {"type": "string"},
+              "source_id": {"type": "string"},
+              "source_type": {"type": "string", "enum": ["llm_model", "skill", "human", "external_system"]},
+              "nodes": {"type": "array", "items": {"type": "object"}},
+              "edges": {"type": "array", "items": {"type": "object"}},
+              "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+              "priority": {"type": "integer", "minimum": 1, "maximum": 10, "default": 5},
+              "timestamp": {"type": "string", "format": "date-time"}
+            },
+            "required": ["candidate_id", "nodes", "edges"]
+          }
+        },
+        "resolution_strategy": {
+          "type": "string",
+          "enum": ["voting", "weighted_average", "highest_confidence", "priority_based", "majority_vote"],
+          "default": "weighted_average"
+        },
+        "confidence_threshold": {"type": "number", "minimum": 0, "maximum": 1, "default": 0.7},
+        "minimum_consensus_ratio": {"type": "number", "minimum": 0, "maximum": 1, "default": 0.5}
+      }
+    },
+    "output": {
+      "type": "object",
+      "required": ["resolved_nodes", "resolved_edges", "unresolved_conflicts"],
+      "properties": {
+        "resolved_nodes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {"type": "string"},
+              "type": {"type": "string"},
+              "name": {"type": "string"},
+              "canonical_id": {"type": "string"},
+              "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+              "consensus_score": {"type": "number", "minimum": 0, "maximum": 1},
+              "voted_by": {"type": "array", "items": {"type": "string"}},
+              "winning_candidate": {"type": "string"},
+              "attributes": {"type": "object"}
+            },
+            "required": ["id", "type", "name", "consensus_score"]
+          }
+        },
+        "resolved_edges": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {"type": "string"},
+              "type": {"type": "string"},
+              "head": {"type": "string"},
+              "tail": {"type": "string"},
+              "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+              "consensus_score": {"type": "number", "minimum": 0, "maximum": 1},
+              "voted_by": {"type": "array", "items": {"type": "string"}},
+              "winning_candidate": {"type": "string"}
+            },
+            "required": ["id", "type", "head", "tail", "consensus_score"]
+          }
+        },
+        "unresolved_conflicts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "conflict_id": {"type": "string"},
+              "conflict_type": {"type": "string", "enum": ["entity_type_conflict", "relation_conflict", "attribute_conflict", "multiple_candidates", "no_consensus"]},
+              "candidates": {"type": "array", "items": {"type": "string"}},
+              "conflict_details": {"type": "object"},
+              "consensus_score": {"type": "number", "minimum": 0, "maximum": 1},
+              "recommended_action": {"type": "string", "enum": ["human_review", "retry_with_higher_confidence", "discard", "keep_all"]},
+              "priority": {"type": "string", "enum": ["high", "medium", "low"]}
+            },
+            "required": ["conflict_id", "conflict_type", "candidates"]
+          }
+        },
+        "consensus_summary": {
+          "type": "object",
+          "properties": {
+            "total_candidates": {"type": "integer", "minimum": 0},
+            "total_nodes_resolved": {"type": "integer", "minimum": 0},
+            "total_edges_resolved": {"type": "integer", "minimum": 0},
+            "total_conflicts": {"type": "integer", "minimum": 0},
+            "unresolved_conflicts_count": {"type": "integer", "minimum": 0},
+            "average_consensus_score": {"type": "number", "minimum": 0, "maximum": 1},
+            "consensus_rate": {"type": "number", "minimum": 0, "maximum": 1}
+          }
+        },
+        "voting_details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "item_id": {"type": "string"},
+              "item_type": {"type": "string", "enum": ["node", "edge"]},
+              "votes": {"type": "array", "items": {"type": "string"}},
+              "vote_count": {"type": "integer", "minimum": 0},
+              "winning_vote": {"type": "string"},
+              "winning_score": {"type": "number", "minimum": 0, "maximum": 1}
+            }
+          }
+        }
+      }
+    },
+    "quality": {"$ref": "../shared/skill_envelope.schema.json#/definitions/quality"},
+    "trace": {"$ref": "../shared/skill_envelope.schema.json#/definitions/trace"},
+    "warnings": {"type": "array", "items": {"$ref": "../shared/skill_envelope.schema.json#/definitions/warning"}},
+    "errors": {"type": "array", "items": {"$ref": "../shared/skill_envelope.schema.json#/definitions/error"}}
+  }
+}

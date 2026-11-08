@@ -1,0 +1,194 @@
+# RAG Pipeline 中心化配置
+# 基于 QA 报告优化：硬编码参数迁移到 YAML
+
+# 版本
+version: "1.0.0"
+last_updated: "2026-05-22"
+
+# ═══════════════════════════════════════════════════════════════
+# 1. RelevanceGate 配置 (QA: char_budget 硬编码)
+# ═══════════════════════════════════════════════════════════════
+relevance_gate:
+  # Token/Prompt 预算控制
+  char_budget:
+    ontology: 50_000      # 之前硬编码: 50_000 (原 12K)
+    data: 10_000          # 之前硬编码: 10_000 (原 6K)
+    max_blocks: 50        # 最大 ontology 块数
+    max_data_rows: 200    # 最大数据行数
+  
+  # 相关性阈值
+  thresholds:
+    full: 0.7             # >0.7: 返回全部内容
+    summary: 0.3          # 0.3-0.7: 返回摘要
+    metadata: 0.1         # 0.1-0.3: 仅返回元数据
+    min_score: 0.05       # <0.05: 忽略
+  
+  # 类型权重 (QA: TYPE_WEIGHTS 硬编码)
+  type_weights:
+    fragment: 1.4
+    core_results: 1.2
+    domain_report: 1.1
+    l2_instances: 1.0
+    l1_sandbox: 0.9
+    manifest: 0.7
+    # 可扩展更多类型...
+
+# ═══════════════════════════════════════════════════════════════
+# 2. RIGOR 引擎配置 (QA: RIGOR 迭代参数)
+# ═══════════════════════════════════════════════════════════════
+rigor:
+  # 迭代控制
+  max_iterations: 3           # 最大迭代次数
+  confidence_threshold: 0.85  # 收敛置信度阈值
+  min_improvement: 0.05       # 最小改进阈值
+  
+  # 质量评分权重
+  quality_weights:
+    node_completeness: 0.33   # 节点完整性 (name + description)
+    relationship_validity: 0.33 # 关系有效性
+    domain_consistency: 0.34   # 域一致性
+  
+  # LLM 参数
+  llm:
+    temperature: 0.3
+    max_tokens: 4000
+    enable_thinking: true
+
+# ═══════════════════════════════════════════════════════════════
+# 3. RAG Chunk Builder 配置 (QA: chunk 类型支持)
+# ═══════════════════════════════════════════════════════════════
+chunk_builder:
+  # 支持的 meta_class 类型
+  supported_meta_classes:
+    - Capability
+    - System
+    - Process
+    - Data        # 新增
+    - Actor       # 新增
+    - Asset       # 新增
+  
+  # Chunk 大小限制
+  limits:
+    max_content_length: 2000   # 单个 chunk 最大字符数
+    max_linked_entities: 50  # 最大关联实体数
+    max_edge_types: 20       # 最大边类型数
+  
+  # Chunk ID 前缀
+  prefixes:
+    capability: "cap_"
+    path: "path_"
+    system_mapping: "sysmap_"
+    process: "proc_"
+    data: "data_"
+    actor: "actor_"
+    asset: "asset_"
+
+# ═══════════════════════════════════════════════════════════════
+# 4. Vector Index Manager 配置
+# ═══════════════════════════════════════════════════════════════
+vector_index:
+  # 向量配置
+  dimension: 384           # TF-IDF 默认维度
+  similarity_metric: "cosine"  # 余弦相似度
+  
+  # 缓存配置
+  cache:
+    enabled: true
+    file_name: "chunk_embeddings.npz"
+    compression: true
+  
+  # 增量更新
+  incremental:
+    enabled: true
+    content_hash_algorithm: "sha256"
+    detect_deleted: true
+
+# ═══════════════════════════════════════════════════════════════
+# 4.5 混合索引配置 (L8 Phase 2/3: 向量索引集成到 RAG 流程)
+# ═══════════════════════════════════════════════════════════════
+hybrid_index:
+  # 启用混合索引（倒排 + 向量）
+  enabled: true
+  
+  # 混合检索权重配置
+  search_weights:
+    vector: 0.6        # 向量检索权重 (0-1)
+    keyword: 0.4       # 关键词检索权重 (0-1)
+    vector_top_k: 50   # 向量检索候选数量
+  
+  # 增量更新配置
+  incremental:
+    enabled: true
+    detect_deleted: true
+    auto_rebuild_threshold: 0.3  # 变更超过30%时触发全量重建
+
+# ═══════════════════════════════════════════════════════════════
+# 5. Quality Scorer 配置 (QA: quality_gate_weights 硬编码)
+# ═══════════════════════════════════════════════════════════════
+quality_scorer:
+  # 在线评估 (片段级)
+  online_weights:
+    completeness: 0.40     # 40% 完整性
+    consistency: 0.40     # 40% 一致性
+    provenance: 0.20       # 20% 来源可追溯性
+  
+  # 离线评估 (聚合级)
+  offline_weights:
+    coverage: 0.20         # 20% 覆盖率
+    scale: 0.25           # 25% 规模
+    depth: 0.25           # 25% 深度
+    diversity: 0.15        # 15% 多样性
+    l1_score: 0.15         # 15% L1 质量分
+  
+  # 等级阈值
+  grade_thresholds:
+    A: 0.90
+    B: 0.75
+    C: 0.60
+    D: 0.40
+    E: 0.00
+
+# ═══════════════════════════════════════════════════════════════
+# 6. DataAnalysisOrchestrator 配置
+# ═══════════════════════════════════════════════════════════════
+data_analysis:
+  # 分析循环控制
+  max_rounds: 5
+  convergence_threshold: 0.85
+  
+  # 相关性门控
+  relevance:
+    type_weights:           # 复用 relevance_gate.type_weights
+      ref: "relevance_gate.type_weights"
+    char_budget:
+      ontology: 50_000
+      data: 10_000
+  
+  # Patch 转换
+  patch_adapter:
+    use_llm_enhance: true
+    min_confidence: 0.4
+    max_operations: 50
+
+# ═══════════════════════════════════════════════════════════════
+# 7. 日志与监控
+# ═══════════════════════════════════════════════════════════════
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  
+  # 性能监控
+  performance:
+    log_timing: true
+    log_memory: false
+    log_token_usage: true
+
+# ═══════════════════════════════════════════════════════════════
+# 8. 扩展配置 (供未来插件使用)
+# ═══════════════════════════════════════════════════════════════
+extensions:
+  # 插件配置命名空间
+  # 示例:
+  # custom_plugin:
+  #   enabled: true
+  #   config_key: value

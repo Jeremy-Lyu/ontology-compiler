@@ -1,0 +1,138 @@
+# RAG Result Contract
+# Version: 1.0.0
+# Status: ACTIVE
+# Source of Truth: skills/rag/ + this schema
+#
+# This file is the canonical contract for RAG evaluation/validation results.
+# All RAG skill outputs must conform to this schema.
+# Breaking changes require version bump + migration notes.
+
+contract_id: rag_result
+contract_type: schema
+version: "1.0.0"
+status: active
+
+description: >
+  Canonical contract for RAG evaluation and validation results.
+  Describes the output of a RAG run, including retrieved context,
+  answer quality, and evaluation metrics.
+
+fields:
+  run_id:
+    type: string
+    required: true
+    description: "Unique identifier for this RAG run"
+
+  query:
+    type: string
+    required: true
+    description: "The query submitted to the RAG system"
+
+  answer:
+    type: string
+    required: true
+    description: "The generated answer"
+
+  retrieved_context:
+    type: array
+    required: false
+    description: "List of retrieved context chunks"
+    items:
+      type: object
+      properties:
+        content:
+          type: string
+          description: "Chunk content"
+        source:
+          type: string
+          description: "Source file or document"
+        score:
+          type: number
+          description: "Relevance score"
+        chunk_id:
+          type: string
+          description: "Chunk identifier"
+
+  evaluation:
+    type: object
+    required: false
+    description: "Evaluation metrics for this RAG run"
+    properties:
+      faithfulness:
+        type: number
+        minimum: 0
+        maximum: 1
+        description: "Answer faithfulness score"
+      relevance:
+        type: number
+        minimum: 0
+        maximum: 1
+        description: "Answer relevance score"
+      context_precision:
+        type: number
+        minimum: 0
+        maximum: 1
+        description: "Context precision score"
+      context_recall:
+        type: number
+        minimum: 0
+        maximum: 1
+        description: "Context recall score"
+      answer_correctness:
+        type: number
+        minimum: 0
+        maximum: 1
+        description: "Answer correctness score"
+
+  model:
+    type: string
+    required: false
+    description: "LLM model used for generation"
+
+  provider:
+    type: string
+    required: false
+    description: "LLM provider"
+
+  prompt_tokens:
+    type: integer
+    required: false
+    description: "Number of prompt tokens consumed"
+
+  completion_tokens:
+    type: integer
+    required: false
+    description: "Number of completion tokens consumed"
+
+  duration_ms:
+    type: integer
+    required: false
+    description: "Total execution duration in milliseconds"
+
+  status:
+    type: string
+    required: true
+    enum: ["success", "partial", "failed"]
+    description: "Overall RAG run status"
+
+  error_message:
+    type: string
+    required: false
+    description: "Error message if status is failed"
+
+  timestamp:
+    type: string
+    required: true
+    description: "ISO timestamp of the run"
+
+  contract_id:
+    type: string
+    required: true
+    default: "rag_result"
+    description: "Contract identifier"
+
+  contract_version:
+    type: string
+    required: true
+    default: "1.0.0"
+    description: "Contract version"

@@ -1,0 +1,72 @@
+{
+  "name": "complex_rag_orchestrator",
+  "description": "Enhanced multi-agent RAG orchestrator for complex scenario analysis with automatic task decomposition and parallel execution. Supports BOM system analysis, production planning, and cross-system collaboration insights.",
+  "command": "python scripts/run_complex_rag_analysis.py \"<query>\" [--mix MIX] [--data-path PATH] [--save]",
+  "script_path": "scripts/run_complex_rag_analysis.py",
+  "category": "workflow",
+  "enabled": true,
+  "version": "1.0.0",
+  "capabilities": [
+    "task_decomposition",
+    "multi_agent_coordination",
+    "rag_retrieval",
+    "data_validation_layer1",
+    "data_validation_layer2",
+    "llm_synthesis",
+    "dag_execution"
+  ],
+  "args_schema": {
+    "query": {
+      "type": "string",
+      "required": true,
+      "description": "Complex analysis query (e.g., '分析MIX=544769的系统协作和物料状态')"
+    },
+    "mix": {
+      "type": "string",
+      "required": false,
+      "description": "MIX number for BOM analysis (e.g., '544769')"
+    },
+    "data_path": {
+      "type": "string",
+      "required": false,
+      "default": "C:/Users/user/Documents/Documents/Projects/DataMesh&MasterData/Datas/Sample_data",
+      "description": "Path to sample data directory"
+    },
+    "save": {
+      "type": "boolean",
+      "required": false,
+      "default": true,
+      "description": "Save analysis report to outputs/complex_rag_analysis/"
+    },
+    "output_format": {
+      "type": "string",
+      "required": false,
+      "default": "markdown",
+      "enum": [
+        "markdown",
+        "json"
+      ],
+      "description": "Output report format"
+    }
+  },
+  "layer_scope": [
+    "L1",
+    "L2",
+    "L2.5",
+    "L3"
+  ],
+  "business_domain": [
+    "SUPPLY_CHAIN",
+    "MANUFACTURING",
+    "DATA_MESH",
+    "MASTER_DATA"
+  ],
+  "output_schema": {},
+  "quality_thresholds": {},
+  "trace_config": {
+    "log_model_name": false,
+    "log_prompt_version": false,
+    "log_execution_time": true,
+    "log_retries": false
+  }
+}

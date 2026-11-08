@@ -1,0 +1,74 @@
+# Ontology Relationship Contract
+# Version: 1.0.0
+# Status: ACTIVE
+# Source of Truth: src/domain/models/ontology_relationship.py + this schema
+
+contract_id: ontology_relationship
+contract_type: schema
+version: "1.0.0"
+status: active
+
+description: >
+  Canonical contract for relationships between ontology entities.
+  Supports typed evidence, confidence scoring, and inverse relation derivation.
+
+fields:
+  source_id:
+    type: string
+    required: true
+    description: Source entity meta_id.
+
+  target_id:
+    type: string
+    required: true
+    description: Target entity meta_id.
+
+  relation_type:
+    type: string
+    required: true
+    description: Canonical relation type from schema relation_types list.
+
+  description:
+    type: string
+    required: false
+    default: ""
+
+  properties:
+    type: dict
+    required: false
+    default: {}
+
+  evidence:
+    type: dict
+    required: false
+    description: Evidence payload or null.
+
+  confidence:
+    type: number
+    required: false
+    default: 1.0
+    min: 0.0
+    max: 1.0
+
+  version:
+    type: string
+    required: false
+    default: "1.0"
+
+  bidirectional:
+    type: boolean
+    required: false
+    default: false
+
+  rewrite_reason:
+    type: string
+    required: false
+    description: Optional reason if relation_type was rewritten from RELATED_TO.
+
+deprecated:
+  legacy_fields:
+    - source
+    - target
+    - type
+    - relation
+  migration_notes: "Prefer source_id/target_id/relation_type; use rewrite_reason for audit trail."

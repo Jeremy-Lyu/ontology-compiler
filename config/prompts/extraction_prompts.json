@@ -1,0 +1,148 @@
+{
+  "version": "2.0",
+  "prompt_architecture": {
+    "layers": [
+      "base",
+      "domain",
+      "task",
+      "schema_hint",
+      "document"
+    ],
+    "composition_order": [
+      "base",
+      "domain",
+      "task",
+      "schema_hint",
+      "document"
+    ],
+    "notes": "Prompts are assembled from reusable fragments to reduce duplication and keep contract language stable."
+  },
+  "fragments": {
+    "base": {
+      "id": "shared_base",
+      "version": "2.0",
+      "description": "Optimized extraction rules: consolidated JSON-only constraints (5->3) + CONCISE OUTPUT block (descriptions/evidence/empty-field trimming). Verified 2026-08-03: response tokens -14%, LLM duration -25%.",
+      "template": "Extract entities, relationships, and attributes.\n\nCRITICAL OUTPUT CONSTRAINTS:\n- Output ONLY valid JSON: start with `{` and end with `}`. No reasoning, commentary, markdown fences, or prefix text.\n- Do NOT wrap output in code fences (no ```json). If you need to think, do it silently.\n- Response must contain JSON and nothing else.\n\nCONCISE OUTPUT (save tokens):\n- descriptions: max 2 sentences.\n- evidence content: max 50 chars, quote key phrase only.\n- Omit empty attributes and empty optional fields.\n- Use short meta_id values (e.g. L1-001, L2-002).\n\nTEMPORAL FIELD EXTRACTION (when available from source):\n- valid_from: extract effectivity date / start date when the document specifies one (ISO 8601 preferred, e.g. 2026-01-15).\n- version / revision: extract version or revision info when the document specifies one (e.g. v1.2, Rev A, 3.0).\n- timestamp: when the document mentions dates, include a timestamp field inside evidence (ISO 8601 preferred)."
+    },
+    "schema_hint": {
+      "id": "shared_schema_hint",
+      "version": "1.0",
+      "description": "Compact canonical contract hint",
+      "template": "Canonical fields: meta_id, meta_name, meta_class, layer, entity_type, classification_confidence, needs_review, source_id, target_id, relation_type, evidence_ref, confidence, valid_from, version, revision. Temporal: include timestamp in evidence when the document mentions dates."
+    },
+    "domain": {
+      "technical": {
+        "id": "domain_technical",
+        "version": "1.0",
+        "description": "Technical document domain rules",
+        "template": "Technical docs often contain systems, capabilities, workflows, tools, and instances. Prefer concise identifiers and preserve exact evidence quotes."
+      },
+      "business": {
+        "id": "domain_business",
+        "version": "1.0",
+        "description": "Business document domain rules",
+        "template": "Business docs often contain capabilities, scenarios, rules, and organizational objects. Prefer explicit hierarchy and keep evidence local to the source sentence."
+      },
+      "contract": {
+        "id": "domain_contract",
+        "version": "1.0",
+        "description": "Legal or compliance document domain rules",
+        "template": "Contract and compliance docs often contain obligations, rules, exceptions, and named instances. Preserve exact wording for evidence and avoid speculative interpretation."
+      },
+      "general": {
+        "id": "domain_general",
+        "version": "1.0",
+        "description": "General document domain rules",
+        "template": "General docs should be treated conservatively. Extract only entities and relationships supported by explicit evidence."
+      }
+    },
+    "task": {
+      "relation_extraction": {
+        "id": "relation_extraction",
+        "version": "1.2",
+        "description": "Extract relationships between entities",
+        "variables": [
+          "text",
+          "entities",
+          "domain"
+        ],
+        "template": "Extract relationships only. Use source_id, target_id, relation_type, description, evidence_ref, confidence. Relationship types must come from the allowed list for the current schema. Output JSON only.\n\nENTITIES:\n{entities}\n\nRELATION TYPES: contains, uses, implements, depends_on, associated_with, produces, consumes, manages, calls, realizes, supports, deploys_to, executes, owns, assigned_to, integrates_with, traces_to, validates, verifies, same_as, part_of, maps_to, defines, creates, maintains\n\nDOCUMENT:\n{text}"
+      },
+      "technical": {
+        "id": "extraction_technical",
+        "version": "2.0",
+        "description": "Technical extraction task",
+        "variables": [
+          "domain",
+          "text",
+          "skill_section",
+          "context_section"
+        ],
+        "template": "Extract entities and relationships for a technical document. Focus on systems, capabilities, workflows, tools, and instances. Keep output minimal and structured. Output JSON only."
+      },
+      "business": {
+        "id": "extraction_business",
+        "version": "2.0",
+        "description": "Business extraction task",
+        "variables": [
+          "domain",
+          "text",
+          "skill_section",
+          "context_section"
+        ],
+        "template": "Extract entities and relationships for a business document. Focus on capabilities, scenarios, rules, and organizational objects. Keep hierarchy explicit and output JSON only."
+      },
+      "contract": {
+        "id": "extraction_contract",
+        "version": "2.0",
+        "description": "Legal/compliance extraction task",
+        "variables": [
+          "domain",
+          "text",
+          "skill_section",
+          "context_section"
+        ],
+        "template": "Extract entities and relationships for a legal or compliance document. Preserve exact evidence and avoid speculative interpretation. Output JSON only."
+      },
+      "general": {
+        "id": "extraction_general",
+        "version": "2.0",
+        "description": "General extraction task",
+        "variables": [
+          "domain",
+          "text",
+          "skill_section",
+          "context_section"
+        ],
+        "template": "Extract entities and relationships for a general document. Use conservative interpretation and output JSON only."
+      }
+    }
+  },
+  "legacy_templates": {
+    "relation_extraction": {
+      "id": "relation_extraction",
+      "version": "1.1",
+      "description": "Extract relationships between entities",
+      "variables": [
+        "text",
+        "entities",
+        "domain"
+      ],
+      "template": "Extract ALL relationships between the following entities from the document.\n\nENTITIES:\n{entities}\n\nRELATION TYPES: contains, uses, implements, depends_on, associated_with, produces, consumes, manages, calls, realizes, supports, deploys_to, executes, owns, assigned_to, integrates_with, traces_to, validates, verifies, same_as, part_of, maps_to, defines, creates, maintains\n\nCANONICAL FIELDS: source_id, target_id, relation_type, description, evidence_ref, confidence\n\nOUTPUT: ONLY JSON, NO EXTRAS\n\n{{\"relationships\":[{{\"from\":\"entity_meta_id\",\"to\":\"entity_meta_id\",\"type\":\"\",\"description\":\"\",\"evidence_ref\":\"\",\"confidence\":0.7}}]}}\n\n## DOCUMENT:\n{text}"
+    },
+    "technical": {
+      "id": "extraction_technical",
+      "version": "3.1",
+      "description": "Strict layer constraints with L1 fixed enumeration and Asset priority",
+      "variables": [
+        "domain",
+        "domain_hint",
+        "text",
+        "skill_section",
+        "context_section",
+        "schema_hint_section"
+      ],
+      "template": "Extract entities AND relationships{domain_hint}.\n\n## CLASSIFICATION RULES\n- CLASSES: Capability, System, Actor, Asset, Data, Process, Concept, BusinessScenario, BusinessRule, MappingRule, ValidationRule\n- NAMING: TitleCase, noun, singular\n- EVIDENCE: REQUIRED (exact quote from document)\n- meta_id: L0/L1/L2/L2.5/L3-prefix\n\n## STRICT LAYER CONSTRAINTS (HARD RULES)\n\n### L0: Core categories (Abstract - ONLY 6-11 categories)\n- Definition: Fundamental abstract categories that form the foundation of the ontology\n- Examples: ONLY: Capability, System, Actor, Asset, Data, Process, Concept, BusinessScenario, BusinessRule, MappingRule, ValidationRule\n- CRITICAL: DO NOT put specific systems (VCATS, CHIMAS, OTA2System) at L0 - they belong at L2\n\n### L1: Fixed enumeration dictionary (NO specific business names!)\n- Definition: Abstract subtypes - FIXED ENUMERATION ONLY. L1 is a stable meta-model dictionary.\n- ALLOWED L1 VALUES (use these exact names):\n  - Actor subtypes: Internal_Department, Business_Function, External_Partner\n  - Data subtypes: Master_Data, Transaction_Data, Document\n  - System subtypes: SupplyChain_System, Manufacturing_System, Retail_System, Engineering_System\n  - Process subtypes: SupplyChain_Process, Manufacturing_Process, Engineering_Process\n  - Capability subtypes: CostManagement, ChangeManagement, QualityManagement, RequirementsManagement, RiskManagement, DealerManagement, DocumentManagement, ProcurementManagement\n  - Asset subtypes: Vehicle_Asset, Part_Asset, Tooling_Asset\n- CRITICAL: DO NOT put specific teams (Cost Management Team), specific data (PartData), or specific systems (TACDIS) in L1!\n- CRITICAL: Teams/Departments belong in L2 as Actor, NOT in L1!\n- CRITICAL: Specific data entities (PartData, OrderData) belong in L2 as Data, NOT in L1!\n\n### L2: Logical entities (MAIN LAYER - 50-70% of entities!)\n- Definition: Macro systems, departments, business processes, and organizational units\n- Examples: TACDIS, DMS, PowerBI, Finance Department, Cost Management Team, CRP Process\n- Belongs here: Specific systems, named departments, named teams, business workflows\n- DO NOT put here: Physical data tables, micro features, specific part instances\n\n### L2.5: Rules/mappings\n- Definition: Business rules, validation rules, mapping rules\n- Examples: SWDLValidationRule, TARR75Rule, ROI4Rule\n\n### L3: Physical instances (IMPORTANT!)\n- Definition: Physical tables, micro features, specific records, part instances, unique identifiers\n- Examples: Order Handling Table (physical table), Use Up Countdown (micro feature), VIN: YV1ZZZ99Z9Z9999999, PartNumber: 31254789\n- MUST extract: Physical data tables, micro features/capabilities, specific part names (XC60Wheel, SeatStorageBox), VINs, serial numbers\n- If document mentions a physical table or micro feature, IT GOES TO L3!\n\n\n## MANUFACTURING ENTITY DETECTION (CRITICAL for OEM)\n- BOP (Bill of Process): MUST be extracted as L2 (Process) - represents factory workstation/sequence\n- POS (Point of Service/Physical Position): MUST be extracted as L2 or L3 - represents physical installation position\n- PII (Process Instruction Information): MUST be extracted as L2 (Data) - worker operation guidance\n- MBOM (Manufacturing BOM): MUST be extracted as L2 (Data) - manufacturing bill of materials\n- EBOM (Engineering BOM): MUST be extracted as L2 (Data) - engineering bill of materials\n- C-Note (Change Note): MUST be extracted as L2 (Data) - delta data package for changes\n- ECN (Engineering Change Note): MUST be extracted as L2 (Process) - change management process\n- Effectivity Date / Point of Cut-off: MUST be extracted as L2.5 (ValidationRule) - time-based rules\n- Lead Time / Run-out Period: MUST be extracted as attribute or L2.5 rule - inventory transition timing\n- Any mention of factory workstations, assembly lines, or production sequences MUST be extracted\n\n## DYNAMIC TIME DIMENSION RULES\n- When document mentions \"effectivity date\", \"cut-off date\", \"phase-in/phase-out\", extract as L2.5 ValidationRule\n- When document mentions inventory transition (old part run-out, new part introduction), extract timing attributes\n- When document mentions shift/schedule constraints, extract as L2.5 rules\n\n## TEMPORAL FIELD EXTRACTION (P2-8)\n- valid_from: When the source document specifies an effectivity date / start date for an entity, extract it as the `valid_from` field (ISO 8601 preferred, e.g. 2026-01-15). Leave empty if not available.\n- version / revision: When the source document specifies version or revision info (e.g. v1.2, Rev A, 3.0), extract it as the `version` field. Leave empty if not available.\n- timestamp in evidence: When the document mentions dates relevant to an entity, include a `timestamp` field inside the entity's evidence object (ISO 8601 preferred).\n\n## ASSET PRIORITY RULES (CRITICAL)\n- Any mention of physical parts (wheel, seat, valve, engine, battery, chassis) MUST be classified as Asset class\n- Any mention of vehicles (VIN, car model) MUST be classified as Asset class\n- Any mention of tooling/molds/fixtures MUST be classified as Asset class\n- DO NOT classify physical parts as Data or Concept - they are Assets!\n- Asset entities should be at L2 (logical asset types) or L3 (specific part instances)\n\n## IMPORTANT REQUIREMENTS\n1. EXTRACT ALL LAYERS: You MUST extract entities at ALL layers (L0, L1, L2, L2.5, L3)\n2. L0 RULE: L0 MUST ONLY contain abstract categories\n3. L1 RULE: L1 MUST ONLY contain fixed enumeration values (see allowed list above)\n4. HIERARCHY: L2 must reference L1 via parent_id\n5. HIERARCHY: L3 must reference L2 via parent_id\n6. RELATIONSHIPS: MUST extract relationships between ANY entities\n7. L2 PRIORITY: L2 should contain MORE entities than L1\n8. L3 INSTANCES: Create L3 for physical tables, micro features, part instances, and unique IDs\n9. ASSET EXTRACTION: Actively look for and extract Asset entities (physical parts, vehicles, tooling)\n\n{schema_hint_section}\n\nOUTPUT: ONLY JSON, NO EXTRAS\n\n{{\"L0_entities\":[{{\"meta_id\":\"L0-Capability\",\"meta_class\":\"Capability\",\"name\":\"Capability\",\"description\":\"Abstract capability category\",\"domain\":\"\",\"status\":\"active\",\"evidence\":\"\"}},{{\"meta_id\":\"L0-System\",\"meta_class\":\"System\",\"name\":\"System\",\"description\":\"Abstract system category\",\"domain\":\"\",\"status\":\"active\",\"evidence\":\"\"}},{{\"meta_id\":\"L0-Actor\",\"meta_class\":\"Actor\",\"name\":\"Actor\",\"description\":\"Abstract actor category\",\"domain\":\"\",\"status\":\"active\",\"evidence\":\"\"}},{{\"meta_id\":\"L0-Asset\",\"meta_class\":\"Asset\",\"name\":\"Asset\",\"description\":\"Abstract asset category\",\"domain\":\"\",\"status\":\"active\",\"evidence\":\"\"}},{{\"meta_id\":\"L0-Data\",\"meta_class\":\"Data\",\"name\":\"Data\",\"description\":\"Abstract data category\",\"domain\":\"\",\"status\":\"active\",\"evidence\":\"\"}},{{\"meta_id\":\"L0-Process\",\"meta_class\":\"Process\",\"name\":\"Process\",\"description\":\"Abstract process category\",\"domain\":\"\",\"status\":\"active\",\"evidence\":\"\"}}],\"L1_entities\":[{{\"meta_id\":\"L1-xxx\",\"meta_class\":\"\",\"name\":\"\",\"description\":\"\",\"domain\":\"\",\"parent_class\":\"Capability/System/Actor/Asset/Data/Process\",\"parent_id\":\"\",\"status\":\"\",\"evidence\":\"\"}}],\"L2_entities\":[{{\"meta_id\":\"L2-xxx\",\"meta_class\":\"\",\"name\":\"\",\"description\":\"\",\"domain\":\"\",\"parent_id\":\"L1-meta_id\",\"status\":\"\",\"evidence\":\"\"}}],\"L2_5_entities\":[{{\"meta_id\":\"L2.5-xxx\",\"meta_class\":\"BusinessRule/MappingRule/ValidationRule\",\"name\":\"\",\"description\":\"\",\"domain\":\"\",\"status\":\"\",\"evidence\":\"\"}}],\"L3_entities\":[{{\"meta_id\":\"L3-xxx\",\"meta_class\":\"Instance\",\"name\":\"\",\"description\":\"\",\"domain\":\"\",\"parent_id\":\"L2-meta_id\",\"status\":\"\",\"evidence\":\"\"}}],\"relationships\":[{{\"from\":\"meta_id\",\"to\":\"meta_id\",\"type\":\"\",\"description\":\"\",\"evidence_ref\":\"\",\"confidence\":\"0.7\"}}]}}\n\nIMPORTANT: Extract entities at ALL layers (L0-L3). L2 should be the largest layer. Include relationships between ANY entities.\n\n{skill_section}\n{context_section}\n\n## DOCUMENT:\n{text}"
+    }
+  }
+}

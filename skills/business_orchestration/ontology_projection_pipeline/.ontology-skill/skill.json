@@ -1,0 +1,40 @@
+{
+  "name": "ontology_projection_pipeline",
+  "description": "将提取结果投影到本体层级结构，确保层间约束和业务规则满足",
+  "command": "python src/skills/business_orchestration/ontology_projection_pipeline/ontology_projection_pipeline.py --data <data>",
+  "script_path": "src/skills/business_orchestration/ontology_projection_pipeline/ontology_projection_pipeline.py",
+  "category": "business_orchestration",
+  "layer_scope": ["L0", "L1", "L2", "L2.5", "L3"],
+  "enabled": true,
+  "version": "2.0.0",
+  "business_domain": ["SUPPLY_CHAIN", "MANUFACTURING", "DATA_MESH", "MASTER_DATA"],
+  "args_schema": {
+    "data": {
+      "type": "object",
+      "required": true,
+      "description": "待投影的数据"
+    },
+    "target_layer": {
+      "type": "string",
+      "description": "目标层级"
+    }
+  },
+  "output_schema": {
+    "projected_nodes": {"type": "array", "items": {"type": "object"}},
+    "projected_edges": {"type": "array", "items": {"type": "object"}},
+    "validation_results": {"type": "object"},
+    "layer_compliance": {"type": "number", "minimum": 0, "maximum": 1}
+  },
+  "preconditions": ["data must contain entities and relationships"],
+  "quality_thresholds": {
+    "min_layer_compliance": 0.8,
+    "max_layer_violations": 3,
+    "review_threshold": 0.95
+  },
+  "trace_config": {
+    "log_model_name": true,
+    "log_prompt_version": true,
+    "log_execution_time": true,
+    "log_retries": true
+  }
+}

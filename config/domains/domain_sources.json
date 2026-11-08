@@ -1,0 +1,31 @@
+{
+  "default_profile": "prod",
+  "profiles": {
+    "prod": {
+      "inventory": [
+        "data/IbP Tool Definitions.csv",
+        "data/Inventorybypurpose.csv"
+      ],
+      "supplier": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "manufacturing": [
+        "data/IbP Tool Definitions.csv"
+      ]
+    },
+    "dev": {
+      "inventory": [
+        "data/IbP Tool Definitions.csv",
+        "data/Inventorybypurpose.csv",
+        "data/TEST_2026-03-26-1121.csv"
+      ],
+      "supplier": [
+        "data/IbP Tool Definitions.csv"
+      ],
+      "manufacturing": [
+        "data/IbP Tool Definitions.csv"
+      ]
+    }
+  }
+}
+

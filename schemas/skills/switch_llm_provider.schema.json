@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ontology-unified.local/schemas/skills/switch_llm_provider.schema.json",
+  "title": "Switch LLM Provider Skill Schema",
+  "type": "object",
+  "required": ["skill_name", "skill_version", "context", "input", "output", "quality", "trace"],
+  "properties": {
+    "skill_name": {"type": "string", "const": "switch_llm_provider"},
+    "skill_version": {"type": "string"},
+    "context": {"$ref": "../shared/skill_envelope.schema.json#/definitions/context"},
+    "input": {
+      "type": "object",
+      "required": ["target_provider"],
+      "properties": {
+        "target_provider": {"type": "string", "enum": ["dify", "deepseek", "openai", "anthropic"]},
+        "fallback_provider": {"type": "string", "enum": ["dify", "deepseek", "openai", "anthropic"]},
+        "provider_config": {
+          "type": "object",
+          "properties": {
+            "api_key": {"type": "string"},
+            "api_base": {"type": "string"},
+            "model_name": {"type": "string"},
+            "timeout_ms": {"type": "integer", "minimum": 0},
+            "max_retries": {"type": "integer", "minimum": 0}
+          }
+        },
+        "test_connection": {"type": "boolean", "default": true},
+        "abort_on_failure": {"type": "boolean", "default": false}
+      }
+    },
+    "output": {
+      "type": "object",
+      "required": ["switch_result", "current_provider"],
+      "properties": {
+        "switch_result": {
+          "type": "object",
+          "properties": {
+            "success": {"type": "boolean"},
+            "message": {"type": "string"},
+            "timestamp": {"type": "string", "format": "date-time"}
+          },
+          "required": ["success"]
+        },
+        "current_provider": {
+          "type": "object",
+          "properties": {
+            "provider": {"type": "string"},
+            "model_name": {"type": "string"},
+            "api_base": {"type": "string"},
+            "timeout_ms": {"type": "integer"},
+            "max_retries": {"type": "integer"}
+          },
+          "required": ["provider"]
+        },
+        "connection_test": {
+          "type": "object",
+          "properties": {
+            "tested": {"type": "boolean"},
+            "success": {"type": "boolean"},
+            "latency_ms": {"type": "integer", "minimum": 0},
+            "error_message": {"type": "string"}
+          }
+        },
+        "previous_provider": {
+          "type": "object",
+          "properties": {
+            "provider": {"type": "string"},
+            "model_name": {"type": "string"}
+          }
+        }
+      }
+    },
+    "quality": {"$ref": "../shared/skill_envelope.schema.json#/definitions/quality"},
+    "trace": {"$ref": "../shared/skill_envelope.schema.json#/definitions/trace"},
+    "warnings": {"type": "array", "items": {"$ref": "../shared/skill_envelope.schema.json#/definitions/warning"}},
+    "errors": {"type": "array", "items": {"$ref": "../shared/skill_envelope.schema.json#/definitions/error"}}
+  }
+}

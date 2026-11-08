@@ -1,0 +1,44 @@
+{
+  "name": "document_router",
+  "description": "分析文档类型和业务领域，确定最佳的处理路由和技能组合",
+  "command": "python src/skills/perception/document_router/document_router.py --input <input_text> --domain <domain>",
+  "script_path": "src/skills/perception/document_router/document_router.py",
+  "category": "perception",
+  "layer_scope": ["L0", "L1"],
+  "enabled": true,
+  "version": "2.0.0",
+  "business_domain": ["SUPPLY_CHAIN", "MANUFACTURING", "DATA_MESH", "MASTER_DATA"],
+  "args_schema": {
+    "input_text": {
+      "type": "string",
+      "required": true,
+      "description": "输入文本内容"
+    },
+    "domain": {
+      "type": "string",
+      "description": "业务领域"
+    },
+    "file_type": {
+      "type": "string",
+      "description": "文件类型"
+    }
+  },
+  "output_schema": {
+    "document_type": {"type": "string"},
+    "business_domain": {"type": "string"},
+    "route": {"type": "string"},
+    "routing_reason": {"type": "string"},
+    "suggested_skills": {"type": "array", "items": {"type": "string"}}
+  },
+  "preconditions": ["input_text must be non-empty"],
+  "quality_thresholds": {
+    "min_confidence": 0.7,
+    "review_threshold": 0.85
+  },
+  "trace_config": {
+    "log_model_name": true,
+    "log_prompt_version": true,
+    "log_execution_time": true,
+    "log_retries": true
+  }
+}

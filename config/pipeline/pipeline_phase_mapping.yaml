@@ -1,0 +1,60 @@
+# Pipeline 阶段（Stage）→ 规范业务阶段（Phase）映射
+#
+# [W2 / 2026-06-20]
+#
+# 本文件不重命名现有 stage（避免触动 orchestrator、tests、产物路径），
+# 而是给每个 stage 贴上规范的"业务阶段"标签，让以下三件事变得可观测：
+#   1) Pipeline 摘要可以按 P0/P1/P2/P2.5/P3 分组
+#   2) 报告可以告诉用户"当前正在哪个业务阶段"
+#   3) 未来的状态机门禁可以基于 phase 做强约束
+#
+# 规范出处：deepseek_tools/_archive/root_files/PIPELINE_SPEC.md
+#
+# 业务阶段定义（PipelinePhase 枚举）：
+#   P0_Raw         原始证据接入（保留来源/页码/行号，不做业务解释）
+#   P1_Structure   结构识别（章节、表、字段、主外键、候选实体）
+#   P2_Semantics   语义提炼（字段含义、规则、约束、业务对象映射）
+#   P2_5_Instance  实例桥接（VIN/订单/配置/版本下的语义激活）
+#   P3_Governance  治理发布（去重、冲突、合并、版本化、发布、审计）
+
+version: "1.0.0"
+spec: "pipeline_phase/v1"
+
+# 现有项目内有两条 pipeline，stage 命名不同；都做映射。
+# 任何未列出的 stage 默认归入 UNKNOWN，由 registry 报 warning 而不阻断执行。
+stage_to_phase:
+
+  # ---- ontology_compiler / run_pipeline_orchestrator.py 主流程 ----
+  preflight:    P0_Raw         # 输入与环境校验，归 P0
+  health:       P3_Governance  # 业务健康度审计 → 治理域
+  extract:      P1_Structure   # 文档/表抽取（结构化骨架）
+  merge:        P3_Governance  # 跨文件合并 → 治理
+  dedup:        P3_Governance  # 去重 → 治理
+  audit:        P3_Governance  # 审计 → 治理
+  export:       P3_Governance  # 发布产物 → 治理
+  guard:        P3_Governance  # 质量门 → 治理
+  summarize:    P3_Governance  # 跨文件摘要 → 治理
+
+  # ---- KNOWN_PIPELINE_STAGES（catalog/aggregate 流水线）----
+  catalog:      P1_Structure   # 文件目录与表结构枚举
+  aggregate:    P2_Semantics   # 跨域聚合，提炼业务语义
+  scenarios:    P2_5_Instance  # 场景实例化分析
+  publish:      P3_Governance  # 发布
+  rollback:     P3_Governance  # 回滚
+
+# 业务阶段顺序（仅用于排序展示；不强制运行顺序）
+phase_order:
+  - P0_Raw
+  - P1_Structure
+  - P2_Semantics
+  - P2_5_Instance
+  - P3_Governance
+
+# 每个 phase 的人类可读描述（写报告用）
+phase_descriptions:
+  P0_Raw:        "原始证据接入"
+  P1_Structure:  "结构识别"
+  P2_Semantics:  "语义提炼"
+  P2_5_Instance: "实例桥接"
+  P3_Governance: "治理发布"
+  UNKNOWN:       "未归类阶段"

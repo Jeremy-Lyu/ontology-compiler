@@ -1,0 +1,138 @@
+{
+  "name": "quality_gate",
+  "description": "执行质量门禁检查，验证实体、关系、metadata 和治理规则是否满足统一质量阈值，并输出标准质量报告",
+  "command": "python -m ontology_compiler.skills.builtin.quality_gate_skill",
+  "script_path": "ontology_compiler/skills/builtin/quality_gate_skill.py",
+  "category": "validation",
+  "layer_scope": [
+    "L0",
+    "L1",
+    "L2",
+    "L2.5",
+    "L3"
+  ],
+  "enabled": true,
+  "version": "1.1.0",
+  "business_domain": [
+    "SUPPLY_CHAIN",
+    "MANUFACTURING",
+    "DATA_MESH",
+    "MASTER_DATA"
+  ],
+  "priority": "high",
+  "trigger_conditions": {
+    "stage": "audit",
+    "after_stage": "merge",
+    "when_quality_gate_enabled": true
+  },
+  "args_schema": {
+    "data": {
+      "type": "object",
+      "required": true,
+      "description": "待检查的数据，必须包含 entities 和 relationships"
+    },
+    "strict_mode": {
+      "type": "boolean",
+      "default": false,
+      "description": "是否严格模式"
+    }
+  },
+  "output_schema": {
+    "gate_id": {
+      "type": "string"
+    },
+    "result": {
+      "type": "string",
+      "enum": [
+        "pass",
+        "warn",
+        "fail",
+        "block"
+      ]
+    },
+    "grade": {
+      "type": "string",
+      "enum": [
+        "bronze",
+        "silver",
+        "gold"
+      ]
+    },
+    "score": {
+      "type": "object",
+      "properties": {
+        "overall": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "entity_completeness": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "relationship_validity": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "metadata_completeness": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "domain_consistency": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      }
+    },
+    "issues": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "critical_issue_count": {
+      "type": "integer"
+    },
+    "high_issue_count": {
+      "type": "integer"
+    },
+    "medium_issue_count": {
+      "type": "integer"
+    },
+    "low_issue_count": {
+      "type": "integer"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "timestamp": {
+      "type": "string"
+    },
+    "quality_report": {
+      "type": "object",
+      "description": "Canonical quality report payload aligned with quality_report.schema.yaml"
+    }
+  },
+  "preconditions": [
+    "data must contain entities and relationships"
+  ],
+  "quality_thresholds": {
+    "min_quality_score": 0.7,
+    "max_violations": 10,
+    "review_threshold": 0.85
+  },
+  "trace_config": {
+    "log_model_name": false,
+    "log_prompt_version": false,
+    "log_execution_time": true,
+    "log_retries": false,
+    "log_quality_report": true
+  },
+  "source_of_truth": "src/infrastructure/governance/quality_gate.py",
+  "canonical_contract": "schemas/quality_report.schema.yaml",
+  "bridge_notes": "This skill bridges legacy gate output to the canonical quality_report contract."
+}

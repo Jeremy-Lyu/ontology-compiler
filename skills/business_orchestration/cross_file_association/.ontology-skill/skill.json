@@ -1,0 +1,80 @@
+{
+  "name": "cross_file_association",
+  "description": "跨文件实体关联与合并，识别不同文档中的同一实体并建立关联",
+  "category": "workflow",
+  "layer_scope": [
+    "L0",
+    "L1",
+    "L2",
+    "L2.5",
+    "L3"
+  ],
+  "enabled": true,
+  "version": "1.1.0",
+  "business_domain": [
+    "SUPPLY_CHAIN",
+    "MANUFACTURING",
+    "ENTERPRISE"
+  ],
+  "priority": "high",
+  "trigger_conditions": {
+    "stage": "merge",
+    "when_file_count_gt": 1
+  },
+  "args_schema": {
+    "file_entities": {
+      "type": "object",
+      "required": true,
+      "description": "按文件分组的实体字典"
+    },
+    "similarity_threshold": {
+      "type": "number",
+      "default": 0.85,
+      "description": "实体相似度阈值"
+    },
+    "merge_strategy": {
+      "type": "string",
+      "default": "conservative",
+      "enum": [
+        "conservative",
+        "aggressive",
+        "name_only"
+      ]
+    }
+  },
+  "output_schema": {
+    "merged_entities": {
+      "type": "array",
+      "description": "合并后的实体列表"
+    },
+    "association_map": {
+      "type": "object",
+      "description": "原始实体 ID 到合并后实体 ID 的映射"
+    },
+    "merge_count": {
+      "type": "integer"
+    },
+    "unmerged_count": {
+      "type": "integer"
+    },
+    "duplicate_groups": {
+      "type": "array"
+    }
+  },
+  "preconditions": [
+    "file_entities must contain at least 2 files",
+    "entities must have meta_id and meta_name"
+  ],
+  "quality_thresholds": {
+    "max_mismerge_rate": 0.01,
+    "min_merge_confidence": 0.85
+  },
+  "trace_config": {
+    "log_merge_count": true,
+    "log_mismerge_rate": true,
+    "log_execution_time": true
+  },
+  "source_of_truth": "ontology_compiler/services/cross_file_association_service.py",
+  "command": "python -m ontology_compiler.skills.builtin.cross_file_association_skill",
+  "script_path": "ontology_compiler/skills/builtin/cross_file_association_skill.py"
+}

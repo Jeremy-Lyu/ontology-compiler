@@ -1,0 +1,77 @@
+{
+  "default_profile": "local",
+  "incremental": {
+    "enabled": true,
+    "manifest_path": "outputs/runs/ontology/manifest.json",
+    "scan_roots": [
+      "data",
+      "catalogs"
+    ],
+    "include_extensions": [
+      ".md",
+      ".txt",
+      ".pdf",
+      ".pptx",
+      ".docx",
+      ".csv",
+      ".xlsx",
+      ".xls",
+      ".json"
+    ],
+    "emit_incremental_report": true,
+    "stale_retention_runs": 5
+  },
+  "governance": {
+    "conflict_report_path": "catalogs/CONFLICT_REPORT.json",
+    "blocking_conflict_threshold": 1,
+    "warning_conflict_threshold": 5,
+    "external_knowledge_roles": [
+      "external_importer"
+    ],
+    "l1_publish_roles": [
+      "auto-domain-architect"
+    ],
+    "l2_patch_roles": [
+      "verified-user",
+      "colleague"
+    ],
+    "asi_threshold": 0.75,
+    "asi_low_windows_to_pause": 3,
+    "patch_dry_run_required": true,
+    "patch_dry_run_report_path": "outputs/runs/ontology/patch/PATCH_DRY_RUN_RESULT.json",
+    "rag_feedback_min_confidence": 0.7
+  },
+  "profiles": {
+    "local": {
+      "stages": [
+        "preflight",
+        "catalog",
+        "aggregate",
+        "guard",
+        "health"
+      ],
+      "catalog": {
+        "domains": [
+          "inventory",
+          "supply_chain",
+          "logistics",
+          "performance"
+        ],
+        "source_profile": "prod"
+      },
+      "aggregate": {
+        "runs_root": "outputs/runs/ontology/runs",
+        "output_dir": "outputs/runs/ontology/Inventory",
+        "schema_validation_enabled": true
+      },
+      "health": {
+        "aggregate": "outputs/runs/ontology/Inventory/INVENTORY_AGGREGATE_VALIDATE.json",
+        "runs_root": "outputs/runs/ontology/runs",
+        "output_dir": "outputs/runs/ontology/health"
+      }
+    },
+    "ci": {
+      "$extends": "local"
+    }
+  }
+}

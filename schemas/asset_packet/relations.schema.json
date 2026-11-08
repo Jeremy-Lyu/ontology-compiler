@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ontology-unified.local/schemas/asset_packet/relations.schema.json",
+  "title": "Relations Asset Schema",
+  "type": "object",
+  "required": ["version", "relations"],
+  "properties": {
+    "version": {"type": "string", "const": "2.0.0"},
+    "generated_at": {"type": "string", "format": "date-time"},
+    "run_id": {"type": "string"},
+    "total_count": {"type": "integer", "minimum": 0},
+    "relations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "source_id", "target_id", "relation_type", "confidence", "provenance"],
+        "properties": {
+          "id": {"type": "string"},
+          "source_id": {"type": "string"},
+          "target_id": {"type": "string"},
+          "relation_type": {"type": "string"},
+          "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+          "evidence_ref": {"type": "string"},
+          "attributes": {"type": "object"},
+          "provenance": {
+            "type": "object",
+            "required": ["source_file", "source_run_id", "rule_version", "model_version", "skill_version"],
+            "properties": {
+              "source_file": {"type": "string"},
+              "source_run_id": {"type": "string"},
+              "rule_version": {"type": "string"},
+              "model_version": {"type": "string"},
+              "skill_version": {"type": "string"},
+              "extracted_at": {"type": "string", "format": "date-time"},
+              "confidence": {"type": "number", "minimum": 0, "maximum": 1}
+            }
+          }
+        }
+      }
+    }
+  }
+}

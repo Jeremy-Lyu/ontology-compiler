@@ -1,0 +1,60 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "config/cq/cq_schema.json",
+  "title": "CQ (Competency Question) Schema",
+  "description": "CQ_PIPELINE_IMPLEMENTATION_PLAN.md M0 contract. Machine-readable twin of docs/CQ_SCHEMA_SPEC.md; mirrors src/application/cq/cq_models.py::CQ.",
+  "type": "object",
+  "required": ["cq_id", "cq_text", "entities", "relations", "query_path", "status"],
+  "additionalProperties": true,
+  "properties": {
+    "cq_id": {"type": "string", "minLength": 1, "description": "唯一标识，如 CQ-0001"},
+    "original_text": {"type": ["string", "null"], "description": "业务原话，一字不改（Step 1 采集）"},
+    "cq_text": {"type": "string", "minLength": 1, "description": "CQ 化后的业务语言问题（Step 2）"},
+    "pattern_type": {
+      "type": ["string", "null"],
+      "description": "四类模式之一：attribute_query | relationship_trace | condition_filter | time_slice（可组合，用 + 连接）"
+    },
+    "entities": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"type": "string", "minLength": 1},
+      "description": "Step 3 实体化产物：CQ 涉及的实体"
+    },
+    "relations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"type": "string", "minLength": 1},
+      "description": "Step 3 实体化产物：CQ 依赖的关系类型"
+    },
+    "attributes": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "可选：CQ 依赖的属性/时间维度"
+    },
+    "query_path": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Step 4 可执行验证：实体查询路径（含过滤条件）；写不出即模型缺口"
+    },
+    "status": {
+      "enum": ["draft", "reviewed", "frozen", "deprecated"],
+      "description": "状态机：draft -> reviewed -> frozen -> deprecated；仅 frozen 进入验证/回归"
+    },
+    "version": {"type": "string", "description": "CQ 版本号，如 v1"},
+    "owner": {"type": ["string", "null"], "description": "责任人，如 domain-analyst"},
+    "evidence": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "来源证据引用（doc://...#L12-L18 等）"
+    },
+    "sample_binding": {
+      "type": ["string", "null"],
+      "description": "绑定的回归样本，如 regression:mbom-du-v2"
+    },
+    "open_questions": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "待业务确认的口径问题（回译确认产物）"
+    }
+  }
+}

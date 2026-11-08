@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ontology-unified.local/schemas/replay_exec_envelope.schema.json",
+  "title": "Replay Exec Envelope",
+  "type": "object",
+  "required": [
+    "ok",
+    "kind",
+    "source",
+    "phase",
+    "mode",
+    "session_id",
+    "run_id",
+    "request_id",
+    "status",
+    "filters",
+    "payload"
+  ],
+  "properties": {
+    "ok": {"type": "boolean"},
+    "kind": {"type": "string", "enum": ["session_replay"]},
+    "source": {"type": "string", "enum": ["orchestrator"]},
+    "phase": {"type": "string", "enum": ["session_replay"]},
+    "mode": {"type": "string", "enum": ["summary", "events"]},
+    "session_id": {"type": "string"},
+    "run_id": {"type": ["string", "null"]},
+    "request_id": {"type": ["string", "null"]},
+    "status": {"type": ["string", "null"]},
+    "filters": {
+      "type": "object",
+      "required": ["stage", "event", "failures_only"],
+      "properties": {
+        "stage": {"type": ["string", "null"]},
+        "event": {"type": ["string", "null"]},
+        "failures_only": {"type": "boolean"}
+      },
+      "additionalProperties": true
+    },
+    "payload": {
+      "type": "object",
+      "required": ["session_id"],
+      "properties": {
+        "session_id": {"type": "string"},
+        "run_id": {"type": ["string", "null"]},
+        "request_id": {"type": ["string", "null"]},
+        "status": {"type": ["string", "null"]},
+        "events": {
+          "type": ["array", "object"]
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}
+

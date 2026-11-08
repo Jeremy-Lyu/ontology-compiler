@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ontology-unified.local/schemas/skills/entity_recognition.schema.json",
+  "title": "Entity Recognition Skill Schema",
+  "type": "object",
+  "required": ["skill_name", "skill_version", "context", "input", "output", "quality", "trace"],
+  "properties": {
+    "skill_name": {"type": "string", "const": "entity_recognition"},
+    "skill_version": {"type": "string"},
+    "context": {"$ref": "../shared/skill_envelope.schema.json#/definitions/context"},
+    "input": {
+      "type": "object",
+      "required": ["text", "ontology_entity_types"],
+      "properties": {
+        "text": {"type": "string"},
+        "ontology_entity_types": {"type": "array", "items": {"type": "string"}},
+        "language": {"type": "string", "default": "zh"}
+      }
+    },
+    "output": {
+      "type": "object",
+      "required": ["entities"],
+      "properties": {
+        "entities": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "surface", "type", "span", "confidence"],
+            "properties": {
+              "id": {"type": "string"},
+              "surface": {"type": "string"},
+              "type": {"type": "string"},
+              "span": {
+                "type": "object",
+                "required": ["start", "end"],
+                "properties": {
+                  "start": {"type": "integer"},
+                  "end": {"type": "integer"}
+                }
+              },
+              "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+              "evidence_ref": {"type": "string"}
+            }
+          }
+        }
+      }
+    },
+    "quality": {"$ref": "../shared/skill_envelope.schema.json#/definitions/quality"},
+    "trace": {"$ref": "../shared/skill_envelope.schema.json#/definitions/trace"},
+    "warnings": {"type": "array", "items": {"$ref": "../shared/skill_envelope.schema.json#/definitions/warning"}},
+    "errors": {"type": "array", "items": {"$ref": "../shared/skill_envelope.schema.json#/definitions/error"}}
+  }
+}

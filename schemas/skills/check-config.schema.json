@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ontology-unified.local/schemas/skills/check-config.schema.json",
+  "title": "Check Config Skill Schema",
+  "type": "object",
+  "required": ["skill_name", "skill_version", "context", "input", "output", "quality", "trace"],
+  "properties": {
+    "skill_name": {"type": "string", "const": "check-config"},
+    "skill_version": {"type": "string"},
+    "context": {"$ref": "../shared/skill_envelope.schema.json#/definitions/context"},
+    "input": {
+      "type": "object",
+      "properties": {
+        "config_path": {"type": "string"},
+        "config_type": {"type": "string", "enum": ["pipeline", "skill", "system", "all"]},
+        "validation_rules": {"type": "array", "items": {"type": "object"}}
+      }
+    },
+    "output": {
+      "type": "object",
+      "required": ["config_status", "issues"],
+      "properties": {
+        "config_status": {
+          "type": "object",
+          "properties": {
+            "valid": {"type": "boolean"},
+            "status": {"type": "string", "enum": ["healthy", "warning", "error"]},
+            "config_type": {"type": "string"},
+            "config_path": {"type": "string"}
+          },
+          "required": ["valid", "status"]
+        },
+        "issues": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "issue_id": {"type": "string"},
+              "issue_type": {"type": "string", "enum": ["missing_config", "invalid_value", "missing_required_field", "deprecation", "incompatibility", "security"]},
+              "severity": {"type": "string", "enum": ["critical", "high", "medium", "low"]},
+              "field": {"type": "string"},
+              "message": {"type": "string"},
+              "suggestion": {"type": "string"}
+            },
+            "required": ["issue_id", "issue_type", "severity", "message"]
+          }
+        },
+        "skill_availability": {
+          "type": "object",
+          "properties": {
+            "total_skills": {"type": "integer", "minimum": 0},
+            "available_skills": {"type": "integer", "minimum": 0},
+            "missing_skills": {"type": "array", "items": {"type": "string"}},
+            "incompatible_skills": {"type": "array", "items": {"type": "string"}}
+          }
+        },
+        "summary": {
+          "type": "object",
+          "properties": {
+            "total_checks": {"type": "integer", "minimum": 0},
+            "passed_checks": {"type": "integer", "minimum": 0},
+            "failed_checks": {"type": "integer", "minimum": 0},
+            "warnings": {"type": "integer", "minimum": 0}
+          }
+        }
+      }
+    },
+    "quality": {"$ref": "../shared/skill_envelope.schema.json#/definitions/quality"},
+    "trace": {"$ref": "../shared/skill_envelope.schema.json#/definitions/trace"},
+    "warnings": {"type": "array", "items": {"$ref": "../shared/skill_envelope.schema.json#/definitions/warning"}},
+    "errors": {"type": "array", "items": {"$ref": "../shared/skill_envelope.schema.json#/definitions/error"}}
+  }
+}

@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ontology-unified.local/schemas/skills/capsule-publisher.schema.json",
+  "title": "Capsule Publisher Skill Schema",
+  "type": "object",
+  "required": ["skill_name", "skill_version", "context", "input", "output", "quality", "trace"],
+  "properties": {
+    "skill_name": {"type": "string", "const": "capsule-publisher"},
+    "skill_version": {"type": "string"},
+    "context": {"$ref": "../shared/skill_envelope.schema.json#/definitions/context"},
+    "input": {
+      "type": "object",
+      "required": ["capsule", "destination"],
+      "properties": {
+        "capsule": {
+          "type": "object",
+          "properties": {
+            "capsule_id": {"type": "string"},
+            "version": {"type": "string"},
+            "content": {"type": "object"},
+            "metadata": {"type": "object"},
+            "quality_score": {"type": "number", "minimum": 0, "maximum": 1}
+          },
+          "required": ["capsule_id", "content"]
+        },
+        "destination": {
+          "type": "object",
+          "properties": {
+            "type": {"type": "string", "enum": ["file", "database", "api", "graph_store"]},
+            "path": {"type": "string"},
+            "connection_string": {"type": "string"},
+            "api_endpoint": {"type": "string"},
+            "format": {"type": "string", "enum": ["json", "jsonld", "ntriples", "rdfxml"]}
+          },
+          "required": ["type"]
+        },
+        "publish_config": {
+          "type": "object",
+          "properties": {
+            "overwrite": {"type": "boolean", "default": false},
+            "versioning": {"type": "boolean", "default": true},
+            "backup": {"type": "boolean", "default": true},
+            "validate_before_publish": {"type": "boolean", "default": true}
+          }
+        }
+      }
+    },
+    "output": {
+      "type": "object",
+      "required": ["publish_result", "artifact_info"],
+      "properties": {
+        "publish_result": {
+          "type": "object",
+          "properties": {
+            "success": {"type": "boolean"},
+            "message": {"type": "string"},
+            "publish_time": {"type": "string", "format": "date-time"}
+          },
+          "required": ["success"]
+        },
+        "artifact_info": {
+          "type": "object",
+          "properties": {
+            "artifact_id": {"type": "string"},
+            "location": {"type": "string"},
+            "version": {"type": "string"},
+            "size_bytes": {"type": "integer", "minimum": 0},
+            "hash": {"type": "string"},
+            "backup_location": {"type": "string"}
+          },
+          "required": ["artifact_id", "location"]
+        },
+        "validation_result": {
+          "type": "object",
+          "properties": {
+            "validated": {"type": "boolean"},
+            "errors": {"type": "array", "items": {"type": "object"}}
+          }
+        },
+        "summary": {
+          "type": "object",
+          "properties": {
+            "total_artifacts": {"type": "integer", "minimum": 0},
+            "published_artifacts": {"type": "integer", "minimum": 0},
+            "failed_artifacts": {"type": "integer", "minimum": 0},
+            "total_size_bytes": {"type": "integer", "minimum": 0}
+          }
+        }
+      }
+    },
+    "quality": {"$ref": "../shared/skill_envelope.schema.json#/definitions/quality"},
+    "trace": {"$ref": "../shared/skill_envelope.schema.json#/definitions/trace"},
+    "warnings": {"type": "array", "items": {"$ref": "../shared/skill_envelope.schema.json#/definitions/warning"}},
+    "errors": {"type": "array", "items": {"$ref": "../shared/skill_envelope.schema.json#/definitions/error"}}
+  }
+}

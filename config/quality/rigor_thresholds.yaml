@@ -1,0 +1,40 @@
+default:
+  max_iterations: 10
+  convergence_threshold: 0.95
+  min_improvement: 0.01
+  sample_size: 100
+  skip_if_coverage_gt: 0.85
+  confidence_threshold: 0.95
+  early_stop_confidence: 0.98
+  max_tokens_per_fragment: 3000
+  max_cost_per_fragment_usd: 0.05
+supply_chain:
+  max_iterations: 12
+  convergence_threshold: 0.93
+  min_improvement: 0.015
+  sample_size: 150
+  skip_if_coverage_gt: 0.8
+  confidence_threshold: 0.93
+  early_stop_confidence: 0.97
+  max_tokens_per_fragment: 4000
+  max_cost_per_fragment_usd: 0.08
+inventory_management:
+  max_iterations: 8
+  convergence_threshold: 0.94
+  min_improvement: 0.01
+  sample_size: 80
+  skip_if_coverage_gt: 0.85
+  confidence_threshold: 0.94
+  early_stop_confidence: 0.97
+  max_tokens_per_fragment: 2500
+  max_cost_per_fragment_usd: 0.04
+fast:
+  max_iterations: 3
+  convergence_threshold: 0.9
+  min_improvement: 0.02
+  sample_size: 50
+  skip_if_coverage_gt: 0.7
+  confidence_threshold: 0.9
+  early_stop_confidence: 0.95
+  max_tokens_per_fragment: 1500
+  max_cost_per_fragment_usd: 0.02

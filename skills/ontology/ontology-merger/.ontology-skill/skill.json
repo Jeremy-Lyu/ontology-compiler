@@ -1,0 +1,179 @@
+{
+  "name": "ontology_merger",
+  "description": "Generate and apply ontology patch transactions",
+  "command": "python scripts/generate_ontology_patch.py --operations-json <operations_json> --reason <reason> --l1 <l1> --l2 <l2> --manifest <manifest>",
+  "script_path": "scripts/generate_ontology_patch.py",
+  "category": "ontology",
+  "enabled": true,
+  "args_schema": {
+    "operations_json": {
+      "type": "string",
+      "required": true
+    },
+    "reason": {
+      "type": "string",
+      "required": true
+    },
+    "l1": {
+      "type": "string",
+      "required": true
+    },
+    "l2": {
+      "type": "string",
+      "required": true
+    },
+    "manifest": {
+      "type": "string",
+      "required": true
+    }
+  },
+  "layer_scope": [
+    "L0",
+    "L1",
+    "L2",
+    "L2.5",
+    "L3"
+  ],
+  "version": "2.0.0",
+  "business_domain": [
+    "SUPPLY_CHAIN",
+    "MANUFACTURING",
+    "DATA_MESH",
+    "MASTER_DATA"
+  ],
+  "output_schema": {
+    "type": "object",
+    "required": [
+      "merged_ontology",
+      "conflicts",
+      "merge_summary"
+    ],
+    "properties": {
+      "merged_ontology": {
+        "type": "object",
+        "properties": {
+          "ontology_id": {
+            "type": "string"
+          },
+          "entities": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "relations": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "evidence": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "merged_sources": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "ontology_id",
+          "entities",
+          "relations"
+        ]
+      },
+      "conflicts": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "conflict_id": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "identity",
+                "attribute",
+                "relation",
+                "schema"
+              ]
+            },
+            "entities": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "sources": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "resolved",
+                "unresolved",
+                "pending_review"
+              ]
+            },
+            "resolution": {
+              "type": "object"
+            }
+          },
+          "required": [
+            "conflict_id",
+            "type"
+          ]
+        }
+      },
+      "merge_summary": {
+        "type": "object",
+        "properties": {
+          "total_sources": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "total_entities": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "total_relations": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "duplicates_removed": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "conflicts_resolved": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "conflicts_pending": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "merge_coverage": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          }
+        }
+      }
+    }
+  },
+  "quality_thresholds": {},
+  "trace_config": {
+    "log_model_name": true,
+    "log_prompt_version": true,
+    "log_execution_time": true,
+    "log_retries": true
+  }
+}

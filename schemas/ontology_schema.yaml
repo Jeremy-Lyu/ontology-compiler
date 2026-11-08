@@ -1,0 +1,530 @@
+# 本体 Schema 单一真源（W1 / 方案 A）
+#
+# 此文件是项目内 ontology schema 的唯一权威定义。
+# - schemas/ontology_layer0_schema.json 由它驱动（保持兼容输出）
+# - src/domain/schema_registry.py 加载本文件
+# - 代码不再硬编码主类/子类列表
+#
+# 规范出处：deepseek_tools/_archive/root_files/UNIFIED_ONTOLOGY_AND_PIPELINE_SPEC.md
+#                                            ONTOLOGY_SCHEMA_SPEC.md
+#
+# 命名约定（方案 A）：
+# - Capability 子类使用 Domain/SubDomain/Actionable（不再以 L1_/L2_/L3_ 前缀）
+# - 旧值 L1_Domain/L2_SubDomain/L3_Actionable 作为 legacy alias，registry 自动归一化
+# - LayerType（L0..L3）保持不变，与 Capability 子类语义独立
+#
+# 校验流程：
+# 1. LLM 提取阶段：prompt 中注入合法类型列表（_build_schema_hint_section）
+# 2. 适配器阶段：FragmentToCanonicalAdapter 强制执行 SchemaRegistry 校验
+# 3. Pipeline 阶段：EnrichStep._normalize_meta_classes 进行归一化和过滤
+#
+# 修改流程：
+# 1. 修改本文件 → 2. 运行 scripts/run_regression_tests.py 验证 → 3. 提交
+#
+# 发现未覆盖别名：运行 scripts/discover_uncovered_aliases.py 分析历史产物
+
+version: "1.2.0"
+spec: "ontology_schema/v1"
+
+# ==============================================================================
+# 主类定义（L1 Entity Types）
+# ==============================================================================
+# 所有实体必须属于以下主类之一。新增主类需同步更新：
+# - 子类定义（subclasses）
+# - Legacy 别名映射（legacy_main_class_aliases，如需要）
+# - 相关校验逻辑（schema_registry.py）
+#
+# 主类语义说明：
+# - Capability: 能力域概念，如业务领域、子领域、可执行动作
+# - System: 系统/平台，如企业平台、微服务应用、测试环境
+# - Actor: 参与者/角色，如内部部门、业务职能、设备基础设施
+# - Asset: 资产/资源，如产品定义、软件资产、工具资产、材料
+# - Data: 数据/文档，如文档制品、规则逻辑、数据记录、表结构
+# - Process: 流程，如业务流程
+# - Concept: 概念，如领域概念、技术概念、业务概念、法律概念
+# - BusinessScenario: 业务场景，如业务流程、系统集成、数据流
+# - MappingRule: 映射规则，如数据映射、转换规则、集成规则
+# - BusinessRule: 业务规则，如条件规则、约束规则、审批规则
+# - ValidationRule: 验证规则，如 Schema 验证、业务验证、合规验证
+
+main_classes:
+  - Capability
+  - System
+  - Actor
+  - Asset
+  - Data
+  - Process
+  - Concept
+  - BusinessScenario
+  - MappingRule
+  - BusinessRule
+  - ValidationRule
+
+# ==============================================================================
+# 子类定义（按主类分组）
+# ==============================================================================
+# 子类是主类的细化分类。子类必须归属于某个主类。
+# 新增子类需同步更新：
+# - Legacy 别名映射（legacy_subclass_aliases，如需要）
+# - FragmentToCanonicalAdapter 中的类型转换逻辑
+
+subclasses:
+  # Capability（能力域概念）
+  # 语义：描述系统的能力范围和业务边界
+  Capability:
+    - Domain              # 主领域（如供应链、财务）
+    - SubDomain           # 子领域（如订单管理、库存管理）
+    - Actionable          # 可执行动作（如创建订单、查询库存）
+
+  # System（系统/平台）
+  # 语义：描述技术系统和运行环境
+  System:
+    - Enterprise_Platform # 企业级平台（如 ERP、CRM）
+    - Microservice_App    # 微服务应用（如订单服务、支付服务）
+    - Test_Environment    # 测试环境（如开发环境、测试环境）
+    - External_Portal     # 外部门户（如客户门户、供应商门户）
+    - SoftwareAsset       # 软件资产系统（如软件组件）
+    - OSBSystem           # OSB 系统（Oracle Service Bus）
+    - ConfigHubSystem     # ConfigHub 配置管理系统
+    - SoftwarePart        # 软件部件
+    - ReleaseEvent        # 发布事件系统
+    - DownloadList        # 下载列表系统
+
+  # Actor（参与者/角色）
+  # 语义：描述参与业务流程的实体
+  Actor:
+    - Internal_Department # 内部部门（如采购部、销售部）
+    - Business_Function   # 业务职能（如采购员、审批员）
+    - Equipment_Infra     # 设备基础设施（如服务器、网络设备）
+    - UserRole            # 用户角色（如管理员、操作员）
+    - SystemUser          # 系统用户（如配置中心用户）
+
+  # Asset（资产/资源）
+  # 语义：描述企业拥有或使用的资源
+  Asset:
+    - Product_Definition  # 产品定义（如产品规格、产品型号）
+    - Software_Asset      # 软件资产（如代码库、许可证、软件包）
+    - Tooling_Asset       # 工具资产（如开发工具、测试工具）
+    - Consumable_Material # 消耗材料（如原材料、零部件）
+    - Vehicle_Instance    # 车辆实例（如货车、叉车）
+    - Physical_Instance   # 物理实例（如仓库、设备）
+    - Digital_Twin_Instance # 数字孪生实例
+    - Document_Artifact   # 文档资产（如文件、文档）
+
+  # Data（数据/文档/规则）
+  # 语义：描述数据资产、文档、规则和概念
+  Data:
+    - Document_Artifact   # 文档制品（如合同、报告）
+    - Rule_Logic          # 规则逻辑（如业务规则、校验规则）
+    - Data_Record         # 数据记录（如订单记录、库存记录）
+    - Table_Schema        # 表结构（如数据库表定义）
+    - Domain_Concept      # 领域概念
+    - Technical_Concept   # 技术概念
+    - Business_Concept    # 业务概念
+    - Data_Mapping        # 数据映射
+    - Transform_Rule      # 转换规则
+    - Integration_Rule    # 集成规则
+    - Conditional_Rule    # 条件规则
+    - Constraint_Rule     # 约束规则
+    - Schema_Validation   # Schema验证
+    - Business_Validation # 业务验证
+    - Data_Object         # 数据对象
+    - Domain_Object       # 领域对象
+    - ReleaseData         # 发布数据
+    - ReleaseEventRule    # 发布事件规则
+    - VariantFilterRule   # 变体过滤规则
+    - VariantExpressionRule # 变体表达式规则
+    - CompatibilityRule   # 兼容性规则
+
+  # Process（流程）
+  # 语义：描述业务流程
+  Process:
+    - Business_Process    # 业务流程（如订单处理流程、审批流程）
+    - DownloadProcess     # 下载流程
+    - CIConfiguration     # CI 配置流程
+
+  # Concept（概念）
+  # 语义：描述领域概念
+  Concept:
+    - Domain_Concept      # 领域概念（如供应链概念）
+    - Technical_Concept   # 技术概念（如微服务、API）
+    - Business_Concept    # 业务概念（如订单、客户）
+    - Legal_Concept       # 法律概念（如合同、合规）
+
+  # BusinessScenario（业务场景）
+  # 语义：描述具体的业务场景
+  BusinessScenario:
+    - Business_Process    # 业务流程场景
+    - BusinessProcess     # 业务流程（无下划线变体）
+    - System_Integration  # 系统集成场景
+    - Data_Flow           # 数据流场景
+    - User_Interaction    # 用户交互场景
+    - Quality_Control     # 质量控制场景
+    - Compliance          # 合规场景
+    - Scenario            # 场景（通用）
+    - UseCase             # 用例
+    - Definition          # 定义
+    - Term                # 术语
+    - Glossary            # 术语表
+    - LogicRule           # 逻辑规则
+    - Constraint          # 约束
+    - KDP_Transaction_Screen  # KDP 交易屏幕
+    - Logistic_Process    # 物流流程
+    - InventoryManagement # 库存管理
+    - ShipmentProcessing  # 运输处理
+    - DataFlow            # 数据流（无下划线变体）
+    - Integration_Scenario # 集成场景
+    - Organizational_Setup # 组织设置
+
+  # MappingRule（映射规则）
+  # 语义：描述数据映射和转换规则
+  MappingRule:
+    - Data_Mapping        # 数据映射（如字段映射）
+    - Transform_Rule      # 转换规则（如格式转换）
+    - Integration_Rule    # 集成规则（如接口集成）
+    - Routing_Rule        # 路由规则（如消息路由）
+
+  # BusinessRule（业务规则）
+  # 语义：描述业务规则和约束
+  BusinessRule:
+    - Conditional_Rule    # 条件规则（如 IF-THEN）
+    - Constraint_Rule     # 约束规则（如数据约束）
+    - Approval_Rule       # 审批规则（如多级审批）
+    - Trigger_Rule        # 触发规则（如事件触发）
+
+  # ValidationRule（验证规则）
+  # 语义：描述验证和校验规则
+  ValidationRule:
+    - Schema_Validation   # Schema 验证（如 JSON Schema）
+    - Business_Validation # 业务验证（如业务规则校验）
+    - Compliance_Validation # 合规验证（如合规检查）
+    - Data_Quality_Validation # 数据质量验证
+
+  # BusinessObject（业务对象）
+  # 语义：描述业务领域中的具体对象和实体
+  BusinessObject:
+    - Business_Object     # 业务对象（标准）
+    - Data_Object         # 数据对象
+    - Domain_Object       # 领域对象
+
+  # StorageLocation（存储位置）
+  # 语义：描述物理或逻辑存储位置
+  StorageLocation:
+    - Storage_Location    # 存储位置（标准）
+    - Warehouse_Location  # 仓库位置
+    - Shelf_Location      # 货架位置
+    - Bin_Location        # 货位位置
+
+# ==============================================================================
+# Legacy 别名映射（子类）
+# ==============================================================================
+# 历史运行产物中使用的旧名称，在加载时会被自动归一化为标准名称。
+# 新增别名需同步更新：
+# - 运行 scripts/discover_uncovered_aliases.py 验证覆盖情况
+# - 确保对应的标准子类已在 subclasses 中定义
+
+legacy_subclass_aliases:
+  L1_Domain: Domain              # 旧版 L1 层领域 → 标准 Domain
+  L2_SubDomain: SubDomain        # 旧版 L2 层子领域 → 标准 SubDomain
+  L3_Actionable: Actionable      # 旧版 L3 层可执行 → 标准 Actionable
+  Equipment_Infrastructure: Equipment_Infra # 完整名称 → 缩写
+
+# ==============================================================================
+# Legacy 别名映射（主类）
+# ==============================================================================
+# LLM 提取器可能使用的缩写或替代名称，在加载时会被自动归一化。
+# 新增别名需同步更新：
+# - 运行 scripts/run_regression_tests.py 验证
+
+legacy_main_class_aliases:
+  scenario: BusinessScenario     # scenario -> BusinessScenario
+  rule: MappingRule              # rule -> MappingRule
+  usecase: Process              # usecase -> Process
+  businesscapability: Capability # BusinessCapability -> Capability
+  business_capability: Capability # Business_Capability -> Capability
+  data_record: Data             # data_record -> Data
+  Data_Record: Data             # Data_Record -> Data
+  business_process: BusinessScenario # business_process -> BusinessScenario
+  Business_Process: BusinessScenario # Business_Process -> BusinessScenario
+  business_object: Asset        # business_object -> Asset
+  Business_Object: Asset        # Business_Object -> Asset
+  storage_location: Asset       # storage_location -> Asset
+  Storage_Location: Asset       # Storage_Location -> Asset
+  Instance: Asset               # Instance -> Asset
+  # 小写变体
+  capability: Capability
+  system: System
+  actor: Actor
+  asset: Asset
+  data: Data
+  process: Process
+  concept: Concept
+  businessscenario: BusinessScenario
+  mappingrule: MappingRule
+  businessrule: BusinessRule
+  validationrule: ValidationRule
+  businessobject: Asset
+  storagelocation: Asset
+  instance: Asset
+
+# ==============================================================================
+# 关系类型分组（Relation Type Families）
+# ==============================================================================
+# 关系类型按家族分组管理，优先级从高到低：
+# - structural: 结构关系，描述实体间的组成/层次/实现关系
+# - semantic: 语义关系，描述实体间的业务语义关联
+# - mapping: 映射关系，描述数据/规则的转换与映射
+# - temporal: 时态关系，描述实体间的时序关系
+#
+# 抽取策略：结构关系优先，其次语义关系，再映射关系，最后时态关系
+
+relation_families:
+  structural:
+    description: "结构关系 - 描述实体间的组成、层次、实现关系"
+    priority: 1
+    types:
+      - contains          # A 包含 B（如领域包含子领域）
+      - implements        # A 实现 B（如系统实现能力）
+      - depends_on        # A 依赖 B（如服务依赖数据库）
+      - has_part          # A 包含子部分 B
+      - is_part_of        # A 是 B 的一部分
+      - is_instance_of    # A 是 B 的实例（如具体产品是产品定义的实例）
+      - deploys           # A 部署 B（如系统部署应用）
+
+  semantic:
+    description: "语义关系 - 描述实体间的业务语义关联"
+    priority: 2
+    types:
+      - uses              # A 使用 B（如流程使用数据）
+      - used_by           # A 被 B 使用（uses 的反向关系）
+      - controls          # A 控制/管控 B（如系统控制流程）
+      - associated_with   # A 与 B 关联（如角色与流程关联）
+      - calls             # A 调用 B（如服务调用 API）
+      - produces          # A 产生 B（如流程产生数据）
+      - consumes          # A 消费 B（如服务消费消息）
+      - manages           # A 管理 B（如部门管理资产）
+      - owns              # A 拥有 B（如组织拥有资产）
+      - interacts_with    # A 与 B 交互（如系统间交互）
+      - governs           # A 治理 B（如能力治理流程）
+      - processes         # A 处理 B（如系统处理数据）
+      - provides_data_for # A 为 B 提供数据
+      - enhances          # A 增强 B
+      - creates           # A 创建 B（如动作创建实体）
+      - results_in        # A 导致 B（如流程导致结果）
+      - maintains         # A 维护 B（如团队维护系统）
+      - performs          # A 执行/执行 B（如角色执行任务）
+      - classifies_into   # A 分类到 B（如实体分类到类别）
+      - sends             # A 发送消息给 B
+      - notifies          # A 通知 B
+      - informs           # A 告知 B
+      - reports_to        # A 向 B 报告
+      - requires          # A 需要/依赖 B
+      - validates         # A 验证 B
+      - verifies          # A 验证/核实 B
+      - attaches          # A 附加到 B
+      - links_to          # A 链接到 B
+      - references        # A 引用 B
+
+  mapping:
+    description: "映射关系 - 描述数据/规则的转换与映射（L2.5专用）"
+    priority: 3
+    types:
+      - defines           # L2 定义层定义 L1 实体 (L2-DEF → L1)
+      - maps_to           # L2.5 规则层映射 L2 定义 (L25-RULE → L2-DEF)
+      - transforms        # A 转换 B（如流程转换数据）
+      - routes_to         # A 路由到 B（如消息路由）
+
+  temporal:
+    description: "时态关系 - 描述实体间的时序关系"
+    priority: 4
+    types:
+      - triggers          # A 触发 B（如事件触发流程）
+      - initiates         # A 启动/发起 B（如流程启动任务）
+      - precedes          # A 在 B 之前（如步骤A在步骤B之前）
+      - follows           # A 在 B 之后（如步骤A在步骤B之后）
+
+# ==============================================================================
+# 关系类型（Relation Types）- 扁平化列表
+# ==============================================================================
+# 所有关系必须使用以下类型之一。新增关系类型需同步更新：
+# - SchemaRegistry.relation_types 属性
+# - relation_families（上方）
+# - 相关校验逻辑
+
+relation_types:
+  # structural
+  - contains
+  - implements
+  - depends_on
+  - has_part
+  - is_part_of
+  - is_instance_of
+  - deploys
+  - connected_to
+  - integrates_with
+  # semantic
+  - uses
+  - used_by
+  - controls
+  - associated_with
+  - calls
+  - produces
+  - consumes
+  - manages
+  - owns
+  - interacts_with
+  - governs
+  - processes
+  - provides_data_for
+  - enhances
+  - creates
+  - results_in
+  - maintains
+  - performs
+  - classifies_into
+  - secures
+  # mapping
+  - defines
+  - maps_to
+  - transforms
+  - routes_to
+  # temporal
+  - triggers
+  - initiates
+  - precedes
+  - follows
+  # supply chain specific
+  - delivers
+  - stores
+  - generates
+  - used_in
+  - has_component
+  # communication & notification
+  - sends
+  - notifies
+  - informs
+  - reports_to
+  # dependency & requirement
+  - requires
+  - depends_on
+  # validation & verification
+  - validates
+  - verifies
+  - authorizes
+  # data flow
+  - sends_data_to
+  # attachment & association
+  - attaches
+  - links_to
+  - references
+  # creation & production
+  - creates_for
+  - generates_for
+  # execution & context
+  - executes_in
+  - runs_on
+  - operates_in
+  # auto-discovered from pipeline outputs
+  - same_as
+  - monitors
+  - conflicts_with
+  - orders
+  - developed_in
+  - synchronizes_with
+  - signals
+  - provides_feedback_to
+  - complements
+  - collects
+  - sends_signal
+  - constrains
+  - is_primary_output_of
+  - variant_of
+  - utilizes
+  - operates
+  - modifies
+
+# ==============================================================================
+# Legacy 别名映射（关系类型）
+# ==============================================================================
+# 旧 PPM 文档中使用的关系类型，在加载时会被自动归一化为标准名称。
+# 新增别名需同步更新：
+# - SchemaRegistry.normalize_relation_type 方法
+# - 运行 scripts/run_regression_tests.py 验证
+
+legacy_relation_type_aliases:
+  GENERATES: produces           # 旧版生成 → 标准 produces
+  ENABLES: uses                # 旧版启用 → 标准 uses
+  VALIDATES: validates         # 旧版验证 → 标准 validates
+  EXTENDS: contains            # 旧版扩展 → 标准 contains
+  SUPPORTS: implements         # 旧版支持 → 标准 implements
+  TRIGGER: triggers            # 旧版触发（单数）→ 标准 triggers
+  # 大写别名（LLM 提取时可能使用大写）
+  PRODUCES: produces
+  CONSUMES: consumes
+  USES: uses
+  IMPLEMENTS: implements
+  TRIGGERS: triggers
+  DEPENDS_ON: depends_on
+  CONTAINS: contains
+  MANAGES: manages
+  OWNS: owns
+  INTERACTS_WITH: interacts_with
+  STORES: stores
+  TRANSFORMS: transforms
+  GOVERNS: governs
+  PROCESSES: processes
+  IS_INSTANCE_OF: is_instance_of
+  INSTANCE_OF: is_instance_of
+  # 新增关系类型的大写别名
+  PERFORMS: performs
+  INITIATES: initiates
+  DEPLOYS: deploys
+  CLASSIFIES_INTO: classifies_into
+  CLASSIFIES INTO: classifies_into
+  # 别名变体
+  DEPLOY: deploys
+  # 新增关系类型的大写别名
+  CONNECTED_TO: connected_to
+  CONNECTED TO: connected_to
+  INTEGRATES_WITH: integrates_with
+  INTEGRATES WITH: integrates_with
+  SECURES: secures
+  PERFORM: performs
+  INITIATE: initiates
+  USED_BY: used_by
+  USED BY: used_by
+  CONTROLS: controls
+  CONTROL: controls
+  # auto-discovered from pipeline outputs
+  SAME_AS: same_as
+  GOVERNS_DATA: governs
+  DEPLOYS_TO: deploys
+  EXECUTES: executes_in
+  INTEGRATED_WITH: integrates_with
+  INTEGRATEDWITH: integrates_with
+  FEEDS_INTO: same_as
+  MONITORS: monitors
+  CONFLICTS_WITH: conflicts_with
+  PRECEDENCE: precedes
+  CLASSIFIES: classifies_into
+  ORDERS: orders
+  DEVELOPED_IN: developed_in
+  SYNCHRONIZES_WITH: synchronizes_with
+  SIGNALS: signals
+  PROVIDES_FEEDBACK_TO: provides_feedback_to
+  COMPLEMENTS: complements
+  COLLECTS: collects
+  SENDS_SIGNAL: sends_signal
+  REALIZES: realizes
+  VALIDATED_BY: validates
+  CONSTRAINS: constrains
+  IS_PRIMARY_OUTPUT_OF: is_primary_output_of
+  PROVIDES_INPUT: provides_data_for
+  VARIANT_OF: variant_of
+  TESTES: validates
+  UTILIZES: utilizes
+  OPERATES: operates
+  MODIFIES: modifies
+  # data flow aliases
+  sends_data_to: sends_data_to
+  SENDS_DATA_TO: sends_data_to

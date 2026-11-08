@@ -1,0 +1,747 @@
+version: "1.0"
+name: entity_classification_unified
+status: legacy_compat
+owner: ontology_team
+description: "Legacy compatibility overlay for entity classification. Canonical schema lives in schemas/ontology_schema.yaml."
+
+layers:
+  L0:
+    name: core_class
+    description: "业务本体主类"
+    types:
+      - Capability
+      - System
+      - Actor
+      - Asset
+      - Data
+      - Process
+      - Concept
+
+  L1:
+    name: standard_subclass
+    description: "标准子类"
+    types:
+      Capability:
+        - Domain
+        - SubDomain
+        - Actionable
+      System:
+        - Enterprise_Platform
+        - Microservice_App
+        - Test_Environment
+        - External_Portal
+      Actor:
+        - Internal_Department
+        - Business_Function
+        - Equipment_Infra
+      Asset:
+        - Product_Definition
+        - Software_Asset
+        - Tooling_Asset
+        - Consumable_Material
+        - Vehicle_Instance
+        - Physical_Instance
+        - Digital_Twin_Instance
+      Data:
+        - Document_Artifact
+        - Rule_Logic
+        - Data_Record
+        - Table_Schema
+      Process:
+        - Business_Process
+
+  L2:
+    name: business_scenario
+    description: "业务细分层：业务场景、流程上下文、角色情境"
+    types:
+      - BusinessScenario
+      - Scenario
+      - UseCase
+      - Definition
+      - Term
+      - Glossary
+      - BusinessRule
+      - LogicRule
+      - Constraint
+      - BusinessProcess
+      - Process
+
+  L2.5:
+    name: transition_mapping
+    description: "过渡层/映射层：规则、约束、映射逻辑"
+    types:
+      - MappingRule
+      - TransformRule
+      - ValidationRule
+      - RulePackage
+      - RuleSet
+      - TemplateGroup
+      - MappingSet
+      - BatchGroup
+      - ModuleGroup
+      - Cluster
+
+  L3:
+    name: instance_action
+    description: "最终实例层/最末级动作层"
+    types:
+      - Unique_Instance
+      - Workflow_Instance
+      - Action_Instance
+      - Record_Instance
+
+types:
+  Capability:
+    layer: L0
+    description: "业务能力、能力域、职能边界"
+    default_sub_types:
+      - Domain
+      - SubDomain
+      - Actionable
+    keywords:
+      - 能力
+      - 职能
+      - 域
+      - capability
+      - domain
+      - action
+    examples:
+      - Product Development
+      - Product Structures
+      - BOM Governance
+
+  System:
+    layer: L0
+    description: "系统、平台、工具、环境"
+    default_sub_types:
+      - Enterprise_Platform
+      - Microservice_App
+      - Test_Environment
+      - External_Portal
+    keywords:
+      - 系统
+      - 平台
+      - 工具
+      - portal
+      - app
+      - environment
+    examples:
+      - KDP
+      - CMP
+      - PLUS
+      - CoDev Driver Portal
+
+  Actor:
+    layer: L0
+    description: "组织、部门、团队、角色、基础设施"
+    default_sub_types:
+      - Internal_Department
+      - Business_Function
+      - Equipment_Infra
+    keywords:
+      - 部门
+      - 团队
+      - 组织
+      - 角色
+      - infra
+      - 设备
+    examples:
+      - Engineering
+      - Manufacturing Engineering
+      - CCB
+      - Automation Desk
+
+  Asset:
+    layer: L0
+    description: "产品、零件、软件包、物理实例、数字孪生"
+    default_sub_types:
+      - Product_Definition
+      - Software_Asset
+      - Tooling_Asset
+      - Consumable_Material
+      - Vehicle_Instance
+      - Physical_Instance
+      - Digital_Twin_Instance
+    keywords:
+      - 零件
+      - 部件
+      - 产品
+      - 物料
+      - 软件包
+      - VIN
+      - SN
+      - 实例
+    examples:
+      - HW_Part_PN12345
+      - Battery_Pack_SN_001
+      - VIN_LSV1234567890
+
+  Data:
+    layer: L0
+    description: "文档、规则、记录、表结构、辅助性数据工件"
+    default_sub_types:
+      - Document_Artifact
+      - Rule_Logic
+      - Data_Record
+      - Table_Schema
+    keywords:
+      - 文档
+      - 规则
+      - 记录
+      - 表
+      - schema
+      - sheet
+      - 手册
+    examples:
+      - Material Data Sheet
+      - Configuration Rule 05
+      - OIS Manual OP30
+
+  Process:
+    layer: L0
+    description: "有明确生命周期、状态流转和输入输出的业务流程"
+    default_sub_types:
+      - Business_Process
+    keywords:
+      - 流程
+      - 变更
+      - 审批
+      - 事务
+      - process
+      - order
+      - issue
+    examples:
+      - Change_Order_AO_998
+      - Quality_Deviation_Report_01
+
+  Concept:
+    layer: L0
+    description: "通用概念，无法明确归为其他主类的实体"
+    default_sub_types:
+      - Domain
+    keywords:
+      - 概念
+      - 术语
+      - 定义
+      - concept
+      - term
+      - definition
+    examples:
+      - Product Lifecycle
+      - Configuration Management
+      - Engineering Change
+
+  BusinessScenario:
+    layer: L2
+    description: "业务场景、流程上下文、角色情境"
+    default_sub_types:
+      - Scenario
+      - UseCase
+      - Definition
+      - Integration_Scenario
+      - KDP_Transaction_Screen
+      - Logistic_Process
+      - InventoryManagement
+      - ShipmentProcessing
+      - DataFlow
+    keywords:
+      - 场景
+      - 用例
+      - case
+      - scenario
+      - 流程
+      - 步骤
+    examples:
+      - BOM Release Process Flow
+      - Engineering Change Approval Workflow
+      - Vehicle Configuration Use Case
+
+  BusinessRule:
+    layer: L2
+    description: "业务规则、逻辑约束、术语定义"
+    default_sub_types:
+      - LogicRule
+      - Constraint
+      - Glossary
+    keywords:
+      - 规则
+      - 约束
+      - 定义
+      - 术语
+      - rule
+      - constraint
+      - glossary
+    examples:
+      - Part Numbering Rule
+      - Configuration Constraint Rule
+      - Enterprise Glossary Term
+
+  MappingRule:
+    layer: L2.5
+    description: "映射规则、转换规则、验证规则"
+    default_sub_types:
+      - MappingRule
+      - TransformRule
+      - ValidationRule
+    keywords:
+      - 映射
+      - 转换
+      - 验证
+      - mapping
+      - transform
+      - validation
+    examples:
+      - PN to VIN Mapping Rule
+      - Data Transform Rule 01
+      - Validation Rule Set A
+
+classification_rules:
+  - id: rule_capability_primary
+    priority: 100
+    description: "能力、职能、领域类实体优先归为 Capability"
+    match:
+      any:
+        - field: text
+          contains_any: ["能力", "职能", "域", "业务能力", "capability", "action"]
+        - field: name
+          regex: ".*(Capability|Cap|Domain).*"
+    result:
+      type: Capability
+      layer: L0
+      sub_type: Domain
+    confidence: 0.95
+
+  - id: rule_system_primary
+    priority: 95
+    description: "系统、平台、工具类实体优先归为 System"
+    match:
+      any:
+        - field: text
+          contains_any: ["系统", "平台", "工具", "portal", "app", "environment"]
+        - field: name
+          regex: ".*(SYS|System|Platform|Portal|App).*"
+    result:
+      type: System
+      layer: L0
+      sub_type: Enterprise_Platform
+    confidence: 0.92
+
+  - id: rule_actor_primary
+    priority: 90
+    description: "组织、部门、团队、角色、设备类实体优先归为 Actor"
+    match:
+      any:
+        - field: text
+          contains_any: ["部门", "团队", "组织", "角色", "infra", "设备"]
+        - field: name
+          regex: ".*(Dept|Team|Org|Role|Infra|Equipment).*"
+    result:
+      type: Actor
+      layer: L0
+      sub_type: Internal_Department
+    confidence: 0.90
+
+  - id: rule_asset_primary
+    priority: 85
+    description: "产品、零件、软件包、物理对象优先归为 Asset"
+    match:
+      any:
+        - field: text
+          contains_any: ["零件", "部件", "产品", "物料", "软件包", "VIN", "SN", "实例"]
+        - field: name
+          regex: ".*(PN|Part|Asset|VIN|SN|Vehicle).*"
+    result:
+      type: Asset
+      layer: L0
+      sub_type: Product_Definition
+    confidence: 0.91
+
+  - id: rule_data_primary
+    priority: 80
+    description: "文档、规则、记录、表结构优先归为 Data"
+    match:
+      any:
+        - field: text
+          contains_any: ["文档", "规则", "记录", "表", "schema", "sheet", "手册"]
+        - field: name
+          regex: ".*(Doc|Rule|Record|Schema|Sheet|Manual).*"
+    result:
+      type: Data
+      layer: L0
+      sub_type: Document_Artifact
+    confidence: 0.89
+
+  - id: rule_process_primary
+    priority: 75
+    description: "流程、变更、审批、事务优先归为 Process"
+    match:
+      any:
+        - field: text
+          contains_any: ["流程", "变更", "审批", "事务", "process", "order", "issue"]
+        - field: name
+          regex: ".*(Process|Change|Order|Issue|Workflow).*"
+    result:
+      type: Process
+      layer: L0
+      sub_type: Business_Process
+    confidence: 0.88
+
+  - id: rule_effectivity_variant_configuration
+    priority: 60
+    description: "Effectivity / Variant / Configuration 统一作为映射与实例化辅助语义"
+    match:
+      any:
+        - field: text
+          contains_any: ["effectivity", "variant", "configuration", "适用", "选装", "配置"]
+        - field: name
+          regex: ".*(Effectivity|Variant|Configuration).*"
+    result:
+      type: Data
+      layer: L2.5
+      sub_type: Rule_Logic
+    confidence: 0.80
+
+  - id: rule_business_scenario
+    priority: 55
+    description: "业务场景、用例、情景描述归为 L2 业务场景层"
+    match:
+      any:
+        - field: text
+          contains_any: ["场景", "用例", "case", "scenario", "流程", "步骤", "stage"]
+        - field: name
+          regex: ".*(Scenario|UseCase|BusinessScenario|Workflow|ProcessFlow).*"
+    result:
+      type: BusinessScenario
+      layer: L2
+      sub_type: Scenario
+    confidence: 0.82
+
+  - id: rule_business_rule_l2
+    priority: 50
+    description: "业务规则、约束、术语定义归为 L2 规则层"
+    match:
+      any:
+        - field: text
+          contains_any: ["规则", "约束", "定义", "术语", "glossary", "term", "constraint"]
+        - field: name
+          regex: ".*(Rule|Constraint|Definition|Term|Glossary|BusinessRule|LogicRule).*"
+    result:
+      type: BusinessRule
+      layer: L2
+      sub_type: LogicRule
+    confidence: 0.80
+
+  - id: rule_mapping_rule_l25
+    priority: 45
+    description: "映射规则、转换规则、验证规则归为 L2.5 过渡层"
+    match:
+      any:
+        - field: text
+          contains_any: ["映射", "转换", "验证", "mapping", "transform", "validation"]
+        - field: name
+          regex: ".*(MappingRule|TransformRule|ValidationRule|RulePackage|RuleSet).*"
+    result:
+      type: MappingRule
+      layer: L2.5
+      sub_type: MappingRule
+    confidence: 0.85
+
+  - id: rule_instance_l3
+    priority: 40
+    description: "具体实例、工作流实例、动作实例归为 L3 实例层"
+    match:
+      any:
+        - field: text
+          contains_any: ["实例", "工单", "任务", "instance", "workflow", "action"]
+        - field: name
+          regex: ".*(Instance|Workflow_Instance|Action_Instance|Record_Instance|Task|Order).*"
+        - field: name
+          regex: "^[A-Za-z]+_[0-9]+$"
+    result:
+      type: Data
+      layer: L3
+      sub_type: Record_Instance
+    confidence: 0.75
+
+  - id: rule_fallback_llm_review
+    priority: 1
+    description: "兜底规则，无法稳定分类时进入 LLM 或人工复核"
+    match:
+      any:
+        - field: text
+          exists: true
+    result:
+      type: Concept
+      layer: L0
+      sub_type: Domain
+    confidence: 0.50
+
+conflict_resolution:
+  strategy: highest_priority
+  fallback: llm_vote
+  min_confidence_to_auto_accept: 0.85
+  require_evidence: true
+  tie_breaker:
+    use_more_specific_sub_type: true
+    prefer_context_match: true
+    prefer_evidence_overlap: true
+
+validation:
+  auto_reject_if:
+    - missing_name
+    - missing_evidence
+    - confidence_below: 0.60
+  manual_review_if:
+    - confidence_between: [0.60, 0.85]
+    - multiple_rules_matched: true
+    - layer_conflict: true
+
+node_optimizations:
+  layer_promotions:
+    supply chain: L1
+    organization role: L1
+    config manager: L1
+    accountability check: L1
+  layer_downgrades:
+    ebom release: L2.5
+    mbom release: L2.5
+    bop process: L2.5
+  name_rewrites:
+    co specialist: CO Specialist
+    tc plm: Teamcenter PLM
+    art: ART (Anti-Rattle Tab)
+    fg: FG (Finished Goods)
+    pos: POS (Position)
+    bev: BEV (Battery Electric Vehicle)
+    phev: PHEV (Plug-in Hybrid EV)
+    bop to prins investigation: BOP-to-PRINS Investigation
+    cnote entity: Change Note Entity
+    pos physicalposition: Position Physical Position
+    pii knowledge: PII Knowledge
+  attr_overrides:
+    caliper: [part_number, material_type]
+    fluid: [part_number, material_type]
+    caliper cover: [part_number, material_type]
+    rear seat: [part_number, material_type]
+    protective foil: [part_number, material_type]
+    ebom policy: [rule_id, rule_text, enforcement]
+    mbom policy: [rule_id, rule_text, enforcement]
+  merge_into_parent:
+    ebom structure: ebom
+    mbom structure: mbom
+
+output_fields:
+  node:
+    required:
+      - id
+      - name
+      - layer
+      - type
+      - status
+    optional:
+      - code
+      - sub_type
+      - parent_id
+      - version
+      - source_system
+      - source_file
+      - description
+      - effective_from
+      - effective_to
+      - evidence_ref
+  edge:
+    required:
+      - source_id
+      - target_id
+      - relation_type
+      - confidence
+      - evidence_ref
+    optional:
+      - role
+      - effective_from
+      - effective_to
+      - weight
+      - sequence_no
+
+relation_family_defaults:
+  structural:
+    - SUBSUMES
+    - DECOMPOSES_TO
+    - CONTAINS
+    - HAS_PART
+    - HAS_VARIANT
+    - PART_OF
+    - INSTANCE_OF
+  semantic:
+    - REALIZES
+    - SUPPORTS
+    - APPLICABLE_TO
+    - SATISFIES
+    - ENABLES
+    - RELATED_TO
+    - EXTENDS
+    - GENERATES
+    - TRIGGER
+  governance:
+    - VALIDATES
+    - GOVERNS_DATA
+    - REPLACES
+    - SUPERSEDES
+    - SAME_AS
+  temporal:
+    - EFFECTIVE_FOR
+    - APPLIES_TO
+    - MODIFIES
+    - RESULTS_IN
+    - REFERENCES
+    - TRACES_TO
+    - EXECUTES
+    - TRIGGERS
+    - HAS_STEP
+    - PARTICIPATES_IN
+    - ASSIGNED_TO
+    - RESPONSIBLE_FOR
+    - OWNS
+    - OPERATES
+    - MAINTAINS
+    - USES
+    - DEPLOYS_TO
+    - DERIVED_FROM
+    - OPTION_FOR
+    - INTEGRATES_WITH
+    - CONNECTED_TO
+    - UPLOADS_TO
+    - uploads_to
+    - CONNECTS_TO
+    - connects_to
+
+valid_meta_classes:
+  - Capability
+  - System
+  - Actor
+  - Asset
+  - Data
+  - Process
+  - Concept
+  - BusinessScenario
+  - MappingRule
+  - BusinessRule
+  - ValidationRule
+  - Domain
+  - SubDomain
+  - Actionable
+  - Equipment_Infra
+  - BusinessProcess
+  - Scenario
+  - UseCase
+  - Definition
+  - Term
+  - Glossary
+  - LogicRule
+  - Constraint
+  - Component
+  - DataRecord
+  - Data_Record
+  - EnterprisePlatform
+  - Enterprise_Platform
+  - data_record
+  - enterprise_platform
+  - Internal_Department
+  - internal_department
+  - Business_Function
+  - business_function
+  - Product_Definition
+  - Software_Asset
+  - Tooling_Asset
+  - Consumable_Material
+  - Vehicle_Instance
+  - Physical_Instance
+  - Digital_Twin_Instance
+  - Document_Artifact
+  - Rule_Logic
+  - Table_Schema
+  - Microservice_App
+  - External_Portal
+  - Test_Environment
+  - component
+  - businessprocess
+  - BusinessProcess
+
+field_mappings:
+  node_minimum:
+    - id
+    - code
+    - name
+    - layer
+    - type
+    - status
+  edge_minimum:
+    - source_id
+    - target_id
+    - relation_type
+    - confidence
+    - evidence_ref
+
+layer_rules:
+  L2.5:
+    description: "过渡层 / 映射层，服务于语义桥接、规则映射与实例化"
+    allowed_sub_types:
+      - Rule_Logic
+      - Mapping_Logic
+      - Template_Group
+      - Family_Group
+
+  L3:
+    description: "最终实例层 / 最末级动作层"
+    allowed_sub_types:
+      - Unique_Instance
+      - Workflow_Instance
+      - Action_Instance
+      - Record_Instance
+    instance_markers:
+      - meta_id
+      - entity_id
+      - id
+      - instance_of
+      - vin
+      - sn
+      - serial_no
+      - record_no
+      - process_no
+
+relation_defaults:
+  structural:
+    - SUBSUMES
+    - DECOMPOSES_TO
+    - CONTAINS
+    - HAS_PART
+    - HAS_VARIANT
+  semantic:
+    - REALIZES
+    - SUPPORTS
+    - APPLICABLE_TO
+    - SATISFIES
+  governance:
+    - VALIDATES
+    - GOVERNS_DATA
+    - REPLACES
+    - SUPERSEDES
+  temporal:
+    - EFFECTIVE_FOR
+    - APPLIES_TO
+    - MODIFIES
+
+field_defaults:
+  node_required:
+    - id
+    - code
+    - name
+    - layer
+    - type
+    - status
+  edge_required:
+    - source_id
+    - target_id
+    - relation_type
+    - confidence
+    - evidence_ref

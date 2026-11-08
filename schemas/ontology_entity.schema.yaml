@@ -1,0 +1,93 @@
+# Ontology Entity Contract
+# Version: 1.0.0
+# Status: ACTIVE
+# Source of Truth: src/domain/models/ontology_entity.py + this schema
+
+contract_id: ontology_entity
+contract_type: schema
+version: "1.0.0"
+status: active
+
+description: >
+  Canonical contract for ontology entities.
+  Used by pipeline, skill, validation, and downstream export paths.
+
+fields:
+  meta_id:
+    type: string
+    required: true
+    description: Stable entity identifier.
+
+  meta_name:
+    type: string
+    required: true
+    description: Canonical entity name.
+
+  meta_class:
+    type: string
+    required: true
+    description: Primary entity class.
+
+  meta_subclass:
+    type: string
+    required: false
+    default: ""
+    description: Normalized subclass.
+
+  description:
+    type: string
+    required: false
+    default: ""
+
+  domain:
+    type: string
+    required: false
+    default: ENTERPRISE
+
+  properties:
+    type: dict
+    required: false
+    default: {}
+
+  evidence:
+    type: dict
+    required: false
+    description: Evidence payload or null.
+
+  confidence:
+    type: number
+    required: false
+    default: 1.0
+    min: 0.0
+    max: 1.0
+
+  version:
+    type: string
+    required: false
+    default: "1.0"
+
+  layer:
+    type: string
+    required: false
+    description: Optional inferred layer.
+
+  provenance:
+    type: dict
+    required: false
+    description: Optional provenance metadata.
+
+  structured_metadata:
+    type: dict
+    required: false
+    description: Optional enriched metadata payload.
+
+  validation_state:
+    type: string
+    required: false
+    description: Optional validation state.
+
+deprecated:
+  legacy_fields:
+    - name
+    - type
+  migration_notes: "Prefer meta_name/meta_class and typed evidence payloads."

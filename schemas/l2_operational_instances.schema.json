@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ontology-unified.local/schemas/l2_operational_instances.schema.json",
+  "title": "L2 Operational Instances",
+  "type": "object",
+  "required": ["schema_version", "meta", "instances", "quality"],
+  "properties": {
+    "schema_version": {"type": "string"},
+    "meta": {
+      "type": "object",
+      "required": ["run_id", "topic_id", "domain", "source_folder", "generated_at"],
+      "properties": {
+        "run_id": {"type": "string"},
+        "topic_id": {"type": "string"},
+        "domain": {"type": "string"},
+        "source_folder": {"type": "string"},
+        "generated_at": {"type": "string"}
+      },
+      "additionalProperties": true
+    },
+    "instances": {"type": "array"},
+    "quality": {
+      "type": "object",
+      "required": ["instance_count", "binding_valid_ratio", "stale_ratio", "refresh_sla_ratio"],
+      "properties": {
+        "instance_count": {"type": "integer"},
+        "binding_valid_ratio": {"type": "number"},
+        "stale_ratio": {"type": "number"},
+        "refresh_sla_ratio": {"type": "number"}
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}
+

@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ontology-unified.local/schemas/skills/quality_gate.schema.json",
+  "title": "Quality Gate Skill Schema",
+  "type": "object",
+  "required": ["skill_name", "skill_version", "context", "input", "output", "quality", "trace"],
+  "properties": {
+    "skill_name": {"type": "string", "const": "quality_gate"},
+    "skill_version": {"type": "string"},
+    "context": {"$ref": "../shared/skill_envelope.schema.json#/definitions/context"},
+    "input": {
+      "type": "object",
+      "required": ["nodes", "edges", "evidence", "thresholds"],
+      "properties": {
+        "nodes": {"type": "array", "items": {"type": "object"}},
+        "edges": {"type": "array", "items": {"type": "object"}},
+        "evidence": {"type": "array", "items": {"type": "object"}},
+        "thresholds": {
+          "type": "object",
+          "properties": {
+            "min_confidence": {"type": "number", "minimum": 0, "maximum": 1, "default": 0.5},
+            "min_evidence_coverage": {"type": "number", "minimum": 0, "maximum": 1, "default": 0.7},
+            "max_duplicate_rate": {"type": "number", "minimum": 0, "maximum": 1, "default": 0.3},
+            "max_conflict_count": {"type": "integer", "minimum": 0, "default": 5},
+            "min_completeness": {"type": "number", "minimum": 0, "maximum": 1, "default": 0.6}
+          }
+        },
+        "governance_rules": {"type": "array", "items": {"type": "object"}}
+      }
+    },
+    "output": {
+      "type": "object",
+      "required": ["status", "pass_items", "review_items", "reject_items"],
+      "properties": {
+        "status": {"type": "string", "enum": ["pass", "review", "reject"]},
+        "pass_items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "item_id": {"type": "string"},
+              "item_type": {"type": "string", "enum": ["node", "edge", "evidence"]},
+              "reason": {"type": "string"}
+            },
+            "required": ["item_id", "item_type"]
+          }
+        },
+        "review_items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "item_id": {"type": "string"},
+              "item_type": {"type": "string", "enum": ["node", "edge", "evidence"]},
+              "reason": {"type": "string"},
+              "issue_type": {"type": "string", "enum": ["low_confidence", "missing_evidence", "duplicate", "conflict", "incomplete"]},
+              "confidence": {"type": "number", "minimum": 0, "maximum": 1}
+            },
+            "required": ["item_id", "item_type", "reason", "issue_type"]
+          }
+        },
+        "reject_items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "item_id": {"type": "string"},
+              "item_type": {"type": "string", "enum": ["node", "edge", "evidence"]},
+              "reason": {"type": "string"},
+              "issue_type": {"type": "string", "enum": ["schema_violation", "critical_conflict", "no_evidence", "invalid_structure"]}
+            },
+            "required": ["item_id", "item_type", "reason", "issue_type"]
+          }
+        },
+        "quality_summary": {
+          "type": "object",
+          "properties": {
+            "total_items": {"type": "integer", "minimum": 0},
+            "pass_count": {"type": "integer", "minimum": 0},
+            "review_count": {"type": "integer", "minimum": 0},
+            "reject_count": {"type": "integer", "minimum": 0},
+            "overall_confidence": {"type": "number", "minimum": 0, "maximum": 1},
+            "evidence_coverage_rate": {"type": "number", "minimum": 0, "maximum": 1},
+            "duplicate_rate": {"type": "number", "minimum": 0, "maximum": 1},
+            "conflict_count": {"type": "integer", "minimum": 0}
+          }
+        },
+        "review_tasks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "task_id": {"type": "string"},
+              "priority": {"type": "string", "enum": ["high", "medium", "low"]},
+              "assignee": {"type": "string"},
+              "due_date": {"type": "string", "format": "date-time"},
+              "items_to_review": {"type": "array", "items": {"type": "string"}}
+            },
+            "required": ["task_id", "priority"]
+          }
+        }
+      }
+    },
+    "quality": {"$ref": "../shared/skill_envelope.schema.json#/definitions/quality"},
+    "trace": {"$ref": "../shared/skill_envelope.schema.json#/definitions/trace"},
+    "warnings": {"type": "array", "items": {"$ref": "../shared/skill_envelope.schema.json#/definitions/warning"}},
+    "errors": {"type": "array", "items": {"$ref": "../shared/skill_envelope.schema.json#/definitions/error"}}
+  }
+}

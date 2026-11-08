@@ -1,0 +1,612 @@
+version: "1.0"
+name: relation_type_registry
+status: active
+owner: ontology_team
+description: "统一关系类型注册表 - 所有关系类型的单一真源"
+
+categories:
+  structural:
+    name: 结构关系
+    description: "描述实体间的组成、包含、层次结构"
+  realization:
+    name: 实现关系
+    description: "描述实体如何实现、部署、执行"
+  ownership:
+    name: 归属关系
+    description: "描述实体的所有权、管理权"
+  dependency:
+    name: 依赖关系
+    description: "描述实体间的依赖、使用、集成"
+  traceability:
+    name: 追溯关系
+    description: "描述实体间的追溯、验证、满足"
+  effectivity:
+    name: 时效关系
+    description: "描述实体的应用范围、替代"
+  special:
+    name: 特殊关系
+    description: "特殊语义关系"
+  system:
+    name: 系统关系
+    description: "系统间的连接、控制、监控"
+  data:
+    name: 数据关系
+    description: "数据的治理、生成、更新、映射"
+  process:
+    name: 流程关系
+    description: "流程的触发、步骤、生产"
+  asset:
+    name: 资产关系
+    description: "资产的实例化、派生"
+  enhancement:
+    name: 增强关系
+    description: "增强、优化关系"
+
+relation_types:
+  SUBSUMES:
+    display_name: 包含（泛化）
+    category: structural
+    status: active
+    version: "1.0"
+    description: "父概念包含子概念"
+    default_direction: forward
+
+  DECOMPOSES_TO:
+    display_name: 分解为
+    category: structural
+    status: active
+    version: "1.0"
+    description: "整体分解为部分"
+    default_direction: forward
+
+  CONTAINS:
+    display_name: 包含
+    category: structural
+    status: active
+    version: "1.0"
+    description: "容器包含内容"
+    default_direction: forward
+
+  HAS_PART:
+    display_name: 拥有部件
+    category: structural
+    status: active
+    version: "1.0"
+    description: "整体拥有部分"
+    default_direction: forward
+
+  HAS_VARIANT:
+    display_name: 拥有变体
+    category: structural
+    status: active
+    version: "1.0"
+    description: "实体拥有变体形式"
+    default_direction: forward
+
+  HAS_BOM:
+    display_name: 拥有BOM
+    category: structural
+    status: active
+    version: "1.0"
+    description: "产品拥有物料清单"
+    default_direction: forward
+
+  REALIZES:
+    display_name: 实现
+    category: realization
+    status: active
+    version: "1.0"
+    description: "能力被系统实现"
+    default_direction: forward
+
+  DEPLOYS_TO:
+    display_name: 部署到
+    category: realization
+    status: active
+    version: "1.0"
+    description: "系统部署到环境"
+    default_direction: forward
+
+  SUPPORTS:
+    display_name: 支持
+    category: realization
+    status: active
+    version: "1.0"
+    description: "实体支持另一实体"
+    default_direction: forward
+
+  EXECUTES:
+    display_name: 执行
+    category: realization
+    status: active
+    version: "1.0"
+    description: "系统执行流程"
+    default_direction: forward
+
+  OWNS:
+    display_name: 拥有
+    category: ownership
+    status: active
+    version: "1.0"
+    description: "实体拥有另一实体"
+    default_direction: forward
+
+  MANAGES:
+    display_name: 管理
+    category: ownership
+    status: active
+    version: "1.0"
+    description: "实体管理另一实体"
+    default_direction: forward
+
+  MAINTAINS:
+    display_name: 维护
+    category: ownership
+    status: active
+    version: "1.0"
+    description: "实体维护另一实体"
+    default_direction: forward
+
+  ASSIGNED_TO:
+    display_name: 分配给
+    category: ownership
+    status: active
+    version: "1.0"
+    description: "任务分配给执行者"
+    default_direction: forward
+
+  DEPENDS_ON:
+    display_name: 依赖于
+    category: dependency
+    status: active
+    version: "1.0"
+    description: "实体依赖另一实体"
+    default_direction: forward
+
+  USES:
+    display_name: 使用
+    category: dependency
+    status: active
+    version: "1.0"
+    description: "实体使用另一实体"
+    default_direction: forward
+
+  INTEGRATES_WITH:
+    display_name: 集成于
+    category: dependency
+    status: active
+    version: "1.0"
+    description: "系统集成于另一系统"
+    default_direction: forward
+
+  REFERENCES:
+    display_name: 引用
+    category: dependency
+    status: active
+    version: "1.0"
+    description: "实体引用另一实体"
+    default_direction: forward
+
+  TRACES_TO:
+    display_name: 追溯到
+    category: traceability
+    status: active
+    version: "1.0"
+    description: "需求追溯到实现"
+    default_direction: forward
+
+  VERIFIES:
+    display_name: 验证
+    category: traceability
+    status: active
+    version: "1.0"
+    description: "验证关系"
+    default_direction: forward
+
+  VALIDATES:
+    display_name: 确认
+    category: traceability
+    status: active
+    version: "1.0"
+    description: "确认关系"
+    default_direction: forward
+
+  SATISFIES:
+    display_name: 满足
+    category: traceability
+    status: active
+    version: "1.0"
+    description: "实现满足需求"
+    default_direction: forward
+
+  CONFORMS_TO:
+    display_name: 符合
+    category: traceability
+    status: active
+    version: "1.0"
+    description: "实体符合标准"
+    default_direction: forward
+
+  APPLIES_TO:
+    display_name: 应用于
+    category: effectivity
+    status: active
+    version: "1.0"
+    description: "规则应用于实体"
+    default_direction: forward
+
+  EFFECTIVE_FOR:
+    display_name: 对...有效
+    category: effectivity
+    status: active
+    version: "1.0"
+    description: "规则对实体有效"
+    default_direction: forward
+
+  REPLACES:
+    display_name: 替换
+    category: effectivity
+    status: active
+    version: "1.0"
+    description: "新实体替换旧实体"
+    default_direction: forward
+
+  same_as:
+    display_name: 相同于
+    category: special
+    status: active
+    version: "1.0"
+    description: "两实体相同"
+    default_direction: bidirectional
+
+  related_to:
+    display_name: 相关于
+    category: special
+    status: active
+    version: "1.0"
+    description: "两实体相关"
+    default_direction: bidirectional
+
+  child_of:
+    display_name: 子节点
+    category: special
+    status: active
+    version: "1.0"
+    description: "子节点关系"
+    default_direction: forward
+
+  parent_of:
+    display_name: 父节点
+    category: special
+    status: active
+    version: "1.0"
+    description: "父节点关系"
+    default_direction: forward
+
+  participates_in:
+    display_name: 参与
+    category: special
+    status: active
+    version: "1.0"
+    description: "实体参与流程"
+    default_direction: forward
+
+  connected_to:
+    display_name: 连接到
+    category: system
+    status: active
+    version: "1.0"
+    description: "系统连接到另一系统"
+    default_direction: bidirectional
+
+  governs_data:
+    display_name: 治理数据
+    category: data
+    status: active
+    version: "1.0"
+    description: "规则治理数据"
+    default_direction: forward
+
+  results_in:
+    display_name: 导致
+    category: data
+    status: active
+    version: "1.0"
+    description: "操作导致结果"
+    default_direction: forward
+
+  generates:
+    display_name: 生成
+    category: data
+    status: active
+    version: "1.0"
+    description: "过程生成数据"
+    default_direction: forward
+
+  triggers:
+    display_name: 触发
+    category: process
+    status: active
+    version: "1.0"
+    description: "事件触发流程"
+    default_direction: forward
+
+  has_step:
+    display_name: 有步骤
+    category: process
+    status: active
+    version: "1.0"
+    description: "流程有步骤"
+    default_direction: forward
+
+  modifies:
+    display_name: 修改
+    category: process
+    status: active
+    version: "1.0"
+    description: "操作修改实体"
+    default_direction: forward
+
+  instance_of:
+    display_name: 实例化
+    category: asset
+    status: active
+    version: "1.0"
+    description: "实例是类的实例"
+    default_direction: forward
+
+  option_for:
+    display_name: 选项
+    category: asset
+    status: active
+    version: "1.0"
+    description: "选项关系"
+    default_direction: forward
+
+  derived_from:
+    display_name: 派生自
+    category: asset
+    status: active
+    version: "1.0"
+    description: "实体派生自另一实体"
+    default_direction: forward
+
+  maps:
+    display_name: 映射
+    category: data
+    status: active
+    version: "1.0"
+    description: "数据映射"
+    default_direction: forward
+
+  feeds:
+    display_name: 供给
+    category: process
+    status: active
+    version: "1.0"
+    description: "流程供给"
+    default_direction: forward
+
+  updates:
+    display_name: 更新
+    category: data
+    status: active
+    version: "1.0"
+    description: "更新数据"
+    default_direction: forward
+
+  populates:
+    display_name: 填充
+    category: data
+    status: active
+    version: "1.0"
+    description: "填充数据"
+    default_direction: forward
+
+  sends_to:
+    display_name: 发送到
+    category: data
+    status: active
+    version: "1.0"
+    description: "发送数据到"
+    default_direction: forward
+
+  handles_over:
+    display_name: 移交
+    category: data
+    status: active
+    version: "1.0"
+    description: "移交数据"
+    default_direction: forward
+
+  maps_to:
+    display_name: 映射到
+    category: data
+    status: active
+    version: "1.0"
+    description: "映射到目标"
+    default_direction: forward
+
+  processes:
+    display_name: 处理
+    category: process
+    status: active
+    version: "1.0"
+    description: "处理数据"
+    default_direction: forward
+
+  produces:
+    display_name: 生产
+    category: process
+    status: active
+    version: "1.0"
+    description: "生产产出"
+    default_direction: forward
+
+  implements:
+    display_name: 实现
+    category: realization
+    status: active
+    version: "1.0"
+    description: "实现能力"
+    default_direction: forward
+
+  deploys:
+    display_name: 部署
+    category: realization
+    status: active
+    version: "1.0"
+    description: "部署系统"
+    default_direction: forward
+
+  controls:
+    display_name: 控制
+    category: system
+    status: active
+    version: "1.0"
+    description: "控制实体"
+    default_direction: forward
+
+  enhances:
+    display_name: 增强
+    category: enhancement
+    status: active
+    version: "1.0"
+    description: "增强实体"
+    default_direction: forward
+
+  is_part_of:
+    display_name: 属于...的一部分
+    category: structural
+    status: active
+    version: "1.0"
+    description: "属于整体的一部分"
+    default_direction: forward
+
+  integratedWith:
+    display_name: 集成于
+    category: dependency
+    status: active
+    version: "1.0"
+    description: "集成于系统"
+    default_direction: bidirectional
+
+  monitors:
+    display_name: 监控
+    category: system
+    status: active
+    version: "1.0"
+    description: "监控实体"
+    default_direction: forward
+
+  defines:
+    display_name: 定义
+    category: system
+    status: active
+    version: "1.0"
+    description: "定义实体"
+    default_direction: forward
+
+  FEEDS_INTO:
+    display_name: 输入到
+    category: process
+    status: active
+    version: "1.0"
+    description: "输入到流程"
+    default_direction: forward
+
+  associated_with:
+    display_name: 关联
+    category: special
+    status: active
+    version: "1.0"
+    description: "通用关联关系（降级用）"
+    default_direction: bidirectional
+
+  uses:
+    display_name: 使用
+    category: dependency
+    status: active
+    version: "1.0"
+    description: "使用（小写）"
+    default_direction: forward
+
+  manages:
+    display_name: 管理
+    category: ownership
+    status: active
+    version: "1.0"
+    description: "管理（小写）"
+    default_direction: forward
+
+  has_part:
+    display_name: 拥有部件
+    category: structural
+    status: active
+    version: "1.0"
+    description: "拥有部件（小写）"
+    default_direction: forward
+
+  contains:
+    display_name: 包含
+    category: structural
+    status: active
+    version: "1.0"
+    description: "包含（小写）"
+    default_direction: forward
+
+  implements:
+    display_name: 实现
+    category: realization
+    status: active
+    version: "1.0"
+    description: "实现（小写）"
+    default_direction: forward
+
+  depends_on:
+    display_name: 依赖于
+    category: dependency
+    status: active
+    version: "1.0"
+    description: "依赖于（小写）"
+    default_direction: forward
+
+  integrates_with:
+    display_name: 集成于
+    category: dependency
+    status: active
+    version: "1.0"
+    description: "集成于（小写）"
+    default_direction: forward
+
+  deployed_to:
+    display_name: 部署到
+    category: realization
+    status: active
+    version: "1.0"
+    description: "部署到（小写）"
+    default_direction: forward
+
+  governed_by:
+    display_name: 被治理
+    category: data
+    status: active
+    version: "1.0"
+    description: "被治理（小写）"
+    default_direction: forward
+
+  governed_data:
+    display_name: 治理数据
+    category: data
+    status: active
+    version: "1.0"
+    description: "治理数据（小写）"
+    default_direction: forward
+
+  SAME_AS:
+    display_name: 相同于
+    category: special
+    status: active
+    version: "1.0"
+    description: "相同于（大写）"
+    default_direction: bidirectional

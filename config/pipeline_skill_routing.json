@@ -1,0 +1,67 @@
+{
+    "version": "1.2.0",
+    "description": "Pipeline Stage to Skill Routing Configuration — extract stage no longer routes L2.5 prompt-only skills (l25_*); those are consumed inside the extraction kernel by L25SkillLoader (matched_skills -> document_metadata), not by the pipeline skill executor. C-1 experiment (2026-08-15): 'relationship' stage routes to relation_rewrite; the router only activates this rule when PIPELINE_SKILL_RELATION_REWRITE=1 (production unchanged by default).",
+    "routing_rules": [
+        {
+            "stage": "preflight",
+            "domain": "*",
+            "skills": []
+        },
+        {
+            "stage": "extract",
+            "domain": "MANUFACTURING",
+            "skills": []
+        },
+        {
+            "stage": "extract",
+            "domain": "SUPPLY_CHAIN",
+            "skills": []
+        },
+        {
+            "stage": "extract",
+            "domain": "*",
+            "skills": []
+        },
+        {
+            "stage": "merge",
+            "domain": "*",
+            "skills": []
+        },
+        {
+            "stage": "dedup",
+            "domain": "*",
+            "skills": []
+        },
+        {
+            "stage": "relationship",
+            "domain": "*",
+            "skills": ["relation_rewrite"]
+        },
+        {
+            "stage": "audit",
+            "domain": "*",
+            "skills": []
+        },
+        {
+            "stage": "guard",
+            "domain": "*",
+            "skills": []
+        },
+        {
+            "stage": "export",
+            "domain": "*",
+            "skills": []
+        },
+        {
+            "stage": "summarize",
+            "domain": "*",
+            "skills": []
+        }
+    ],
+    "fallback_rules": [
+        {
+            "stage": "extract",
+            "skills": []
+        }
+    ]
+}

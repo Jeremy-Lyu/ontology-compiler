@@ -1,0 +1,655 @@
+relation_family_map:
+  STRUCTURAL:
+    - "SUBSUMES"
+    - "DECOMPOSES_TO"
+    - "CONTAINS"
+    - "HAS_PART"
+    - "HAS_VARIANT"
+    - "HAS_BOM"
+    - "HAS_COMPONENT"
+    - "PART_OF"
+
+  REALIZATION:
+    - "REALIZES"
+    - "DEPLOYS_TO"
+    - "SUPPORTS"
+    - "EXECUTES"
+    - "CONNECTED_TO"
+    - "INTEGRATES_WITH"
+
+  GOVERNANCE:
+    - "OWNS"
+    - "MANAGES"
+    - "MAINTAINS"
+    - "ASSIGNED_TO"
+    - "RESPONSIBLE_FOR"
+    - "PARTICIPATES_IN"
+
+  DEPENDENCY_TRACE:
+    - "DEPENDS_ON"
+    - "USES"
+    - "USED_IN"
+    - "REFERENCES"
+    - "TRACES_TO"
+    - "VERIFIES"
+    - "VALIDATES"
+    - "SATISFIES"
+    - "CONFORMS_TO"
+    - "COMPLIES_TO"
+
+  CONFIG_EFFECTIVITY:
+    - "APPLIES_TO"
+    - "CONFIGURED_BY"
+    - "APPLICABLE_TO"
+    - "EFFECTIVE_FOR"
+    - "OPTION_FOR"
+    - "SUBSTITUTES"
+    - "REPLACES"
+    - "SUPERSEDES"
+    - "ALIGNED_WITH"
+
+  CHANGE_FLOW:
+    - "MODIFIES"
+    - "GENERATES"
+    - "RESULTS_IN"
+    - "TRIGGERS"
+    - "TRANSFORMS_TO"
+
+  DERIVATION:
+    - "DERIVED_FROM"
+
+  GENERAL: []
+
+
+relation_rules:
+  HAS_VARIANT:
+    family: STRUCTURAL
+    allowed_source_types:
+      - "Platform"
+      - "Program"
+      - "Vehicle Line"
+      - "VehicleLine"
+    allowed_target_types:
+      - "Variant"
+      - "Configuration"
+    required_fields:
+      - "evidence_ref"
+      - "rule_no"
+      - "citation"
+      - "config_code"
+    severity: error
+    notes: "HAS_VARIANT should carry evidence_ref or rule/config citation"
+
+  APPLIES_TO:
+    family: CONFIG_EFFECTIVITY
+    allowed_source_types:
+      - "Variant"
+      - "Configuration"
+      - "Effectivity"
+      - "Asset"
+    allowed_target_types:
+      - "Variant"
+      - "Configuration"
+      - "BOM"
+      - "Part"
+      - "Part Family"
+      - "Asset"
+    required_fields:
+      - "effectivity_code"
+      - "option_codes"
+      - "evidence_ref"
+    severity: error
+    notes: "APPLIES_TO should carry effectivity_code/option_codes/evidence_ref"
+
+  APPLICABLE_TO:
+    family: CONFIG_EFFECTIVITY
+    allowed_source_types:
+      - "Variant"
+      - "Configuration"
+      - "Effectivity"
+      - "Asset"
+    allowed_target_types:
+      - "Variant"
+      - "Configuration"
+      - "BOM"
+      - "Part"
+      - "Part Family"
+      - "Asset"
+    required_fields:
+      - "effectivity_code"
+      - "option_codes"
+      - "evidence_ref"
+    severity: error
+    notes: "APPLICABLE_TO should carry effectivity_code/option_codes/evidence_ref"
+
+  CONFIGURED_BY:
+    family: CONFIG_EFFECTIVITY
+    allowed_source_types:
+      - "Variant"
+      - "Configuration"
+      - "Effectivity"
+      - "Asset"
+    allowed_target_types:
+      - "Variant"
+      - "Configuration"
+      - "BOM"
+      - "Part"
+      - "Part Family"
+      - "Asset"
+    required_fields:
+      - "effectivity_code"
+      - "option_codes"
+      - "evidence_ref"
+    severity: error
+    notes: "CONFIGURED_BY should carry effectivity_code/option_codes/evidence_ref"
+
+  HAS_PART:
+    family: STRUCTURAL
+    allowed_source_types:
+      - "BOM"
+      - "Assembly"
+      - "Module"
+      - "Part Family"
+      - "Variant"
+      - "Configuration"
+      - "Asset"
+    allowed_target_types:
+      - "BOM"
+      - "Assembly"
+      - "Module"
+      - "Part Family"
+      - "Part"
+      - "Asset"
+    severity: warn
+    notes: "HAS_PART source/target validation"
+
+  CONTAINS:
+    family: STRUCTURAL
+    allowed_source_types:
+      - "BOM"
+      - "Assembly"
+      - "Module"
+      - "Part Family"
+      - "Variant"
+      - "Configuration"
+      - "Asset"
+      - "Concept"
+      - "BusinessScenario"
+      - "Capability"
+      - "System"
+      - "Process"
+      - "Actor"
+    allowed_target_types:
+      - "BOM"
+      - "Assembly"
+      - "Module"
+      - "Part Family"
+      - "Part"
+      - "Asset"
+      - "Concept"
+      - "BusinessScenario"
+      - "Capability"
+      - "System"
+      - "Process"
+      - "Actor"
+      - "Data"
+    severity: info
+    notes: "CONTAINS is a general containment relation allowed between most entity types"
+
+  DECOMPOSES_TO:
+    family: STRUCTURAL
+    allowed_source_types:
+      - "BOM"
+      - "Assembly"
+      - "Module"
+      - "Part Family"
+      - "Variant"
+      - "Configuration"
+      - "Asset"
+    allowed_target_types:
+      - "BOM"
+      - "Assembly"
+      - "Module"
+      - "Part Family"
+      - "Part"
+      - "Asset"
+    severity: warn
+    notes: "DECOMPOSES_TO source/target validation"
+
+  REPLACES:
+    family: CONFIG_EFFECTIVITY
+    allowed_source_types:
+      - "Part"
+      - "Part Family"
+      - "Asset"
+    allowed_target_types:
+      - "Part"
+      - "Part Family"
+      - "Asset"
+    required_fields:
+      - "effective_from"
+      - "effective_to"
+      - "evidence_ref"
+    severity: error
+    notes: "REPLACES should carry effective_from/effective_to/evidence_ref"
+
+  SUPERSEDES:
+    family: CONFIG_EFFECTIVITY
+    allowed_source_types:
+      - "Part"
+      - "Part Family"
+      - "Asset"
+    allowed_target_types:
+      - "Part"
+      - "Part Family"
+      - "Asset"
+    required_fields:
+      - "effective_from"
+      - "effective_to"
+      - "evidence_ref"
+    severity: error
+    notes: "SUPERSEDES should carry effective_from/effective_to/evidence_ref"
+
+  MODIFIES:
+    family: CHANGE_FLOW
+    allowed_source_types:
+      - "Process"
+      - "Task"
+      - "Asset"
+    allowed_target_types:
+      - "Process"
+      - "Task"
+      - "Asset"
+    required_fields:
+      - "change_request"
+      - "evidence_ref"
+    severity: warn
+    notes: "MODIFIES should carry change_request/evidence_ref"
+
+  DERIVED_FROM:
+    family: DERIVATION
+    allowed_source_types:
+      - "Part"
+      - "Part Family"
+      - "Asset"
+      - "Concept"
+      - "System"
+      - "Data"
+      - "Process"
+    allowed_target_types:
+      - "Part"
+      - "Part Family"
+      - "Asset"
+      - "Concept"
+      - "System"
+      - "Data"
+      - "Process"
+    required_fields:
+      - "evidence_ref"
+      - "source_file"
+    severity: info
+    notes: "DERIVED_FROM should carry evidence_ref/source_file"
+
+  DEPENDS_ON:
+    family: DEPENDENCY_TRACE
+    allowed_source_types:
+      - "Capability"
+      - "System"
+      - "Process"
+      - "Asset"
+    allowed_target_types:
+      - "Capability"
+      - "System"
+      - "Process"
+      - "Asset"
+    severity: info
+    notes: "DEPENDS_ON is allowed between most entity types"
+
+  USES:
+    family: DEPENDENCY_TRACE
+    allowed_source_types:
+      - "Capability"
+      - "System"
+      - "Process"
+      - "Asset"
+    allowed_target_types:
+      - "Capability"
+      - "System"
+      - "Process"
+      - "Asset"
+    severity: info
+    notes: "USES is allowed between most entity types"
+
+  USED_IN:
+    family: DEPENDENCY_TRACE
+    allowed_source_types:
+      - "Capability"
+      - "System"
+      - "Process"
+      - "Asset"
+    allowed_target_types:
+      - "Capability"
+      - "System"
+      - "Process"
+      - "Asset"
+    severity: info
+    notes: "USED_IN is allowed between most entity types"
+
+  PART_OF:
+    family: STRUCTURAL
+    allowed_source_types:
+      - "Capability"
+      - "System"
+      - "Asset"
+      - "Process"
+      - "BOM"
+      - "Assembly"
+    allowed_target_types:
+      - "Capability"
+      - "System"
+      - "Asset"
+      - "Process"
+      - "BOM"
+      - "Assembly"
+    severity: info
+    notes: "PART_OF is allowed between most entity types"
+
+  HAS_COMPONENT:
+    family: STRUCTURAL
+    allowed_source_types:
+      - "Capability"
+      - "System"
+      - "Asset"
+      - "Process"
+      - "BOM"
+      - "Assembly"
+    allowed_target_types:
+      - "Capability"
+      - "System"
+      - "Asset"
+      - "Process"
+      - "BOM"
+      - "Assembly"
+    severity: info
+    notes: "HAS_COMPONENT is allowed between most entity types"
+
+  MANUFACTURED_BY:
+    family: REALIZATION
+    allowed_source_types:
+      - "Asset"
+      - "Part"
+      - "Part Family"
+    allowed_target_types:
+      - "Process"
+      - "Capability"
+      - "Actor"
+    severity: info
+    notes: "MANUFACTURED_BY connects assets to manufacturing processes"
+
+  HAS_OPERATION:
+    family: STRUCTURAL
+    allowed_source_types:
+      - "Process"
+      - "Capability"
+    allowed_target_types:
+      - "Process"
+      - "Capability"
+      - "Asset"
+    severity: info
+    notes: "HAS_OPERATION connects processes to operations"
+
+  ROUTES_TO:
+    family: REALIZATION
+    allowed_source_types:
+      - "Process"
+      - "Asset"
+    allowed_target_types:
+      - "Process"
+      - "Asset"
+      - "Capability"
+    severity: info
+    notes: "ROUTES_TO connects processes and assets"
+
+
+layer_pair_rules:
+  "L0-L0":
+    allowed: true
+    allowed_families:
+      - STRUCTURAL
+      - GOVERNANCE
+    requires_evidence: false
+    notes: "Same-layer relations within L0"
+
+  "L0-L1":
+    allowed: true
+    allowed_families:
+      - STRUCTURAL
+      - REALIZATION
+    requires_evidence: false
+    notes: "L0 to L1 is allowed - abstract category has domain subtypes"
+
+  "L0-L2":
+    allowed: false
+    allowed_families: []
+    requires_evidence: false
+    notes: "L0 to L2 skip-layer relations are not allowed"
+
+  "L0-L2.5":
+    allowed: false
+    allowed_families: []
+    requires_evidence: false
+    notes: "L0 to L2.5 direct relations are not allowed"
+
+  "L0-L3":
+    allowed: false
+    allowed_families: []
+    requires_evidence: false
+    notes: "L0 to L3 direct relations are not allowed"
+
+  "L1-L0":
+    allowed: false
+    allowed_families: []
+    requires_evidence: false
+    notes: "L1 to L0 reverse trace relations are not allowed"
+
+  "L1-L1":
+    allowed: true
+    allowed_families:
+      - STRUCTURAL
+      - DEPENDENCY_TRACE
+    requires_evidence: false
+    notes: "Same-layer relations within L1"
+
+  "L1-L2":
+    allowed: true
+    allowed_families:
+      - STRUCTURAL
+      - REALIZATION
+      - DEPENDENCY_TRACE
+    requires_evidence: true
+    notes: "L1 to L2 is allowed - abstract subtype realizes as concrete system/scenario"
+
+  "L1-L2.5":
+    allowed: false
+    allowed_families: []
+    requires_evidence: false
+    notes: "L1 to L2.5 relations are not allowed"
+
+  "L1-L3":
+    allowed: false
+    allowed_families: []
+    requires_evidence: false
+    notes: "L1 to L3 direct relations are not allowed"
+
+  "L2-L0":
+    allowed: false
+    allowed_families: []
+    requires_evidence: false
+    notes: "L2 to L0 relations are not allowed"
+
+  "L2-L1":
+    allowed: false
+    allowed_families: []
+    requires_evidence: false
+    notes: "L2 to L1 relations are not allowed (only L1->L2)"
+
+  "L2-L2":
+    allowed: true
+    allowed_families:
+      - STRUCTURAL
+      - DEPENDENCY_TRACE
+      - GOVERNANCE
+      - REALIZATION
+    requires_evidence: false
+    notes: "Same-layer relations within L2"
+
+  "L2-L2.5":
+    allowed: false
+    allowed_families: []
+    requires_evidence: false
+    notes: "L2 to L2.5 relations are not allowed"
+
+  "L2-L3":
+    allowed: true
+    allowed_families:
+      - STRUCTURAL
+      - REALIZATION
+      - DEPENDENCY_TRACE
+    requires_evidence: true
+    notes: "L2 to L3 is allowed - business scenario has instances"
+
+  "L2.5-L0":
+    allowed: false
+    allowed_families: []
+    requires_evidence: false
+    notes: "L2.5 to L0 relations are not allowed"
+
+  "L2.5-L1":
+    allowed: false
+    allowed_families: []
+    requires_evidence: false
+    notes: "L2.5 to L1 relations are not allowed"
+
+  "L2.5-L2":
+    allowed: false
+    allowed_families: []
+    requires_evidence: false
+    notes: "L2.5 to L2 relations are not allowed"
+
+  "L2.5-L2.5":
+    allowed: true
+    allowed_families:
+      - STRUCTURAL
+      - DEPENDENCY_TRACE
+      - GOVERNANCE
+    requires_evidence: false
+    notes: "Same-layer relations within L2.5"
+
+  "L2.5-L3":
+    allowed: true
+    allowed_families:
+      - STRUCTURAL
+      - DEPENDENCY_TRACE
+      - GOVERNANCE
+    requires_evidence: false
+    notes: "L2.5 to L3 is allowed - rules govern instance behavior"
+
+  "L3-L0":
+    allowed: false
+    allowed_families: []
+    requires_evidence: false
+    notes: "L3 to L0 relations are not allowed"
+
+  "L3-L1":
+    allowed: false
+    allowed_families: []
+    requires_evidence: false
+    notes: "L3 to L1 relations are not allowed"
+
+  "L3-L2":
+    allowed: false
+    allowed_families: []
+    requires_evidence: false
+    notes: "L3 to L2 relations are not allowed (only L2->L3)"
+
+  "L3-L2.5":
+    allowed: false
+    allowed_families: []
+    requires_evidence: false
+    notes: "L3 to L2.5 relations are not allowed"
+
+  "L3-L3":
+    allowed: true
+    allowed_families:
+      - STRUCTURAL
+      - DEPENDENCY_TRACE
+      - GOVERNANCE
+    requires_evidence: false
+    notes: "Same-layer relations within L3"
+
+
+evidence_requirements:
+  HIGH:
+    required_fields:
+      - evidence_ref
+      - citation
+      - source_file
+      - rule_no
+    description: "High-risk relations require full evidence"
+
+  MEDIUM:
+    required_fields:
+      - evidence_ref
+      - citation
+    description: "Medium-risk relations require basic evidence"
+
+  LOW:
+    required_fields:
+      - evidence_ref
+    description: "Low-risk relations require minimal evidence"
+
+  NONE:
+    required_fields: []
+    description: "No evidence required"
+
+low_confidence_threshold: 0.5
+
+domain_whitelist:
+  SUPPLY_CHAIN:
+    - CONTAINS
+    - HAS_PART
+    - USES
+    - DEPENDS_ON
+    - APPLIES_TO
+    - REPLACES
+    - SUPERSEDES
+    - MANAGES
+    - OWNS
+  MANUFACTURING:
+    - CONTAINS
+    - HAS_PART
+    - DEPENDS_ON
+    - USES
+    - EXECUTES
+    - ROUTES_TO
+    - MANUFACTURED_BY
+    - PART_OF
+  ENTERPRISE:
+    - CONTAINS
+    - USES
+    - DEPENDS_ON
+    - MANAGES
+    - OWNS
+    - INTEGRATES_WITH
+    - VALIDATES
+    - TRACES_TO
+
+rewrite_priorities:
+  - STRUCTURAL
+  - REALIZATION
+  - GOVERNANCE
+  - DEPENDENCY_TRACE
+  - CONFIG_EFFECTIVITY
+  - CHANGE_FLOW
+  - DERIVATION
+  - GENERAL

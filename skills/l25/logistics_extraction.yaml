@@ -1,0 +1,144 @@
+skill_id: "l25_logistics_extraction"
+skill_name: "物流与供应链场景提取"
+description: "从文档中提取物流与供应链相关的实体和关系，包括库存管理、物料移动、仓库运营、运输等场景"
+version: "1.0.0"
+domain:
+  - SUPPLY_CHAIN
+enabled: true
+
+triggers:
+  keywords:
+    - "物流"
+    - "库存"
+    - "物料移动"
+    - "kanban"
+    - "warehouse"
+    - "STO"
+    - "运输"
+    - "配送"
+    - "仓储"
+    - "供应链"
+    - "采购"
+    - "订单"
+  regex_patterns:
+    - "^STO[\\s_-]?[0-9]+$"
+    - "^运输订单[\\s_-]?[0-9]+$"
+    - "^采购订单[\\s_-]?[0-9]+$"
+  priority: 8
+  exclusive_group: "supply_chain"
+  cost_hint: "medium"
+  requires_llm: true
+  candidate_keywords:
+    - "库存"
+    - "运输"
+    - "仓库"
+
+entity_types:
+  Capability:
+    - "库存管理"
+    - "运输管理"
+    - "供应链计划"
+    - "需求预测"
+  System:
+    - "WMS系统"
+    - "TMS系统"
+    - "库存系统"
+    - "ERP系统"
+  Asset:
+    - "仓库"
+    - "运输车辆"
+    - "库存位置"
+    - "物流设施"
+  Process:
+    - "物料移动"
+    - "库存盘点"
+    - "运输流程"
+    - "配送流程"
+  Data:
+    - "库存数据"
+    - "运输数据"
+    - "订单数据"
+    - "需求数据"
+
+llm_prompt_template: |
+  你是一个供应链领域的本体工程师。请从以下文档内容中提取物流与供应链相关的实体和关系：
+
+  文档内容：
+  {document_content}
+
+  请提取以下类型的实体：
+  1. 库存项（物料、数量、位置）
+  2. 仓库（仓库编码、类型、容量）
+  3. 运输（运输方式、路线、时间）
+  4. 订单（采购订单、销售订单、STO）
+  5. 供应链规则（安全库存、补货策略）
+
+  请输出JSON格式，包含以下字段：
+  - l25_entities: 物流相关实体列表
+  - relationships: 实体之间的关系
+
+governance:
+  allowed_relation_types:
+    - STORED_AT
+    - TRANSPORTED_BY
+    - ORDERED_BY
+    - SUPPLIES
+    - DELIVERS_TO
+    - HAS_INVENTORY
+  fallback_relation_types:
+    # Last-resort fallback only: prefer a specific whitelist type above.
+    # If RELATED_TO is emitted, downstream rewrite policy should convert it
+    # to a semantic type when text evidence allows.
+    - RELATED_TO
+  blocked_relation_types:
+    - DERIVED_FROM
+    - TRANSFORMS_TO
+
+# T3.2 契约化三层（docs/architectures/ENTITY_CLASSIFICATION_ROADMAP.md）：
+# 与 mbom_extraction.yaml 同构；由 skill_contract.validate_extraction_against_contract 校验。
+contract:
+  classification:
+    required_layers: [L1, L2]
+    noise_patterns:
+      - "^TODO"
+      - "^待定$"
+  entity:
+    rag_required_fields: [evidence_ref]
+    required_entity_types:
+      Capability:
+        min_count: 1
+        required_fields: [meta_id, name]
+      Data:
+        min_count: 0
+        required_fields: [name]
+  relation:
+    forbidden_relation_types: [DERIVED_FROM, TRANSFORMS_TO]
+    evidence_required_relation_types: [STORED_AT, HAS_INVENTORY, DELIVERS_TO]
+
+post_processing:
+  required_fields:
+    - meta_id
+    - meta_name
+    - meta_class
+    - description
+  normalization_rules:
+    - field: "meta_class"
+      allowed_values:
+        - Capability
+        - System
+        - Asset
+        - Process
+        - Data
+      default: "Concept"
+
+cross_layer_mapping:
+  L1:
+    - source: "WMS系统"
+      target: "System"
+    - source: "库存管理"
+      target: "Capability"
+  L2:
+    - source: "库存场景"
+      target: "Process"
+    - source: "运输场景"
+      target: "Process"

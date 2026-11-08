@@ -1,0 +1,35 @@
+{
+  "_security_warning": "This file contains placeholder DIDs for local development. In production, use environment variables or a proper identity management system with dynamic verification. Do not commit real production DIDs to version control.",
+  "schema_version": "v1.0",
+  "identities": [
+    {
+      "subject_id": "system-architect",
+      "did": "did:ontology:system-architect-dev",
+      "roles": [
+        "auto-domain-architect",
+        "verified-user",
+        "colleague"
+      ],
+      "trust_level": "high",
+      "scopes": [
+        "l1",
+        "l2",
+        "publish",
+        "rollback"
+      ],
+      "status": "active"
+    },
+    {
+      "subject_id": "external-importer",
+      "did": "did:ontology:external-importer-dev",
+      "roles": [
+        "external_importer"
+      ],
+      "trust_level": "restricted",
+      "scopes": [
+        "external_knowledge"
+      ],
+      "status": "active"
+    }
+  ]
+}

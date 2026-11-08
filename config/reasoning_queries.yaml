@@ -1,0 +1,85 @@
+# Emergent Reasoning Query Templates (步骤4: 涌现推理查询模板)
+# Predefined business scenarios for manufacturing ontology supply chain analysis
+
+queries:
+  # Scenario 1: Supplier Delay Impact Analysis
+  - name: "supplier_delay_impact"
+    description: "供应商延误影响分析 — 追踪从供应商到VIN的完整影响链"
+    anchor_pattern: "supplier|vendor|provider"
+    anchor_layer: "L2"
+    anchor_class: "Actor|Asset"
+    max_hops: 5
+    edge_types: ["CALL_OFF", "SUPPLIES", "CONTAINS", "ROUTED_TO", "ASSEMBLED_IN"]
+    question: "受影响的特定VIN车辆有哪些？流水线断点倒计时是多少？"
+    metrics:
+      - name: "remaining_hours"
+        formula: "stock_on_hand / shift_demand"
+        description: "线边库存还能支撑多少小时"
+    conclusion_template: "供应商 {anchor} 延误将影响 {affected_count} 个实体，包括 {parts_count} 个零件和 {stations_count} 个工位"
+
+  # Scenario 2: BOM Change Impact Analysis
+  - name: "bom_change_impact"
+    description: "BOM变更影响范围 — 从BOM节点追踪到所有受影响的零件和供应商"
+    anchor_pattern: "bom|mbom|sbom|ebom"
+    anchor_layer: "L2"
+    anchor_class: "Data"
+    max_hops: 4
+    edge_types: ["CONTAINS", "PART_OF", "DEPENDS_ON", "SUPPLIES"]
+    question: "BOM变更会影响哪些零件和供应商？"
+    conclusion_template: "BOM {anchor} 变更影响 {affected_count} 个实体，涉及 {suppliers_count} 个供应商"
+
+  # Scenario 3: System Dependency Chain Analysis
+  - name: "system_dependency_chain"
+    description: "系统依赖链分析 — 追踪IT系统间的依赖关系"
+    anchor_pattern: "system|platform|tool"
+    anchor_layer: "L2"
+    anchor_class: "System"
+    max_hops: 6
+    edge_types: ["DEPENDS_ON", "USES", "IMPLEMENTS", "RELATED_TO"]
+    question: "该系统依赖哪些下游系统？如果该系统宕机，哪些系统会受影响？"
+    conclusion_template: "系统 {anchor} 依赖 {depth1_count} 个直接系统，{depth2_count} 个间接系统"
+
+  # Scenario 4: Part Traceability Analysis
+  - name: "part_traceability"
+    description: "零件追溯分析 — 从零件追踪到设计、采购、制造全链路"
+    anchor_pattern: "part|component|material"
+    anchor_layer: "L2"
+    anchor_class: "Data|Asset"
+    max_hops: 5
+    edge_types: ["CONTAINS", "PART_OF", "SUPPLIES", "ROUTED_TO", "MADE_FROM"]
+    question: "该零件的完整供应链路是什么？"
+    conclusion_template: "零件 {anchor} 的供应链路涉及 {suppliers_count} 个供应商、{bom_count} 个BOM和 {stations_count} 个工位"
+
+  # Scenario 5: Process Flow Analysis
+  - name: "process_flow_analysis"
+    description: "流程分析 — 从制造流程追踪到所有相关系统和数据"
+    anchor_pattern: "process|manufacturing|assembly"
+    anchor_layer: "L2"
+    anchor_class: "Process"
+    max_hops: 4
+    edge_types: ["CONTAINS", "USES", "GENERATES", "DEPENDS_ON"]
+    question: "该流程使用哪些系统？生成哪些数据？"
+    conclusion_template: "流程 {anchor} 使用 {systems_count} 个系统，生成 {data_count} 个数据实体"
+
+  # Scenario 6: Data Lineage Analysis
+  - name: "data_lineage"
+    description: "数据血缘分析 — 追踪数据的来源和下游消费者"
+    anchor_pattern: "data|table|report|document"
+    anchor_layer: "L2"
+    anchor_class: "Data"
+    max_hops: 5
+    edge_types: ["GENERATES", "CONSUMES", "DEPENDS_ON", "RELATED_TO"]
+    question: "该数据从哪里来？被哪些系统消费？"
+    conclusion_template: "数据 {anchor} 由 {sources_count} 个源头生成，被 {consumers_count} 个系统消费"
+
+# Default query to run when no specific query is specified
+default_query: "system_dependency_chain"
+
+# Auto-run settings for pipeline integration
+auto_run:
+  enabled: true
+  queries:
+    - "system_dependency_chain"
+    - "process_flow_analysis"
+    - "data_lineage"
+  max_results_per_query: 50

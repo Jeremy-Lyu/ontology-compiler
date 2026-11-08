@@ -1,0 +1,158 @@
+{
+  "name": "cleanup_comp_runs",
+  "description": "Cleanup COMP-* intermediate run directories under outputs/ontology/runs",
+  "command": "python scripts/maintenance/cleanup_comp_runs.py --mode dry-run",
+  "script_path": "scripts/maintenance/cleanup_comp_runs.py",
+  "category": "maintenance",
+  "enabled": true,
+  "args_schema": {
+    "runs_root": {
+      "type": "string",
+      "required": false,
+      "description": "Root directory to scan"
+    },
+    "retention_days": {
+      "type": "integer",
+      "required": false,
+      "description": "Keep directories modified within this many days"
+    },
+    "keep_latest": {
+      "type": "integer",
+      "required": false,
+      "description": "Always keep the N most recent COMP- dirs regardless of age"
+    },
+    "mode": {
+      "type": "string",
+      "required": false,
+      "description": "Operation mode - dry-run or apply"
+    },
+    "yes": {
+      "type": "boolean",
+      "required": false,
+      "description": "Skip confirmation prompt in apply mode"
+    }
+  },
+  "layer_scope": [
+    "L0",
+    "L1",
+    "L2",
+    "L2.5",
+    "L3"
+  ],
+  "version": "2.0.0",
+  "business_domain": [
+    "SUPPLY_CHAIN",
+    "MANUFACTURING",
+    "DATA_MESH",
+    "MASTER_DATA"
+  ],
+  "output_schema": {
+    "type": "object",
+    "required": [
+      "cleanup_result",
+      "summary"
+    ],
+    "properties": {
+      "cleanup_result": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "dry_run": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "success"
+        ]
+      },
+      "runs_cleaned": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "run_id": {
+              "type": "string"
+            },
+            "status": {
+              "type": "string"
+            },
+            "created_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "files_deleted": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "size_freed_bytes": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "required": [
+            "run_id"
+          ]
+        }
+      },
+      "runs_kept": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "run_id": {
+              "type": "string"
+            },
+            "reason": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "run_id",
+            "reason"
+          ]
+        }
+      },
+      "summary": {
+        "type": "object",
+        "properties": {
+          "total_runs_found": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "total_runs_cleaned": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "total_runs_kept": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "total_files_deleted": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "total_size_freed_bytes": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "errors": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
+      }
+    }
+  },
+  "quality_thresholds": {},
+  "trace_config": {
+    "log_model_name": false,
+    "log_prompt_version": false,
+    "log_execution_time": true,
+    "log_retries": false
+  }
+}

@@ -1,0 +1,129 @@
+# Canary Deployment Configuration for ScenarioAnchorRegistry
+# 金丝雀部署配置 - 外化部署配置 (R3)
+# 
+# STATUS: PROTOTYPE / EXPERIMENTAL ⚠️
+# This configuration is for Direction A progressive rollout.
+# Last updated: 2026-06-01
+
+# Global settings
+global:
+  enabled: true
+  default_traffic_percentage: 0
+  
+  # Audit and monitoring
+  audit_all_requests: true
+  metrics_collection: true
+  alert_on_failure: true
+  
+  # Feature flags
+  feature_flags:
+    enable_cache: true
+    enable_effectivity_check: true
+    enable_path_scoring: true
+    enable_dashboard: true
+
+# Phase 1: CASE-01..05 (low risk, high value scenarios)
+# - CASE-01: CO锁版本 - Change Order locks DSCIMOD version
+# - CASE-02: 无料不排产 - Inventory validation
+# - CASE-03: 精准备料 - Pick-to-light preparation
+# - CASE-04: CO周切换 - Weekly CO transition
+# - CASE-05: 跨日ETA处理 - Cross-day ETA handling
+phases:
+  phase1:
+    name: "Phase 1 - Low Risk Scenarios"
+    description: "CASE-01..05 deployment with conservative traffic"
+    rules:
+      - scenario_pattern: "SCN-CO-LOCK-*"
+        enabled: true
+        traffic_percentage: 20
+        allowed_anchor_types: ["DSCIMOD", "IVMIX"]
+        require_validation: true
+        fallback_to_legacy: true
+        
+      - scenario_pattern: "SCN-INVENTORY-CHECK-*"
+        enabled: true
+        traffic_percentage: 15
+        allowed_anchor_types: ["DSCIMOD", "IVMIX", "PNO34"]
+        require_validation: true
+        fallback_to_legacy: true
+        
+      - scenario_pattern: "SCN-PICK-PREPARE-*"
+        enabled: true
+        traffic_percentage: 15
+        allowed_anchor_types: ["IVMIX", "PNO34"]
+        require_validation: true
+        fallback_to_legacy: true
+        
+      - scenario_pattern: "SCN-WEEK-TRANSITION-*"
+        enabled: true
+        traffic_percentage: 10
+        allowed_anchor_types: ["DSCIMOD", "IVMIX"]
+        require_validation: true
+        fallback_to_legacy: true
+        
+      - scenario_pattern: "SCN-ETA-CROSS-*"
+        enabled: true
+        traffic_percentage: 10
+        allowed_anchor_types: ["DSCIMOD", "PNO34"]
+        require_validation: true
+        fallback_to_legacy: true
+
+  # Phase 2: Expand to CASE-06..10 (moderate complexity)
+  phase2:
+    name: "Phase 2 - Moderate Complexity"
+    description: "CASE-06..07 with lower traffic percentage"
+    extends: phase1
+    additional_rules:
+      - scenario_pattern: "SCN-ADDRESS-FALLBACK-*"
+        enabled: true
+        traffic_percentage: 5
+        allowed_anchor_types: ["IVMIX", "PNO34"]
+        require_validation: true
+        fallback_to_legacy: true
+        
+      - scenario_pattern: "SCN-TORQUE-RESET-*"
+        enabled: true
+        traffic_percentage: 5
+        allowed_anchor_types: ["DSCIMOD", "IVMIX"]
+        require_validation: true
+        fallback_to_legacy: true
+
+  # Full production: All scenarios at 100% traffic
+  full:
+    name: "Full Production"
+    description: "All scenarios enabled with 100% traffic"
+    enabled: true
+    default_traffic_percentage: 100
+    rules: []  # Use default for all
+
+# Environment-specific overrides
+environments:
+  development:
+    global:
+      enabled: true
+      default_traffic_percentage: 100
+    feature_flags:
+      enable_cache: true
+      enable_effectivity_check: false  # Skip in dev for speed
+      enable_path_scoring: true
+      enable_dashboard: true
+      
+  staging:
+    global:
+      enabled: true
+      default_traffic_percentage: 50
+    feature_flags:
+      enable_cache: true
+      enable_effectivity_check: true
+      enable_path_scoring: true
+      enable_dashboard: true
+      
+  production:
+    global:
+      enabled: true
+      default_traffic_percentage: 0  # Conservative in prod
+    feature_flags:
+      enable_cache: true
+      enable_effectivity_check: true
+      enable_path_scoring: true
+      enable_dashboard: true

@@ -1,0 +1,113 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ontology-unified.local/schemas/skills/scene-analysis.schema.json",
+  "title": "Scene Analysis Skill Schema",
+  "type": "object",
+  "required": ["skill_name", "skill_version", "context", "input", "output", "quality", "trace"],
+  "properties": {
+    "skill_name": {"type": "string", "const": "scene-analysis"},
+    "skill_version": {"type": "string"},
+    "context": {"$ref": "../shared/skill_envelope.schema.json#/definitions/context"},
+    "input": {
+      "type": "object",
+      "required": ["text", "scene_context"],
+      "properties": {
+        "text": {"type": "string"},
+        "scene_context": {
+          "type": "object",
+          "properties": {
+            "scene_type": {"type": "string", "enum": ["manufacturing", "warehouse", "logistics", "assembly", "quality_control"]},
+            "location": {"type": "string"},
+            "equipment_types": {"type": "array", "items": {"type": "string"}}
+          }
+        },
+        "existing_entities": {"type": "array", "items": {"type": "object"}}
+      }
+    },
+    "output": {
+      "type": "object",
+      "required": ["scene_graph", "entities", "relations", "evidence"],
+      "properties": {
+        "scene_graph": {
+          "type": "object",
+          "properties": {
+            "scene_id": {"type": "string"},
+            "scene_name": {"type": "string"},
+            "scene_type": {"type": "string", "enum": ["manufacturing", "warehouse", "logistics", "assembly", "quality_control"]},
+            "location": {"type": "string"},
+            "equipment": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "equipment_id": {"type": "string"},
+                  "equipment_name": {"type": "string"},
+                  "equipment_type": {"type": "string"},
+                  "location": {"type": "string"},
+                  "status": {"type": "string", "enum": ["operational", "idle", "maintenance", "fault"]}
+                },
+                "required": ["equipment_id", "equipment_name"]
+              }
+            },
+            "processes": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "process_id": {"type": "string"},
+                  "process_name": {"type": "string"},
+                  "status": {"type": "string", "enum": ["pending", "in_progress", "completed"]},
+                  "start_time": {"type": "string", "format": "date-time"},
+                  "end_time": {"type": "string", "format": "date-time"}
+                },
+                "required": ["process_id", "process_name"]
+              }
+            },
+            "spatial_relations": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "relation_type": {"type": "string", "enum": ["NEAR", "BEHIND", "IN_FRONT_OF", "ABOVE", "BELOW", "CONNECTED_TO"]},
+                  "from": {"type": "string"},
+                  "to": {"type": "string"}
+                },
+                "required": ["relation_type", "from", "to"]
+              }
+            },
+            "temporal_relations": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "relation_type": {"type": "string", "enum": ["BEFORE", "AFTER", "SIMULTANEOUS", "DURING"]},
+                  "from": {"type": "string"},
+                  "to": {"type": "string"}
+                },
+                "required": ["relation_type", "from", "to"]
+              }
+            }
+          },
+          "required": ["scene_id", "scene_name"]
+        },
+        "entities": {"type": "array", "items": {"type": "object"}},
+        "relations": {"type": "array", "items": {"type": "object"}},
+        "evidence": {"type": "array", "items": {"type": "object"}},
+        "summary": {
+          "type": "object",
+          "properties": {
+            "total_equipment": {"type": "integer", "minimum": 0},
+            "total_processes": {"type": "integer", "minimum": 0},
+            "total_spatial_relations": {"type": "integer", "minimum": 0},
+            "total_temporal_relations": {"type": "integer", "minimum": 0},
+            "analysis_coverage": {"type": "number", "minimum": 0, "maximum": 1}
+          }
+        }
+      }
+    },
+    "quality": {"$ref": "../shared/skill_envelope.schema.json#/definitions/quality"},
+    "trace": {"$ref": "../shared/skill_envelope.schema.json#/definitions/trace"},
+    "warnings": {"type": "array", "items": {"$ref": "../shared/skill_envelope.schema.json#/definitions/warning"}},
+    "errors": {"type": "array", "items": {"$ref": "../shared/skill_envelope.schema.json#/definitions/error"}}
+  }
+}

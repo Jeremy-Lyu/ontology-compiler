@@ -1,0 +1,51 @@
+{
+  "name": "concept_role_mapping",
+  "description": "将业务概念映射到本体角色，建立概念与实体类型之间的对应关系",
+  "command": "python src/skills/semantic_organization/concept_role_mapping/concept_role_mapping.py --input <input_text> --concepts <concepts>",
+  "script_path": "src/skills/semantic_organization/concept_role_mapping/concept_role_mapping.py",
+  "category": "semantic_organization",
+  "layer_scope": ["L1", "L2"],
+  "enabled": true,
+  "version": "2.0.0",
+  "business_domain": ["SUPPLY_CHAIN", "MANUFACTURING", "DATA_MESH", "MASTER_DATA"],
+  "args_schema": {
+    "input_text": {
+      "type": "string",
+      "required": true,
+      "description": "输入文本内容"
+    },
+    "concepts": {
+      "type": "array",
+      "items": {"type": "object"},
+      "description": "待映射的概念列表"
+    }
+  },
+  "output_schema": {
+    "mappings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["concept", "entity_type", "layer", "confidence"],
+        "properties": {
+          "concept": {"type": "string"},
+          "entity_type": {"type": "string"},
+          "layer": {"type": "string"},
+          "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+          "evidence_ref": {"type": "string"}
+        }
+      }
+    }
+  },
+  "preconditions": ["input_text must be non-empty"],
+  "quality_thresholds": {
+    "min_confidence": 0.7,
+    "max_conflict_count": 1,
+    "review_threshold": 0.85
+  },
+  "trace_config": {
+    "log_model_name": true,
+    "log_prompt_version": true,
+    "log_execution_time": true,
+    "log_retries": true
+  }
+}

@@ -1,0 +1,126 @@
+{
+  "name": "entity_classification",
+  "description": "Classify entities into L0-L3 layers with rule-based matching and LLM fallback",
+  "command": "python scripts/ontology_cli.py classify --input <input> --output <output>",
+  "script_path": "scripts/ontology_cli.py",
+  "category": "ontology",
+  "enabled": true,
+  "args_schema": {
+    "input": {
+      "type": "string",
+      "required": true,
+      "description": "Path to JSON file containing entities to classify"
+    },
+    "output": {
+      "type": "string",
+      "required": true,
+      "description": "Output path for classified entities"
+    },
+    "config": {
+      "type": "string",
+      "required": false,
+      "default": "config/ontology/entity_classification_unified.yaml",
+      "description": "Path to entity classification config"
+    },
+    "use_llm": {
+      "type": "boolean",
+      "required": false,
+      "default": true,
+      "description": "Enable LLM fallback for uncertain classifications"
+    },
+    "confidence_threshold": {
+      "type": "number",
+      "required": false,
+      "default": 0.85,
+      "description": "Minimum confidence for auto-accept"
+    },
+    "dry_run": {
+      "type": "boolean",
+      "required": false,
+      "default": false,
+      "description": "Run classification without writing output"
+    }
+  },
+  "layer_scope": [
+    "L0",
+    "L1",
+    "L2",
+    "L2.5",
+    "L3"
+  ],
+  "version": "1.0.0",
+  "business_domain": [
+    "SUPPLY_CHAIN",
+    "MANUFACTURING",
+    "DATA_MESH",
+    "MASTER_DATA",
+    "ENGINEERING"
+  ],
+  "output_schema": {
+    "type": "object",
+    "required": [
+      "entity_text",
+      "type",
+      "layer",
+      "confidence",
+      "reason",
+      "evidence_ref",
+      "matched_rules",
+      "needs_review",
+      "fallback_decision"
+    ],
+    "properties": {
+      "entity_text": {
+        "type": "string"
+      },
+      "type": {
+        "type": "string"
+      },
+      "layer": {
+        "type": "string",
+        "enum": ["L0", "L1", "L2", "L2.5", "L3"]
+      },
+      "sub_type": {
+        "type": "string"
+      },
+      "confidence": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 1
+      },
+      "reason": {
+        "type": "string"
+      },
+      "evidence_ref": {
+        "type": "string"
+      },
+      "matched_rules": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "needs_review": {
+        "type": "boolean"
+      },
+      "fallback_decision": {
+        "type": "string",
+        "enum": ["auto_accept", "manual_review", "llm_vote", "reject"]
+      }
+    }
+  },
+  "quality_thresholds": {
+    "auto_accept": 0.85,
+    "manual_review_low": 0.60,
+    "manual_review_high": 0.85,
+    "reject": 0.60
+  },
+  "trace_config": {
+    "log_model_name": true,
+    "log_prompt_version": true,
+    "log_execution_time": true,
+    "log_retries": true,
+    "log_confidence": true,
+    "log_matched_rules": true
+  }
+}

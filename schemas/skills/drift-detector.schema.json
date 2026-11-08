@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ontology-unified.local/schemas/skills/drift-detector.schema.json",
+  "title": "Drift Detector Skill Schema",
+  "type": "object",
+  "required": ["skill_name", "skill_version", "context", "input", "output", "quality", "trace"],
+  "properties": {
+    "skill_name": {"type": "string", "const": "drift-detector"},
+    "skill_version": {"type": "string"},
+    "context": {"$ref": "../shared/skill_envelope.schema.json#/definitions/context"},
+    "input": {
+      "type": "object",
+      "required": ["current_version", "previous_version"],
+      "properties": {
+        "current_version": {
+          "type": "object",
+          "properties": {
+            "version_id": {"type": "string"},
+            "entities": {"type": "array", "items": {"type": "object"}},
+            "relations": {"type": "array", "items": {"type": "object"}},
+            "schema": {"type": "object"}
+          },
+          "required": ["version_id"]
+        },
+        "previous_version": {
+          "type": "object",
+          "properties": {
+            "version_id": {"type": "string"},
+            "entities": {"type": "array", "items": {"type": "object"}},
+            "relations": {"type": "array", "items": {"type": "object"}},
+            "schema": {"type": "object"}
+          },
+          "required": ["version_id"]
+        },
+        "drift_thresholds": {
+          "type": "object",
+          "properties": {
+            "entity_count_change_threshold": {"type": "number", "minimum": 0, "maximum": 1, "default": 0.2},
+            "attribute_change_threshold": {"type": "number", "minimum": 0, "maximum": 1, "default": 0.3},
+            "relation_type_change_threshold": {"type": "number", "minimum": 0, "maximum": 1, "default": 0.1}
+          }
+        }
+      }
+    },
+    "output": {
+      "type": "object",
+      "required": ["drift_report", "impact_analysis"],
+      "properties": {
+        "drift_report": {
+          "type": "object",
+          "properties": {
+            "drift_level": {"type": "string", "enum": ["none", "low", "medium", "high", "critical"]},
+            "drift_score": {"type": "number", "minimum": 0, "maximum": 1},
+            "changes": {
+              "type": "object",
+              "properties": {
+                "added_entities": {"type": "array", "items": {"type": "string"}},
+                "removed_entities": {"type": "array", "items": {"type": "string"}},
+                "modified_entities": {"type": "array", "items": {"type": "string"}},
+                "added_relations": {"type": "array", "items": {"type": "string"}},
+                "removed_relations": {"type": "array", "items": {"type": "string"}},
+                "modified_relations": {"type": "array", "items": {"type": "string"}},
+                "schema_changes": {"type": "array", "items": {"type": "object"}}
+              }
+            },
+            "change_summary": {
+              "type": "object",
+              "properties": {
+                "total_changes": {"type": "integer", "minimum": 0},
+                "entity_changes": {"type": "integer", "minimum": 0},
+                "relation_changes": {"type": "integer", "minimum": 0},
+                "schema_changes": {"type": "integer", "minimum": 0}
+              }
+            }
+          },
+          "required": ["drift_level", "drift_score"]
+        },
+        "impact_analysis": {
+          "type": "object",
+          "properties": {
+            "breaking_changes": {"type": "array", "items": {"type": "object"}},
+            "affected_downstream_systems": {"type": "array", "items": {"type": "string"}},
+            "affected_queries": {"type": "array", "items": {"type": "string"}},
+            "recommendations": {"type": "array", "items": {"type": "string"}}
+          }
+        },
+        "validation_status": {
+          "type": "string", "enum": ["valid", "warning", "error"]}
+      }
+    },
+    "quality": {"$ref": "../shared/skill_envelope.schema.json#/definitions/quality"},
+    "trace": {"$ref": "../shared/skill_envelope.schema.json#/definitions/trace"},
+    "warnings": {"type": "array", "items": {"$ref": "../shared/skill_envelope.schema.json#/definitions/warning"}},
+    "errors": {"type": "array", "items": {"$ref": "../shared/skill_envelope.schema.json#/definitions/error"}}
+  }
+}

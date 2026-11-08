@@ -1,0 +1,42 @@
+{
+  "name": "consensus_resolution",
+  "description": "解决实体和关系之间的冲突，基于共识规则进行自动调和",
+  "command": "python src/skills/business_orchestration/consensus_resolution/consensus_resolution.py --conflicts <conflicts>",
+  "script_path": "src/skills/business_orchestration/consensus_resolution/consensus_resolution.py",
+  "category": "business_orchestration",
+  "layer_scope": ["L1", "L2", "L2.5", "L3"],
+  "enabled": true,
+  "version": "2.0.0",
+  "business_domain": ["SUPPLY_CHAIN", "MANUFACTURING", "DATA_MESH", "MASTER_DATA"],
+  "args_schema": {
+    "conflicts": {
+      "type": "array",
+      "items": {"type": "object"},
+      "required": true,
+      "description": "待解决的冲突列表"
+    },
+    "resolution_strategy": {
+      "type": "string",
+      "default": "majority",
+      "description": "解决策略"
+    }
+  },
+  "output_schema": {
+    "resolved_conflicts": {"type": "array", "items": {"type": "object"}},
+    "unresolved_conflicts": {"type": "array", "items": {"type": "object"}},
+    "resolution_rate": {"type": "number", "minimum": 0, "maximum": 1},
+    "consensus_score": {"type": "number", "minimum": 0, "maximum": 1}
+  },
+  "preconditions": ["conflicts must be provided"],
+  "quality_thresholds": {
+    "min_resolution_rate": 0.8,
+    "max_unresolved": 3,
+    "review_threshold": 0.9
+  },
+  "trace_config": {
+    "log_model_name": true,
+    "log_prompt_version": true,
+    "log_execution_time": true,
+    "log_retries": true
+  }
+}

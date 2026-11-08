@@ -1,0 +1,351 @@
+{
+  "skill_id": "l25_mbom_extraction",
+  "name": "MBOM与物料场景提取",
+  "description": "从文档中提取MBOM结构、物料主数据、排产相关实体",
+  "version": "1.0.0",
+  "category": "cross_layer",
+  "tags": [
+    "MBOM",
+    "物料清单",
+    "排产",
+    "制造",
+    "供应链"
+  ],
+  "trigger": {
+    "keywords": [
+      "MBOM",
+      "物料清单",
+      "BOM",
+      "父件",
+      "子件",
+      "物料编码",
+      "排产",
+      "生产订单",
+      "工艺路线",
+      "MRP"
+    ],
+    "file_patterns": [
+      "*mbom*",
+      "*bom*",
+      "*material*"
+    ],
+    "min_confidence": 0.7,
+    "supported_layers": [
+      "L0",
+      "L1",
+      "L2",
+      "L2.5"
+    ],
+    "domain_tags": [
+      "MANUFACTURING",
+      "SUPPLY_CHAIN"
+    ],
+    "regex_patterns": [
+      "\\b\\d{8,12}\\b",
+      "\\b[A-Z]-\\d{3,6}\\b",
+      "\\b\\d+\\.\\d+\\s*(EA|KG|M|PC|SET)\\b"
+    ]
+  },
+  "input_schema": {
+    "type": "object",
+    "description": "文档内容输入",
+    "fields": [
+      {
+        "name": "content",
+        "type": "string",
+        "required": true,
+        "description": "文档文本内容"
+      },
+      {
+        "name": "domain",
+        "type": "string",
+        "required": false,
+        "description": "业务域提示"
+      }
+    ]
+  },
+  "output_schema": {
+    "type": "object",
+    "description": "提取的实体和关系",
+    "fields": [
+      {
+        "name": "entities",
+        "type": "array",
+        "required": true,
+        "description": "实体列表"
+      },
+      {
+        "name": "relationships",
+        "type": "array",
+        "required": false,
+        "description": "关系列表"
+      },
+      {
+        "name": "confidence",
+        "type": "float",
+        "required": false,
+        "description": "置信度"
+      }
+    ]
+  },
+  "preconditions": [],
+  "postconditions": [],
+  "supported_layers": [
+    "L0",
+    "L1",
+    "L2",
+    "L2.5"
+  ],
+  "dependencies": [],
+  "business_domain": [
+    "MANUFACTURING",
+    "SUPPLY_CHAIN"
+  ],
+  "status": "active",
+  "classification_contract": {
+    "name": "MBOM分类契约",
+    "description": "MBOM相关文档分类规则",
+    "applicable_domains": [
+      "MANUFACTURING",
+      "SUPPLY_CHAIN"
+    ],
+    "applicable_document_types": [],
+    "file_patterns": [
+      {
+        "type": "contains",
+        "value": "mbom"
+      },
+      {
+        "type": "contains",
+        "value": "bom"
+      },
+      {
+        "type": "contains",
+        "value": "material"
+      }
+    ],
+    "priority_main_classes": [
+      "Capability",
+      "System",
+      "Asset",
+      "Process",
+      "Actor",
+      "Data"
+    ],
+    "ignored_classes": [],
+    "noise_patterns": [],
+    "required_keywords": []
+  },
+  "entity_contracts": [
+    {
+      "entity_type": "mbom_header",
+      "required_fields": [
+        {
+          "field_name": "material_code",
+          "severity": "required",
+          "description": "父件物料编码"
+        },
+        {
+          "field_name": "material_desc",
+          "severity": "required",
+          "description": "父件描述"
+        },
+        {
+          "field_name": "plant",
+          "severity": "required",
+          "description": "工厂代码"
+        },
+        {
+          "field_name": "valid_from",
+          "severity": "required",
+          "description": "生效日期"
+        }
+      ],
+      "optional_fields": [
+        "bom_usage",
+        "alternative"
+      ],
+      "priority": 1,
+      "description": "MBOM表头",
+      "examples": [
+        "MBOM表头",
+        "物料清单表头"
+      ]
+    },
+    {
+      "entity_type": "mbom_component",
+      "required_fields": [
+        {
+          "field_name": "component_code",
+          "severity": "required",
+          "description": "子件物料编码"
+        },
+        {
+          "field_name": "quantity",
+          "severity": "required",
+          "description": "用量"
+        },
+        {
+          "field_name": "unit",
+          "severity": "required",
+          "description": "单位"
+        }
+      ],
+      "optional_fields": [
+        "operation",
+        "sort_string",
+        "item_category"
+      ],
+      "priority": 1,
+      "description": "MBOM子件",
+      "examples": [
+        "MBOM子件",
+        "子件行"
+      ]
+    },
+    {
+      "entity_type": "material_master",
+      "required_fields": [
+        {
+          "field_name": "material_code",
+          "severity": "required",
+          "description": "物料编码"
+        },
+        {
+          "field_name": "material_type",
+          "severity": "required",
+          "description": "物料类型"
+        }
+      ],
+      "optional_fields": [
+        "mrp_type",
+        "procurement_type",
+        "base_unit"
+      ],
+      "priority": 2,
+      "description": "物料主数据",
+      "examples": [
+        "物料主数据",
+        "物料主记录"
+      ]
+    },
+    {
+      "entity_type": "production_order",
+      "required_fields": [
+        {
+          "field_name": "order_number",
+          "severity": "required",
+          "description": "订单号"
+        },
+        {
+          "field_name": "material",
+          "severity": "required",
+          "description": "产品物料号"
+        },
+        {
+          "field_name": "quantity",
+          "severity": "required",
+          "description": "订单数量"
+        }
+      ],
+      "optional_fields": [
+        "start_date",
+        "end_date",
+        "priority"
+      ],
+      "priority": 2,
+      "description": "生产订单",
+      "examples": [
+        "生产订单",
+        "工单"
+      ]
+    },
+    {
+      "entity_type": "routing_operation",
+      "required_fields": [
+        {
+          "field_name": "operation_number",
+          "severity": "required",
+          "description": "工序号"
+        },
+        {
+          "field_name": "work_center",
+          "severity": "required",
+          "description": "工作中心"
+        }
+      ],
+      "optional_fields": [
+        "operation_desc",
+        "standard_time"
+      ],
+      "priority": 2,
+      "description": "工艺路线",
+      "examples": [
+        "工艺路线",
+        "工序"
+      ]
+    }
+  ],
+  "relation_contracts": [
+    {
+      "relation_type": "HAS_VARIANT",
+      "allowed": true,
+      "description": "变体关系"
+    },
+    {
+      "relation_type": "HAS_COMPONENT",
+      "allowed": true,
+      "description": "组成关系"
+    },
+    {
+      "relation_type": "PART_OF",
+      "allowed": true,
+      "description": "属于关系"
+    },
+    {
+      "relation_type": "MANUFACTURED_BY",
+      "allowed": true,
+      "description": "制造关系"
+    },
+    {
+      "relation_type": "USED_IN",
+      "allowed": true,
+      "description": "使用关系"
+    },
+    {
+      "relation_type": "HAS_OPERATION",
+      "allowed": true,
+      "description": "工序关系"
+    },
+    {
+      "relation_type": "ROUTES_TO",
+      "allowed": true,
+      "description": "路线关系"
+    },
+    {
+      "relation_type": "DERIVED_FROM",
+      "allowed": false,
+      "description": "禁止的关系类型"
+    },
+    {
+      "relation_type": "TRANSFORMS_TO",
+      "allowed": false,
+      "description": "禁止的关系类型"
+    }
+  ],
+  "llm_prompt_template": "你是一位专业的MBOM和物料管理专家。请从以下文档中提取MBOM相关实体。\n\n文档内容：\n{content}\n\n请识别以下实体类型：\n{entity_types}\n\n对于每个实体，请提供：\n1. 实体类型和名称\n2. 关键字段值（如物料编码、用量等）\n3. 父子关系（如果是子件，指出父件是谁）\n4. 业务上下文（该实体在什么场景下使用）\n\n返回JSON格式：\n{{\n  \"entities\": [\n    {{\n      \"type\": \"实体类型\",\n      \"name\": \"实体名称\",\n      \"fields\": {{\n        \"field_name\": \"field_value\"\n      }},\n      \"parent\": \"父实体标识（如果有）\",\n      \"children\": [\"子实体标识列表\"],\n      \"context\": \"业务上下文\"\n    }}\n  ],\n  \"relationships\": [\n    {{\n      \"source\": \"源实体\",\n      \"target\": \"目标实体\", \n      \"type\": \"关系类型\"\n    }}\n  ]\n}}",
+  "author": "Ontology Team",
+  "created_at": "2026-07-10T00:00:00Z",
+  "layer_scope": [
+    "L1",
+    "L2",
+    "L2.5"
+  ],
+  "quality_thresholds": {},
+  "trace_config": {
+    "log_model_name": false,
+    "log_prompt_version": false,
+    "log_execution_time": true,
+    "log_retries": false
+  }
+}

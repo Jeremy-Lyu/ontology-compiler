@@ -1,0 +1,350 @@
+{
+  "version": "2.1",
+  "description": "Regression sample manifest for entity classification, extraction, relationship gating, and dedup audit validation.",
+  "sample_groups": [
+    {
+      "group_id": "golden-success",
+      "name": "Golden success samples",
+      "purpose": "Confirm normal behavior does not regress.",
+      "priority": 1,
+      "samples": [
+        {
+          "sample_id": "mbom-du-v2",
+          "input_path": "data/MBOM DU concept v2.pptx",
+          "expected": {
+            "min_entities": 60,
+            "min_relations": 40,
+            "min_quality_score": 0.9,
+            "max_related_to_share": 0.05,
+            "min_layer_count": 4,
+            "min_meta_classes": 5
+          },
+          "golden_semantic": {
+            "entities": [
+              {
+                "name": "MASTER DATA",
+                "meta_class": "System",
+                "layer": "L1",
+                "aliases": ["主数据", "主数据管理", "MDM", "Master Data Management", "master data"]
+              },
+              {
+                "name": "MBOM",
+                "meta_class": "System",
+                "layer": "L1",
+                "aliases": ["Manufacturing BOM", "Manufacturing Bill of Materials", "制造BOM", "制造物料清单", "生产BOM", "mbom"]
+              },
+              {
+                "name": "BOM",
+                "meta_class": "System",
+                "layer": "L1",
+                "aliases": ["Bill of Materials", "物料清单", "BOM表", "BOM清单", "bom"]
+              }
+            ],
+            "reject_relation_types": [
+              "RELATED_TO"
+            ]
+          }
+        },
+        {
+          "sample_id": "ebom-mbom-2023",
+          "input_path": "data/EBOM MBOM Concept 20230223.pptx",
+          "expected": {
+            "min_entities": 100,
+            "min_relations": 60,
+            "min_quality_score": 0.85,
+            "max_related_to_share": 0.1,
+            "min_layer_count": 4
+          },
+          "golden_semantic": {
+            "sample_id": "ebom-mbom-2023",
+            "entities": [
+              {
+                "name": "EBOM",
+                "meta_class": "System",
+                "layer": "L1",
+                "aliases": ["Engineering BOM", "Engineering Bill of Materials", "工程BOM", "设计BOM", "ebom"]
+              },
+              {
+                "name": "MBOM",
+                "meta_class": "System",
+                "layer": "L1",
+                "aliases": ["Manufacturing BOM", "Manufacturing Bill of Materials", "制造BOM", "制造物料清单", "生产BOM", "mbom"]
+              },
+              {
+                "name": "BOM",
+                "meta_class": "Concept",
+                "layer": "L1",
+                "aliases": ["Bill of Materials", "物料清单", "BOM表", "BOM清单", "bom"]
+              }
+            ],
+            "relations": [
+              {
+                "source": "EBOM",
+                "target": "BOM",
+                "types": [
+                  "DERIVED_FROM"
+                ]
+              },
+              {
+                "source": "MBOM",
+                "target": "BOM",
+                "types": [
+                  "DERIVED_FROM"
+                ]
+              }
+            ],
+            "reject_relation_types": [
+              "RELATED_TO"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "group_id": "boundary-cases",
+      "name": "Boundary samples",
+      "purpose": "Validate behavior on mixed, ambiguous, or structurally complex documents.",
+      "priority": 2,
+      "samples": [
+        {
+          "sample_id": "production-inventory-pptx",
+          "input_path": "data/Production Inventory Benchmark 2025.pptx",
+          "expected": {
+            "min_entities": 150,
+            "min_relations": 80,
+            "min_quality_score": 0.85,
+            "max_related_to_share": 0.05,
+            "min_layer_count": 3
+          },
+          "golden_semantic": {
+            "sample_id": "production-inventory-pptx",
+            "entities": [
+              {
+                "name": "Inventory",
+                "meta_class": "Concept",
+                "layer": "L2",
+                "aliases": ["库存", "存货", "Stock", "Inventory Management", "仓储", "库存管理"]
+              },
+              {
+                "name": "Production",
+                "meta_class": "Process",
+                "layer": "L1",
+                "aliases": ["生产", "制造", "Manufacturing", "生产制造", "Production Process"]
+              },
+              {
+                "name": "Benchmark",
+                "meta_class": "Concept",
+                "layer": "L2",
+                "aliases": ["基准", "对标", "基线", "标杆", "Benchmarking"]
+              },
+              {
+                "name": "Safety Stock",
+                "meta_class": "Concept",
+                "layer": "L2",
+                "aliases": ["安全库存", "安全存货", "Safety Inventory", "缓冲库存"]
+              }
+            ],
+            "reject_relation_types": [
+              "RELATED_TO"
+            ]
+          }
+        },
+        {
+          "sample_id": "production-inventory-md",
+          "input_path": "data/Production_Inventory_Benchmark_2025.md",
+          "expected": {
+            "min_entities": 15,
+            "min_relations": 10,
+            "min_quality_score": 0.9,
+            "max_related_to_share": 0.05
+          },
+          "golden_semantic": {
+            "sample_id": "production-inventory-md",
+            "entities": [
+              {
+                "name": "Inventory",
+                "meta_class": "Concept",
+                "layer": "L2",
+                "aliases": ["库存", "存货", "Stock", "Inventory Management", "仓储", "库存管理"]
+              },
+              {
+                "name": "Safety Stock",
+                "meta_class": "Concept",
+                "layer": "L2",
+                "aliases": ["安全库存", "安全存货", "Safety Inventory", "缓冲库存"]
+              }
+            ],
+            "relations": [
+              {
+                "source": "Safety Stock",
+                "target": "Inventory",
+                "types": [
+                  "HAS_PART",
+                  "PART_OF"
+                ]
+              }
+            ],
+            "reject_relation_types": [
+              "RELATED_TO"
+            ]
+          }
+        },
+        {
+          "sample_id": "cycle-stock-onpeager",
+          "input_path": "data/doc/02_Cycle_Stock_Analysis_Onepager.md",
+          "expected": {
+            "min_entities": 10,
+            "min_relations": 5,
+            "min_quality_score": 0.9,
+            "max_related_to_share": 0.1
+          },
+          "golden_semantic": {
+            "sample_id": "cycle-stock-onpeager",
+            "entities": [
+              {
+                "name": "Cycle Stock",
+                "meta_class": "Concept",
+                "layer": "L2",
+                "aliases": ["周转库存", "循环库存", "周转存货", "Cycle Inventory", "周期性库存"]
+              },
+              {
+                "name": "Inventory",
+                "meta_class": "Concept",
+                "layer": "L2",
+                "aliases": ["库存", "存货", "Stock", "Inventory Management", "仓储", "库存管理"]
+              }
+            ],
+            "reject_relation_types": [
+              "RELATED_TO"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "group_id": "failure-regressions",
+      "name": "Historical failure regressions",
+      "purpose": "Prevent known bugs from reappearing.",
+      "priority": 1,
+      "samples": [
+        {
+          "sample_id": "quality-atacq-truncation",
+          "input_path": "data/Quality-ATACQ 1.pptx",
+          "expected": {
+            "must_complete_within_seconds": 300,
+            "must_not_truncate": true,
+            "min_entities": 20,
+            "min_relations": 10,
+            "min_quality_score": 0.8,
+            "max_related_to_share": 0.1
+          },
+          "regression_note": "2026-07-31: LLM output truncated at max_tokens, JSON parse failed, extract stage timed out at 600s. Fixed: max_tokens raised to 8000/9000, timeout lowered to 300s, prompt budget added.",
+          "golden_semantic": {
+            "sample_id": "quality-atacq-truncation",
+            "entities": [
+              {
+                "name": "Quality",
+                "meta_class": "Concept",
+                "layer": "L1",
+                "aliases": ["质量", "品质", "Quality Management", "质量管理", "品质管理"]
+              },
+              {
+                "name": "ATACQ",
+                "meta_class": "System",
+                "layer": "L2",
+                "aliases": ["ATACQ Process", "ATACQ System", "高级微调质量", "atacq"]
+              },
+              {
+                "name": "incoming material quality reporting",
+                "meta_class": "Process",
+                "layer": "L1",
+                "aliases": ["IMQ", "incoming material quality", "来料质量报告"]
+              }
+            ],
+            "reject_relation_types": [
+              "RELATED_TO"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "group_id": "stress-load",
+      "name": "Stress / volume samples",
+      "purpose": "Validate large or multi-source inputs, artifact generation, and run stability.",
+      "priority": 3,
+      "samples": [
+        {
+          "sample_id": "doc-folder-all",
+          "input_path": "data/doc/",
+          "expected": {
+            "must_complete_within_seconds": 600,
+            "min_entities": 50,
+            "min_relations": 30,
+            "min_quality_score": 0.8,
+            "max_related_to_share": 0.1
+          },
+          "golden_semantic": {
+            "sample_id": "doc-folder-all",
+            "entities": [
+              {
+                "name": "Cycle Stock",
+                "meta_class": "Concept",
+                "layer": "L2",
+                "aliases": ["周转库存", "循环库存", "周转存货", "Cycle Inventory", "周期性库存"]
+              },
+              {
+                "name": "Inventory",
+                "meta_class": "Concept",
+                "layer": "L2",
+                "aliases": ["库存", "存货", "Stock", "Inventory Management", "仓储", "库存管理"]
+              },
+              {
+                "name": "VSM",
+                "meta_class": "Process",
+                "layer": "L1",
+                "aliases": ["Value Stream Mapping", "价值流图", "价值流分析", "价值流映射"]
+              }
+            ],
+            "reject_relation_types": [
+              "RELATED_TO"
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "required_checks": [
+    "classification",
+    "extraction",
+    "relationship_gate",
+    "dedup_audit",
+    "rollback_recoverability"
+  ],
+  "artifact_conventions": {
+    "run_root": "outputs/runs/ontology/pipeline/",
+    "artifact_root": "outputs/runs/ontology/pipeline/",
+    "audit_root": "outputs/runs/ontology/pipeline/",
+    "regression_root": "outputs/runs/ontology/pipeline/"
+  },
+  "acceptance": {
+    "description": "Global acceptance thresholds for the dual-layer (extract/merge) golden semantic gate. Baseline observed: (2026-08-30, n=1) REG-mbom-du-v2-20260830-102509 extract_entity_recall=1.0/merge_entity_recall=0.6667/entity_retention=0.6667; (2026-08-31, n=2) relation thresholds added after endpoint fixes (fragment-priority name index + canonical anchor guard), REG-ebom-mbom-2023-20260831-101917 + REG-production-inventory-md-20260831-103054 observe extract/merge relation_recall=1.0 and relation_retention=1.0 (previously 0.0). (2026-08-31, n=7) FULL production baseline --production --write-baseline PASS=7/FAIL=0, layered_golden_summary all dims mean=1.0 (extract/merge entity+relation recall, entity/relation retention). TIGHTENED 2026-08-31: merge/retention thresholds raised 0.5/0.8 -> 1.0 to lock in the achieved all-1.0 baseline (any golden miss or merge loss now fails the gate; extract thresholds were already 1.0). Other global checks unchanged.",
+    "classification_consistency_min": 0.95,
+    "relationship_precision_min": 0.9,
+    "related_to_share_max": 0.05,
+    "dedup_mismerge_rate_max": 0.01,
+    "evidence_coverage_min": 0.98,
+    "rollback_success_min": 1.0,
+    "single_file_max_runtime_s": 300,
+    "extract_entity_recall_min": 1.0,
+    "merge_entity_recall_min": 1.0,
+    "entity_retention_min": 1.0,
+    "extract_relation_recall_min": 1.0,
+    "merge_relation_recall_min": 1.0,
+    "relation_retention_min": 1.0
+  },
+  "compare_with": {
+    "before": "outputs/runs/ontology/baselines/regression_summary_baseline.json",
+    "after": "outputs/runs/ontology/pipeline/regression_reports/latest_regression_summary.json"
+  }
+}

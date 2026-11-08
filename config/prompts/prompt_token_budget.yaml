@@ -1,0 +1,153 @@
+# Prompt Token Budget Configuration
+# Version: 1.0.0
+#
+# Defines token budgets for each LLM call type.
+# Used by llm_backend.py and llm_candidate_generator.py to enforce limits.
+#
+# Layers (per extraction_prompts.json):
+#   base → domain → task → schema_hint → document
+#
+# Budget = prompt_tokens + max_completion_tokens
+# Total must stay within the model's context window.
+
+version: "1.0.0"
+
+# Global defaults
+defaults:
+  max_completion_tokens: 8000
+  max_prompt_tokens: 12000
+  total_budget: 20000
+  temperature: 0.2
+  truncation_retry_max: 2
+  json_repair_max_retries: 3
+
+# Per-task budgets (overrides defaults)
+tasks:
+  # Entity + relation extraction (main pipeline)
+  extraction_technical:
+    description: "Technical document entity/relation extraction"
+    max_completion_tokens: 8000
+    max_prompt_tokens: 12000
+    temperature: 0.2
+    layers:
+      base: 200        # shared_base fragment
+      domain: 300      # domain_technical fragment
+      task: 500        # extraction_technical fragment
+      schema_hint: 400 # shared_schema_hint fragment
+      document: 10600  # remaining budget for chunk text
+    notes: "Large prompt; chunk text budget = total - base - domain - task - schema_hint"
+
+  extraction_business:
+    description: "Business document entity/relation extraction"
+    max_completion_tokens: 8000
+    max_prompt_tokens: 12000
+    temperature: 0.2
+    layers:
+      base: 200
+      domain: 300
+      task: 400
+      schema_hint: 400
+      document: 10700
+
+  extraction_contract:
+    description: "Legal/compliance document extraction"
+    max_completion_tokens: 8000
+    max_prompt_tokens: 12000
+    temperature: 0.1
+    layers:
+      base: 200
+      domain: 300
+      task: 400
+      schema_hint: 400
+      document: 10700
+
+  extraction_general:
+    description: "General document extraction"
+    max_completion_tokens: 6000
+    max_prompt_tokens: 10000
+    temperature: 0.2
+    layers:
+      base: 200
+      domain: 200
+      task: 300
+      schema_hint: 300
+      document: 9000
+
+  relation_extraction:
+    description: "Standalone relation extraction (entities already extracted)"
+    max_completion_tokens: 4000
+    max_prompt_tokens: 8000
+    temperature: 0.2
+    layers:
+      base: 200
+      task: 800
+      document: 7000
+
+  # Candidate generator prompts
+  scene_classification:
+    description: "Document scene type classification"
+    max_completion_tokens: 1000
+    max_prompt_tokens: 5000
+    temperature: 0.2
+
+  entity_candidates:
+    description: "Entity candidate generation"
+    max_completion_tokens: 3500
+    max_prompt_tokens: 8000
+    temperature: 0.2
+
+  relation_candidates:
+    description: "Relation candidate generation"
+    max_completion_tokens: 3000
+    max_prompt_tokens: 6000
+    temperature: 0.2
+
+  # Quality / governance
+  quality_review:
+    description: "Quality assessment and grading"
+    max_completion_tokens: 2000
+    max_prompt_tokens: 6000
+    temperature: 0.1
+
+  cross_file_association:
+    description: "Cross-file entity association"
+    max_completion_tokens: 4000
+    max_prompt_tokens: 10000
+    temperature: 0.2
+
+# Document-type to prompt-profile mapping
+document_type_profiles:
+  pptx:
+    default: extraction_technical
+    business: extraction_business
+  pdf:
+    default: extraction_technical
+  md:
+    default: extraction_general
+    business: extraction_business
+  docx:
+    default: extraction_business
+  csv:
+    default: extraction_general
+  txt:
+    default: extraction_general
+
+# Chunking policy integration
+chunking:
+  max_chunk_size: 7000        # chars, must fit within document layer budget
+  min_chunk_size: 1500
+  overlap_size: 500
+  max_total_chunks: 80
+  auto_split_threshold: 50000  # chars; documents above this get pre-split
+  chunk_text_token_estimate: 1.5  # chars to tokens ratio for CJK text
+
+# Truncation detection
+truncation_detection:
+  enabled: true
+  min_valid_json_length: 50
+  check_brace_balance: true
+  check_quote_balance: true
+  on_truncate:
+    - retry_with_higher_max_tokens
+    - retry_with_smaller_chunk
+    - fallback_to_degraded_mode

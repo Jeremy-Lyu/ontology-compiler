@@ -1,0 +1,27 @@
+{
+  "profiles": {
+    "local": {
+      "require_schema_validation": true,
+      "thresholds": {
+        "max_warnings": 0,
+        "max_stale_seconds": 14400,
+        "max_l1_conflicts": 0,
+        "max_l2_stale_ratio": 0.2,
+        "min_evidence_coverage": 0.5,
+        "max_catalog_blocking_conflicts": 0
+      }
+    },
+    "ci": {
+      "require_schema_validation": true,
+      "thresholds": {
+        "max_warnings": 0,
+        "max_stale_seconds": 14400,
+        "max_l1_conflicts": 0,
+        "max_l2_stale_ratio": 0.2,
+        "min_evidence_coverage": 0.5,
+        "max_catalog_blocking_conflicts": 0
+      }
+    }
+  }
+}
+

@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ontology-unified.local/schemas/skills/l25_logistics_extraction.schema.json",
+  "title": "L2.5 Logistics Extraction Skill Schema",
+  "type": "object",
+  "required": ["skill_name", "skill_version", "context", "input", "output", "quality", "trace"],
+  "properties": {
+    "skill_name": {"type": "string", "const": "l25_logistics_extraction"},
+    "skill_version": {"type": "string"},
+    "context": {"$ref": "../shared/skill_envelope.schema.json#/definitions/context"},
+    "input": {
+      "type": "object",
+      "required": ["text", "document_metadata"],
+      "properties": {
+        "text": {"type": "string"},
+        "document_metadata": {
+          "type": "object",
+          "properties": {
+            "document_type": {"type": "string"},
+            "domain": {"type": "string"},
+            "source_file": {"type": "string"}
+          }
+        },
+        "existing_entities": {"type": "array", "items": {"type": "object"}}
+      }
+    },
+    "output": {
+      "type": "object",
+      "required": ["logistics_events", "entities", "relations", "evidence"],
+      "properties": {
+        "logistics_events": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "event_id": {"type": "string"},
+              "event_type": {"type": "string", "enum": ["SHIPMENT", "DELIVERY", "RECEIPT", "INSPECTION", "STORAGE", "TRANSIT", "EXCEPTION"]},
+              "timestamp": {"type": "string", "format": "date-time"},
+              "location": {"type": "string"},
+              "status": {"type": "string", "enum": ["PENDING", "IN_PROGRESS", "COMPLETED", "DELAYED", "CANCELLED"]},
+              "milestone": {"type": "string"},
+              "shipment_id": {"type": "string"},
+              "carrier": {"type": "string"},
+              "route_info": {"type": "object"},
+              "confidence": {"type": "number", "minimum": 0, "maximum": 1}
+            },
+            "required": ["event_id", "event_type"]
+          }
+        },
+        "entities": {"type": "array", "items": {"type": "object"}},
+        "relations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "relation_type": {"type": "string", "enum": ["TRANSPORTS", "ORIGINATES_FROM", "DESTINED_FOR", "TRIGGERS", "FOLLOWS"]},
+              "from": {"type": "string"},
+              "to": {"type": "string"},
+              "confidence": {"type": "number", "minimum": 0, "maximum": 1}
+            },
+            "required": ["relation_type", "from", "to"]
+          }
+        },
+        "evidence": {"type": "array", "items": {"type": "object"}},
+        "summary": {
+          "type": "object",
+          "properties": {
+            "total_events": {"type": "integer", "minimum": 0},
+            "total_entities": {"type": "integer", "minimum": 0},
+            "total_relations": {"type": "integer", "minimum": 0},
+            "event_types": {"type": "array", "items": {"type": "string"}},
+            "extraction_coverage": {"type": "number", "minimum": 0, "maximum": 1}
+          }
+        }
+      }
+    },
+    "quality": {"$ref": "../shared/skill_envelope.schema.json#/definitions/quality"},
+    "trace": {"$ref": "../shared/skill_envelope.schema.json#/definitions/trace"},
+    "warnings": {"type": "array", "items": {"$ref": "../shared/skill_envelope.schema.json#/definitions/warning"}},
+    "errors": {"type": "array", "items": {"$ref": "../shared/skill_envelope.schema.json#/definitions/error"}}
+  }
+}

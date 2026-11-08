@@ -1,0 +1,194 @@
+version: "1.0"
+domain: "SUPPLY_CHAIN"
+
+quality_thresholds:
+  node_completeness:
+    min_score: 0.8
+    warning_threshold: 0.6
+    weight: 1.5
+  
+  relationship_validity:
+    min_score: 0.8
+    warning_threshold: 0.6
+    weight: 1.8
+  
+  semantic_quality:
+    min_score: 0.5
+    warning_threshold: 0.3
+    weight: 1.2
+  
+  domain_alignment:
+    min_score: 0.6
+    warning_threshold: 0.4
+    weight: 0.8
+  
+  cross_layer_consistency:
+    min_score: 0.6
+    warning_threshold: 0.4
+    weight: 1.0
+  
+  evidence_coverage:
+    min_score: 0.4
+    warning_threshold: 0.2
+    weight: 1.5
+  
+  field_completeness:
+    min_score: 0.6
+    warning_threshold: 0.4
+    weight: 1.0
+  
+  naming_consistency:
+    min_score: 0.8
+    warning_threshold: 0.6
+    weight: 1.0
+  
+  layer_balance:
+    min_score: 0.5
+    warning_threshold: 0.3
+    weight: 0.8
+  
+  duplicate_detection:
+    min_score: 0.9
+    warning_threshold: 0.7
+    weight: 1.0
+
+domain_keywords:
+  SUPPLY_CHAIN:
+    - 供应链
+    - 库存
+    - 采购
+    - 订单
+    - 配送
+    - 物流
+    - 仓储
+    - 供应商
+    - 物料
+    - 交付
+  
+  LOGISTICS:
+    - 物流
+    - 运输
+    - 配送
+    - 仓储
+    - 货代
+    - VSM
+    - 物流网络
+  
+  MANUFACTURING:
+    - 制造
+    - 生产
+    - 工艺
+    - 工单
+    - 产能
+    - 工厂
+  
+  QUALITY:
+    - 质量
+    - KPI
+    - 指标
+    - 绩效
+    - 检验
+    - 验证
+
+valid_meta_classes:
+  - Capability
+  - System
+  - Actor
+  - Asset
+  - Data
+  - Process
+  - Concept
+  - BusinessScenario
+  - MappingRule
+  - BusinessRule
+  - ValidationRule
+  - Domain
+  - SubDomain
+  - Actionable
+  - Equipment_Infra
+  - BusinessObject
+  - StorageLocation
+  - EnterprisePlatform
+  - ExternalPortal
+  - MicroserviceApp
+  - TestEnvironment
+
+valid_relation_types:
+  - PART_OF
+  - RELATED_TO
+  - ENABLES
+  - GENERATES
+  - VALIDATES
+  - EXTENDS
+  - SUPPORTS
+  - TRIGGER
+  - SAME_AS
+  - INSTANCE_OF
+  - DELIVERS
+  - CONTAINS
+  - STORES
+  - USED_IN
+  - HAS_COMPONENT
+  - contains
+  - implements
+  - depends_on
+  - has_part
+  - is_part_of
+  - is_instance_of
+  - deploys
+  - connected_to
+  - integrates_with
+  - uses
+  - used_by
+  - controls
+  - associated_with
+  - calls
+  - produces
+  - consumes
+  - manages
+  - owns
+  - creates
+  - transforms
+  - generates
+  - sends
+  - notifies
+  - informs
+  - reports_to
+  - requires
+  - verifies
+  - authorizes
+  - attaches
+  - links_to
+  - references
+  - monitors
+  - conflicts_with
+  - orders
+  - developed_in
+  - synchronizes_with
+  - signals
+  - provides_feedback_to
+  - complements
+  - collects
+  - constrains
+  - is_primary_output_of
+  - variant_of
+  - utilizes
+  - sends_data_to
+  - governs
+  - governs_data
+
+governance_rules:
+  max_blocked_relations: 50
+  max_entity_type_violations: 20
+  strict_mode: false
+
+retry_policy:
+  max_retries: 3
+  retry_delay_seconds: 10
+  exponential_backoff: true
+
+llm_config:
+  max_tokens: 8000
+  temperature: 0.3
+  timeout_seconds: 300
+  concurrent_requests: 2

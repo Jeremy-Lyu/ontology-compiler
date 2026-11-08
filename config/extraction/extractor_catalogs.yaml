@@ -1,0 +1,216 @@
+domain_keywords:
+  SUPPLY_CHAIN:
+    - 供应链
+    - 库存
+    - cycle stock
+    - inventory
+    - cmp
+    - plus
+    - git
+    - wip
+  LOGISTICS:
+    - 物流
+    - line back
+    - vsm
+    - s-lane
+    - p-lane
+    - jis
+    - kitting
+    - pull
+  PERFORMANCE:
+    - 绩效
+    - performance
+    - kpi
+    - steering
+    - dpv
+    - ftt
+  DIAGNOSTICS:
+    - 诊断
+    - diagnostics
+    - diagnostic
+    - fault
+    - failure
+    - troubleshooting
+    - root cause
+    - error code
+    - diagnostic code
+    - diagnosis
+  EDUCATION:
+    - 教育
+    - 培训
+    - 课程
+    - training
+    - education
+    - learning
+    - academy
+    - course
+    - curriculum
+    - workshop
+    - seminar
+    - tutorial
+    - instructor
+    - certification
+  OTA:
+    - ota
+    - over-the-air
+    - over the air
+    - software update
+    - software deployment
+    - software distribution
+    - software campaign
+    - update campaign
+    - ecu
+    - electronic control unit
+    - firmware
+    - flash
+    - reflash
+    - flashing
+    - telematics
+    - vehicle update
+    - software package
+    - swdl
+    - software download
+    - config
+    - configuration
+    - calibration
+    - rsu
+    - remote software update
+    - bootloader
+    - manifest
+    - rollback
+    - snapshot
+  MANUFACTURING:
+    - 制造
+    - 生产
+    - 车间
+    - manufacturing
+    - production
+    - plant floor
+    - plantfloor
+    - mes
+    - manufacturing execution
+    - assembly line
+    - production line
+    - shop floor
+    - machine
+    - equipment
+    - plc
+    - scada
+    - oee
+    - downtime
+    - takt
+    - batching
+
+system_catalog:
+  CMP:
+    aliases: [cmp]
+    subclass: Enterprise_Platform
+    description: "企业级CMP平台，用于制造执行和生产计划管理，支持生产流程数字化"
+  PLUS:
+    aliases: [plus]
+    subclass: Enterprise_Platform
+    description: "PLUS企业资源规划系统，集成供应链、库存和物流管理功能"
+  Chimas:
+    aliases: [chimas]
+    subclass: Enterprise_Platform
+    description: "Chimas制造智能系统，专注于生产数据分析和绩效监控"
+  KDP:
+    aliases: [kdp]
+    subclass: Enterprise_Platform
+    description: "KDP知识数据平台，支持企业知识管理和数据分析"
+  Snowflake:
+    aliases: [snowflake]
+    subclass: Microservice_App
+    description: "Snowflake云数据仓库，提供弹性可扩展的数据存储和分析服务"
+  PowerBI:
+    aliases: [powerbi, power bi]
+    subclass: Microservice_App
+    description: "PowerBI商业智能平台，支持数据可视化和业务分析"
+  SharePoint:
+    aliases: [sharepoint]
+    subclass: External_Portal
+    description: "Microsoft SharePoint协作平台，用于文档管理和团队协作"
+  IbP:
+    aliases: [ibp]
+    subclass: Enterprise_Platform
+    description: "Integrated Business Planning系统，支持销售与运营规划(S&OP)"
+
+capability_catalog:
+  Cycle Stock Management:
+    aliases: [cycle stock, 库存管理, 库存控制]
+    subclass: L2_SubDomain
+    description: "循环库存管理能力，通过分析订单模式和运输频率优化库存水平，降低成本同时保证服务水平"
+  Performance Steering:
+    aliases: [performance steering, 绩效管理, kpi]
+    subclass: L2_SubDomain
+    description: "绩效管理能力，通过KPI监控和数据分析驱动业务决策和持续改进"
+  Inventory Visibility:
+    aliases: [inventory visibility, 库存可视化, 可视化]
+    subclass: L2_SubDomain
+    description: "库存可视化能力，提供实时库存状态和多维度库存分析，支持供应链决策"
+  VSM Internal Flow Design:
+    aliases: [vsm, value stream mapping]
+    subclass: L3_Actionable
+    description: "价值流图内部流程设计能力，识别流程瓶颈和浪费，优化价值创造流程"
+  Line Back Principle:
+    aliases: [line back]
+    subclass: L3_Actionable
+    description: "线边配送原则，确保物料准时准确送达生产线，支持精益生产和JIT物流"
+
+process_catalog:
+  VSM Internal Flow Design:
+    aliases: [vsm, value stream mapping]
+    subclass: Business_Process
+    description: "价值流图设计流程，系统化分析从原材料到产品的整个价值创造过程"
+  Line Back Principle:
+    aliases: [line back]
+    subclass: Business_Process
+    description: "线边配送流程，优化从仓库到生产线的物料配送路径和频率"
+  S-Lane Pull System:
+    aliases: [s-lane, s lane]
+    subclass: Business_Process
+    description: "S通道拉动系统，基于实际消耗的物料补充机制"
+  P-Lane Pull System:
+    aliases: [p-lane, p lane]
+    subclass: Business_Process
+    description: "P通道拉动系统，针对特定生产线的物料拉动管理"
+  JIS:
+    aliases: [jis, just-in-sequence]
+    subclass: Business_Process
+    description: "准时顺序供货(Just-In-Sequence)，按生产顺序精确配送零部件"
+  Kitting Process:
+    aliases: [kitting]
+    subclass: Business_Process
+    description: "配套组装流程，将多个零部件预先组合成套件供生产线使用"
+
+data_catalog:
+  Takt Time:
+    aliases: [takt time]
+    subclass: Document_Artifact
+    description: "节拍时间数据，定义生产节奏和客户需求速率的关键指标"
+  Cycle Stock:
+    aliases: [cycle stock]
+    subclass: Document_Artifact
+    description: "循环库存数据，基于订货量和运输频率计算的安全库存水平"
+  Goods In Transit:
+    aliases: [git, goods in transit]
+    subclass: Document_Artifact
+    description: "在途货物数据，跟踪运输过程中的物料状态"
+  Work In Progress:
+    aliases: [wip, work in progress]
+    subclass: Document_Artifact
+    description: "在制品数据，监控生产过程中的半成品状态"
+  Limiting Factor:
+    aliases: [limiting factor, shipping frequency, unit load]
+    subclass: Document_Artifact
+    description: "限制因素数据，影响库存优化效果的关键约束条件"
+
+actor_catalog:
+  Lean Learning Academy:
+    aliases: [lean learning academy, lla]
+    subclass: Business_Function
+    description: "精益学习学院，提供精益生产培训和持续改进能力建设"
+  Group Financial Planning:
+    aliases: [group financial planning]
+    subclass: Business_Function
+    description: "集团财务规划部门，负责财务预算和战略规划"

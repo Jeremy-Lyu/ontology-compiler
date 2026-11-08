@@ -1,0 +1,382 @@
+# Entity Schema - Legacy compatibility overlay
+# Canonical definition now lives in schemas/ontology_schema.yaml
+# This file is retained only to avoid breaking older consumers.
+
+version: "2.0"
+name: entity_schema
+status: legacy_compat
+owner: ontology_team
+
+# ============================================================
+# L0: Abstract Categories (main classes only)
+# ============================================================
+l0_classes:
+  - Capability
+  - System
+  - Actor
+  - Asset
+  - Data
+  - Process
+  - Concept
+  - BusinessScenario
+  - MappingRule
+  - BusinessRule
+  - ValidationRule
+
+# ============================================================
+# L1: Standard Subclasses with inference rules
+# ============================================================
+l1_subclasses:
+  Capability:
+    - L1_Domain
+    - L2_SubDomain
+    - L3_Actionable
+
+  System:
+    - Enterprise_Platform
+    - Microservice_App
+    - Test_Environment
+    - External_Portal
+
+  Actor:
+    - Internal_Department
+    - Business_Function
+    - Equipment_Infra
+
+  Asset:
+    - Product_Definition
+    - Software_Asset
+    - Tooling_Asset
+    - Consumable_Material
+    - Vehicle_Instance
+    - Physical_Instance
+    - Digital_Twin_Instance
+
+  Data:
+    - Document_Artifact
+    - Rule_Logic
+    - Data_Record
+    - Table_Schema
+
+  Process:
+    - Business_Process
+
+  Concept:
+    - Domain_Concept
+    - Term_Definition
+
+# ============================================================
+# L1 Subtype Inference Rules (keyword-based)
+# ============================================================
+l1_inference_rules:
+  System:
+    Enterprise_Platform:
+      keywords: [teamcenter, sap, kdp, cmp, plus, mes, mpp, ohf, aro, hercules, pif, tc plm, plm]
+      description: "Cross-department core platforms"
+    Microservice_App:
+      keywords: [oss, sbs toolbox, sbs, microservice, api, service]
+      description: "Single-function lightweight applications"
+    Test_Environment:
+      keywords: [qnx, vteststudio, test, simulation, hIL]
+      description: "R&D and testing environments"
+    External_Portal:
+      keywords: [ipca, portal, codev, supplier, external]
+      description: "External interaction portals"
+
+  Data:
+    Document_Artifact:
+      keywords: [bom, mbom, ebom, mds, document, sheet, manual, report, form]
+      description: "Unstructured documents and forms"
+    Rule_Logic:
+      keywords: [variant, configuration, rule, expression, logic]
+      description: "Configuration rules and code logic"
+    Data_Record:
+      keywords: [record, data, item, part, address]
+      description: "Data records and table entries"
+    Table_Schema:
+      keywords: [schema, table, field, column, structure]
+      description: "Table structures and schemas"
+
+  Actor:
+    Internal_Department:
+      keywords: [engineering, manufacturing, department, division, team]
+      description: "Internal departments"
+    Business_Function:
+      keywords: [specialist, admin, manager, engineer, role, function, swe, ccb]
+      description: "Business functions and roles"
+    Equipment_Infra:
+      keywords: [robot, workstation, server, infrastructure, equipment, desk]
+      description: "Infrastructure and equipment"
+
+  Asset:
+    Product_Definition:
+      keywords: [part, component, hardware, drawing, design, caliper, actuator, brake, cover]
+      description: "Product drawings and baseline definitions"
+    Software_Asset:
+      keywords: [firmware, software, algorithm, model, code, package]
+      description: "Software and digital assets"
+    Tooling_Asset:
+      keywords: [mold, fixture, tooling, die, jig]
+      description: "Custom tooling and molds"
+    Consumable_Material:
+      keywords: [material, adhesive, paint, consumable, batch]
+      description: "Production materials and consumables"
+    Vehicle_Instance:
+      keywords: [vin, vehicle, car, truck]
+      description: "Physical vehicle instances"
+
+  Process:
+    Business_Process:
+      keywords: [order, change, approval, workflow, process, release, planning]
+      description: "Business processes with lifecycle"
+
+  Capability:
+    L1_Domain:
+      keywords: [product development, supply chain, manufacturing, aftersales]
+      description: "Top-level business domains"
+    L2_SubDomain:
+      keywords: [product structure, verification, logistics, quality]
+      description: "Second-level sub-domains"
+    L3_Actionable:
+      keywords: [management, handling, processing, documentation, tracking]
+      description: "Specific actionable capabilities"
+
+  Concept:
+    Domain_Concept:
+      keywords: [concept, definition, framework, methodology]
+      description: "Domain concepts and frameworks"
+    Term_Definition:
+      keywords: [term, glossary, acronym, abbreviation]
+      description: "Terms and definitions"
+
+# ============================================================
+# L2: Business Scenario types
+# ============================================================
+l2_types:
+  - BusinessScenario
+  - Scenario
+  - UseCase
+  - Definition
+  - Glossary
+  - BusinessRule
+  - LogicRule
+  - Constraint
+
+# ============================================================
+# L2.5: Rules and mappings
+# ============================================================
+l25_types:
+  - MappingRule
+  - TransformRule
+  - ValidationRule
+  - RulePackage
+  - RuleSet
+  - TemplateGroup
+  - MappingSet
+  - BatchGroup
+  - ModuleGroup
+
+# ============================================================
+# Relation Type Registry (uppercase standard)
+# ============================================================
+relation_types:
+  structural:
+    - SUBSUMES
+    - DECOMPOSES_TO
+    - CONTAINS
+    - HAS_PART
+    - PART_OF
+    - HAS_VARIANT
+    - INSTANCE_OF
+  semantic:
+    - REALIZES
+    - SUPPORTS
+    - APPLICABLE_TO
+    - SATISFIES
+    - ENABLES
+    - RELATED_TO
+    - EXTENDS
+    - GENERATES
+    - TRIGGER
+    - USES
+    - IMPLEMENTS
+    - INTEGRATES_WITH
+    - INTERACTS_WITH
+  governance:
+    - VALIDATES
+    - GOVERNS_DATA
+    - MAINTAINS
+    - MANAGES
+    - REPLACES
+    - SUPERSEDES
+    - SAME_AS
+  temporal:
+    - EFFECTIVE_FOR
+    - APPLIES_TO
+    - MODIFIES
+    - RESULTS_IN
+    - REFERENCES
+    - TRACES_TO
+    - DEPENDS_ON
+  data_flow:
+    - SENDS_TO
+    - TRANSFERS_TO
+    - STORED_AT
+    - EXECUTES
+    - DEPLOYS_TO
+    - DERIVED_FROM
+  hierarchy:
+    - OWNS
+    - OPERATES
+    - MAINTAINS
+    - RESPONSIBLE_FOR
+    - ASSIGNED_TO
+    - PARTICIPATES_IN
+
+# ============================================================
+# Relation Type Normalization Map (lowercase -> uppercase)
+# ============================================================
+relation_normalization:
+  # Structural
+  contains: CONTAINS
+  has_part: CONTAINS
+  has: CONTAINS
+  includes: CONTAINS
+  comprises: CONTAINS
+  consists_of: CONTAINS
+  part_of: PART_OF
+  is_part_of: PART_OF
+  instance_of: INSTANCE_OF
+  is_instance_of: INSTANCE_OF
+  has_variant: HAS_VARIANT
+
+  # Semantic
+  uses: USES
+  utilizes: USES
+  consumes: USES
+  implements: IMPLEMENTS
+  realizes: IMPLEMENTS
+  produces: GENERATES
+  outputs: GENERATES
+  delivers: GENERATES
+  generates_output: GENERATES
+  enables: ENABLES
+  critical_for: ENABLES
+  supports: SUPPORTS
+  related_to: RELATED_TO
+  associated_with: RELATED_TO
+  connected_to: RELATED_TO
+  linked_to: RELATED_TO
+  aligned_with: RELATED_TO
+  integrates_with: INTEGRATES_WITH
+  integrated_with: INTEGRATES_WITH
+  interacts_with: INTERACTS_WITH
+  communicates_with: INTERACTS_WITH
+  collaborates_with: INTERACTS_WITH
+  extends: EXTENDS
+
+  # Governance
+  validates: VALIDATES
+  governs_data: GOVERNS_DATA
+  governs: GOVERNS_DATA
+  defines: GOVERNS_DATA
+  maintains: MAINTAINS
+  controls: MAINTAINS
+  manages: MANAGES
+  managed_by: MAINTAINS
+  handles: MAINTAINS
+  steers: MAINTAINS
+  replaces: REPLACES
+  supersedes: SUPERSEDES
+  same_as: SAME_AS
+
+  # Temporal
+  depends_on: DEPENDS_ON
+  requires: DEPENDS_ON
+  relies_on: DEPENDS_ON
+  based_on: DEPENDS_ON
+  modifies: MODIFIES
+  results_in: RESULTS_IN
+  references: REFERENCES
+  traces_to: TRACES_TO
+
+  # Data flow
+  sends_to: SENDS_TO
+  sends_data: SENDS_TO
+  transfers: SENDS_TO
+  transfers_to: TRANSFERS_TO
+  transfers_data: TRANSFERS_TO
+  stored_in: STORED_AT
+  stored_at: STORED_AT
+  executes: EXECUTES
+  calls: EXECUTES
+  invokes: EXECUTES
+  deploys_to: DEPLOYS_TO
+  derived_from: DERIVED_FROM
+
+  # Hierarchy
+  owns: OWNS
+  operates: OPERATES
+  responsible_for: RESPONSIBLE_FOR
+  assigned_to: ASSIGNED_TO
+  participates_in: PARTICIPATES_IN
+
+# ============================================================
+# Entity Type Overrides (fix duplicate classification)
+# ============================================================
+entity_type_overrides:
+  EBOM:
+    correct_class: Data
+    correct_subclass: Document_Artifact
+  MBOM:
+    correct_class: Data
+    correct_subclass: Document_Artifact
+  BOM:
+    correct_class: Data
+    correct_subclass: Document_Artifact
+  BOE:
+    correct_class: Data
+    correct_subclass: Document_Artifact
+  BOP:
+    correct_class: Process
+    correct_subclass: Business_Process
+  Teamcenter:
+    correct_class: System
+    correct_subclass: Enterprise_Platform
+  SAP:
+    correct_class: System
+    correct_subclass: Enterprise_Platform
+  MES:
+    correct_class: System
+    correct_subclass: Enterprise_Platform
+  KDP:
+    correct_class: System
+    correct_subclass: Enterprise_Platform
+  CMP:
+    correct_class: System
+    correct_subclass: Enterprise_Platform
+  PLUS:
+    correct_class: System
+    correct_subclass: Enterprise_Platform
+  PIF:
+    correct_class: System
+    correct_subclass: Microservice_App
+  MPP:
+    correct_class: System
+    correct_subclass: Enterprise_Platform
+
+# ============================================================
+# Validation Rules
+# ============================================================
+validation:
+  required_fields:
+    node: [id, name, layer, meta_class]
+    edge: [from, to, type, confidence]
+  auto_reject_if:
+    - missing_name
+    - name_is_pure_number
+    - name_is_slide_reference
+    - name_too_short
+  manual_review_if:
+    - confidence_below: 0.6
+    - multiple_rules_matched: true

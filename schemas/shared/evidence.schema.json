@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ontology-unified.local/schemas/shared/evidence.schema.json",
+  "title": "Evidence Model Schema",
+  "description": "Unified evidence model for ontology extraction, aligned with core/models/evidence.py",
+  "type": "object",
+  "properties": {
+    "evidence_id": {"type": "string"},
+    "source_file": {"type": "string"},
+    "source_url": {"type": "string"},
+    "line_range": {
+      "type": "array",
+      "items": {"type": "integer"},
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "page_range": {
+      "type": "array",
+      "items": {"type": "integer"},
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "offset": {"type": "integer"},
+    "char_offset": {
+      "type": "array",
+      "items": {"type": "integer"},
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "paragraph_id": {"type": "integer"},
+    "line_numbers": {"type": "array", "items": {"type": "integer"}},
+    "content": {"type": "string"},
+    "raw_text": {"type": "string"},
+    "context": {"type": "string"},
+    "extraction_rule": {"type": "string"},
+    "extractor_id": {"type": "string"},
+    "extractor_version": {"type": "string", "default": "1.0"},
+    "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+    "extraction_confidence": {"type": "number", "minimum": 0, "maximum": 1},
+    "extracted_at": {"type": "string", "format": "date-time"},
+    "created_at": {"type": "string", "format": "date-time"},
+    "run_id": {"type": "string"},
+    "file_hash": {"type": "string"},
+    "content_hash": {"type": "string"},
+    "llm_response": {"type": "object"},
+    "prompt_tokens": {"type": "integer", "minimum": 0},
+    "completion_tokens": {"type": "integer", "minimum": 0},
+    "latency_ms": {"type": "integer", "minimum": 0},
+    "fallback_used": {"type": "boolean"},
+    "model_name": {"type": "string"},
+    "quality_issues": {"type": "array", "items": {"type": "string"}},
+    "metadata": {"type": "object"}
+  }
+}

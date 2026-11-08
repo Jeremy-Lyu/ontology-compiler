@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ontology-unified.local/schemas/asset_packet/manifest.schema.json",
+  "title": "Asset Manifest Schema",
+  "type": "object",
+  "required": ["version", "run_id", "assets"],
+  "properties": {
+    "version": {"type": "string", "const": "2.0.0"},
+    "run_id": {"type": "string"},
+    "session_id": {"type": "string"},
+    "generated_at": {"type": "string", "format": "date-time"},
+    "status": {"type": "string", "enum": ["running", "completed", "failed", "partial"]},
+    "input_files": {"type": "array", "items": {"type": "string"}},
+    "pipeline_version": {"type": "string"},
+    "rule_version": {"type": "string"},
+    "model_version": {"type": "string"},
+    "skill_versions": {"type": "object", "additionalProperties": {"type": "string"}},
+    "prompt_version": {"type": "string"},
+    "output_path": {"type": "string"},
+    "execution_duration_ms": {"type": "integer", "minimum": 0},
+    "llm_call_count": {"type": "integer", "minimum": 0},
+    "assets": {
+      "type": "object",
+      "properties": {
+        "entities": {"type": "string"},
+        "relations": {"type": "string"},
+        "evidence": {"type": "string"},
+        "quality_report": {"type": "string"},
+        "provenance": {"type": "string"},
+        "ontology_packet": {"type": "string"}
+      }
+    },
+    "statistics": {
+      "type": "object",
+      "properties": {
+        "total_files": {"type": "integer", "minimum": 0},
+        "entity_count": {"type": "integer", "minimum": 0},
+        "relation_count": {"type": "integer", "minimum": 0},
+        "evidence_count": {"type": "integer", "minimum": 0},
+        "quality_score": {"type": "number", "minimum": 0, "maximum": 1},
+        "review_required": {"type": "boolean"}
+      }
+    },
+    "errors": {"type": "array", "items": {"type": "string"}},
+    "warnings": {"type": "array", "items": {"type": "string"}}
+  }
+}

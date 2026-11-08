@@ -1,0 +1,162 @@
+{
+  "skill_id": "stage_runner",
+  "name": "Pipeline Stage Runner",
+  "description": "Unified pipeline stage execution: aggregate, catalog, guard, health, preflight, publish, rollback",
+  "version": "2.0.0",
+  "category": "pipeline",
+  "tags": [
+    "pipeline",
+    "stage",
+    "orchestration",
+    "ontology"
+  ],
+  "trigger": {
+    "keywords": [
+      "stage",
+      "pipeline",
+      "run",
+      "aggregate",
+      "catalog",
+      "guard",
+      "publish"
+    ],
+    "min_confidence": 0.8
+  },
+  "input_schema": {
+    "type": "object",
+    "required": [
+      "stage"
+    ],
+    "properties": {
+      "stage": {
+        "type": "string",
+        "enum": [
+          "preflight",
+          "catalog",
+          "aggregate",
+          "guard",
+          "health",
+          "publish",
+          "rollback",
+          "all"
+        ],
+        "description": "Stage to execute"
+      },
+      "run_dir": {
+        "type": "string",
+        "description": "Run directory path"
+      },
+      "pipeline_config": {
+        "type": "object",
+        "description": "Pipeline configuration"
+      },
+      "skip_health_check": {
+        "type": "boolean",
+        "default": false,
+        "description": "Skip health check before execution"
+      }
+    }
+  },
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "stage_results": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "stage": {
+              "type": "string"
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "success",
+                "failed",
+                "skipped"
+              ]
+            },
+            "output": {
+              "type": "object"
+            }
+          }
+        }
+      },
+      "execution_time": {
+        "type": "number"
+      },
+      "final_status": {
+        "type": "string"
+      }
+    }
+  },
+  "sub_skills": [
+    {
+      "name": "stage_preflight",
+      "stage": "preflight",
+      "description": "Pre-execution checks and validation",
+      "script_path": "scripts/pipeline/run_preflight.py"
+    },
+    {
+      "name": "stage_catalog",
+      "stage": "catalog",
+      "description": "Build and validate catalog",
+      "script_path": "scripts/pipeline/run_catalog.py"
+    },
+    {
+      "name": "stage_aggregate",
+      "stage": "aggregate",
+      "description": "Aggregate results from previous stages",
+      "script_path": "scripts/pipeline/run_aggregate.py"
+    },
+    {
+      "name": "stage_guard",
+      "stage": "guard",
+      "description": "Quality gate and validation",
+      "script_path": "scripts/pipeline/run_guard.py"
+    },
+    {
+      "name": "stage_health",
+      "stage": "health",
+      "description": "Health check and diagnostics",
+      "script_path": "scripts/pipeline/run_health_check.py"
+    },
+    {
+      "name": "stage_publish",
+      "stage": "publish",
+      "description": "Publish final results",
+      "script_path": "scripts/pipeline/run_publish.py"
+    },
+    {
+      "name": "stage_rollback",
+      "stage": "rollback",
+      "description": "Rollback on failure",
+      "script_path": "scripts/pipeline/run_rollback.py"
+    }
+  ],
+  "scripts": {
+    "main": "scripts/pipeline/stage_runner.py",
+    "validate": "scripts/pipeline/validate_stage_config.py"
+  },
+  "migration_note": "Consolidated from stage-aggregate, stage-catalog, stage-guard, stage-health, stage-preflight, stage-publish, stage-rollback (2026-06-11)",
+  "layer_scope": [
+    "L0",
+    "L1",
+    "L2",
+    "L2.5",
+    "L3"
+  ],
+  "business_domain": [
+    "SUPPLY_CHAIN",
+    "MANUFACTURING",
+    "DATA_MESH",
+    "MASTER_DATA"
+  ],
+  "quality_thresholds": {},
+  "trace_config": {
+    "log_model_name": false,
+    "log_prompt_version": false,
+    "log_execution_time": true,
+    "log_retries": false
+  }
+}

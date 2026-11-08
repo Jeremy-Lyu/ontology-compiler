@@ -1,0 +1,66 @@
+# Ontology Compilation Pipeline Configuration
+# G26-OPT-05: DSL配置驱动管道
+
+name: ontology_compilation
+error_handling: stop  # stop, continue, retry
+
+# 执行模式
+# legacy: 使用旧的 UnifiedCompilationService
+# new: 使用多 Agent 体系
+# dual: 并行执行新旧两种模式，对比结果
+mode: dual
+
+# 双轨迁移配置
+dual_pipeline:
+  legacy_enabled: true
+  new_enabled: true
+  comparison_enabled: true
+  output_report: true
+  
+steps:
+  # 1. 提取步骤
+  - name: extract
+    type: extract
+    description: 从文档提取实体和关系
+    retry: 2
+    timeout: 60s
+    
+  # 2. 验证步骤（仅在提取成功时执行）
+  - name: validate
+    type: validate
+    description: 验证提取结果质量
+    condition: "extract.success == true"
+    retry: 1
+    
+  # 3. 去重步骤
+  - name: dedup
+    type: transform
+    description: 实体去重和合并
+    condition: "validate.valid == true"
+    parallel: true
+    
+  # 4. 转换步骤
+  - name: transform
+    type: transform
+    description: 转换为 Neo4j 格式
+    condition: "dedup.completed == true"
+    
+  # 5. 加载步骤
+  - name: load
+    type: load
+    description: 导入 Neo4j
+    condition: "transform.completed == true"
+    batch_size: 1000
+    retry: 1
+
+# 错误处理策略
+on_error:
+  log_level: error
+  notify: false
+  fallback_action: "log_and_continue"
+
+# 监控配置
+monitoring:
+  enabled: true
+  log_latency: true
+  track_metrics: true

@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ontology-unified.local/schemas/analysis_manifest.schema.json",
+  "title": "Analysis Manifest",
+  "type": "object",
+  "required": [
+    "run_id",
+    "topic_id",
+    "domain",
+    "source_folder",
+    "source_fingerprint",
+    "status",
+    "summary",
+    "llm_usage",
+    "quality",
+    "artifacts"
+  ],
+  "properties": {
+    "run_id": {"type": "string"},
+    "topic_id": {"type": "string"},
+    "domain": {"type": "string"},
+    "source_folder": {"type": "string"},
+    "source_fingerprint": {"type": "string"},
+    "status": {"type": "string"},
+    "summary": {"type": "object"},
+    "llm_usage": {"type": "object"},
+    "quality": {
+      "type": "object",
+      "required": ["l1_score", "l2_score", "grade", "warnings"],
+      "properties": {
+        "l1_score": {"type": "number"},
+        "l2_score": {"type": "number"},
+        "grade": {"type": "string"},
+        "warnings": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": true
+    },
+    "artifacts": {
+      "type": "object",
+      "required": ["run_dir", "supplement", "layered", "analysis", "merged", "report", "l1", "l2", "manifest"],
+      "properties": {
+        "run_dir": {"type": "string"},
+        "supplement": {"type": ["string", "null"]},
+        "layered": {"type": ["string", "null"]},
+        "analysis": {"type": ["string", "null"]},
+        "merged": {"type": ["string", "null"]},
+        "report": {"type": ["string", "null"]},
+        "l1": {"type": "string"},
+        "l2": {"type": "string"},
+        "manifest": {"type": "string"}
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}
+

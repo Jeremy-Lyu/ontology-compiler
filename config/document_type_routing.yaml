@@ -1,0 +1,61 @@
+# Document Type Aware Pipeline Routing (P2-10)
+# Routes documents to different chunking and extraction strategies based on type
+
+document_types:
+  PPTX:
+    chunking_strategy: "slide_by_slide"
+    max_tokens_per_chunk: 4000
+    extraction_prompt: "default"
+    entity_hints:
+      - "Slide titles are likely L1/L2 entities"
+      - "Bullet points often describe L2.5/L3 instances"
+    
+  DOCX:
+    chunking_strategy: "paragraph_based"
+    max_tokens_per_chunk: 6000
+    extraction_prompt: "default"
+    entity_hints:
+      - "Headings indicate hierarchical entities"
+      - "Tables often contain L3 instance data"
+    
+  DOC:
+    chunking_strategy: "paragraph_based"
+    max_tokens_per_chunk: 6000
+    extraction_prompt: "default"
+    fallback: true  # May need format conversion
+    entity_hints:
+      - "Legacy format, check for encoding issues"
+    
+  XLSX:
+    chunking_strategy: "row_based"
+    max_tokens_per_chunk: 3000
+    extraction_prompt: "tabular"
+    entity_hints:
+      - "Each row may be an L3 instance"
+      - "Column headers are likely L2 attributes"
+    
+  PDF:
+    chunking_strategy: "page_based"
+    max_tokens_per_chunk: 5000
+    extraction_prompt: "default"
+    entity_hints:
+      - "Section headers indicate L1 entities"
+
+# Default routing when type cannot be determined
+default:
+  chunking_strategy: "auto"
+  max_tokens_per_chunk: 4000
+  extraction_prompt: "default"
+  entity_hints: []
+
+# File extension to document type mapping
+extension_mapping:
+  ".pptx": "PPTX"
+  ".ppt": "PPTX"
+  ".docx": "DOCX"
+  ".doc": "DOC"
+  ".xlsx": "XLSX"
+  ".xls": "XLSX"
+  ".pdf": "PDF"
+  ".txt": "TXT"
+  ".md": "TXT"

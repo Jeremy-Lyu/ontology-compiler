@@ -1,0 +1,25 @@
+# 结构化导入配置：Part 实体（Partcache 数据）
+domain: MANUFACTURING
+entity_type: Part
+meta_class: Asset
+column_mapping:
+  - source: PART_NUMBER
+    target: part_no
+    transform: tail8
+  - source: PART_DESCRIPTION
+    target: description
+  - source: QUANTITY
+    target: quantity
+  - source: UNIT_OF_MEASUREMENT
+    target: unit
+  - source: PART_GROUP
+    target: part_group
+  - source: PART_POS
+    target: part_position
+  - source: EVENT_TS
+    target: event_ts
+    transform: datetime
+business_key: PART_NUMBER
+tail8_key: PART_NUMBER
+valid_from_col: EVENT_TS
+output_dir: outputs/enterprise_kb/structured/parts

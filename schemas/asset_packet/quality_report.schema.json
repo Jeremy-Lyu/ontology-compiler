@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ontology-unified.local/schemas/asset_packet/quality_report.schema.json",
+  "title": "Quality Report Schema",
+  "type": "object",
+  "required": ["version", "run_id", "overall_score"],
+  "properties": {
+    "version": {"type": "string", "const": "2.0.0"},
+    "run_id": {"type": "string"},
+    "generated_at": {"type": "string", "format": "date-time"},
+    "overall_score": {"type": "number", "minimum": 0, "maximum": 1},
+    "review_required": {"type": "boolean"},
+    "entity_quality": {
+      "type": "object",
+      "properties": {
+        "total_count": {"type": "integer", "minimum": 0},
+        "valid_count": {"type": "integer", "minimum": 0},
+        "invalid_count": {"type": "integer", "minimum": 0},
+        "confidence_mean": {"type": "number", "minimum": 0, "maximum": 1},
+        "completeness_score": {"type": "number", "minimum": 0, "maximum": 1},
+        "duplicate_rate": {"type": "number", "minimum": 0, "maximum": 1},
+        "violations": {"type": "array", "items": {"type": "object"}}
+      }
+    },
+    "relation_quality": {
+      "type": "object",
+      "properties": {
+        "total_count": {"type": "integer", "minimum": 0},
+        "valid_count": {"type": "integer", "minimum": 0},
+        "invalid_count": {"type": "integer", "minimum": 0},
+        "confidence_mean": {"type": "number", "minimum": 0, "maximum": 1},
+        "conflict_count": {"type": "integer", "minimum": 0},
+        "coverage_score": {"type": "number", "minimum": 0, "maximum": 1},
+        "violations": {"type": "array", "items": {"type": "object"}}
+      }
+    },
+    "governance_checks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["check_name", "result", "severity"],
+        "properties": {
+          "check_name": {"type": "string"},
+          "result": {"type": "string", "enum": ["pass", "warn", "fail"]},
+          "severity": {"type": "string", "enum": ["low", "medium", "high", "critical"]},
+          "details": {"type": "string"},
+          "violations": {"type": "array", "items": {"type": "object"}}
+        }
+      }
+    },
+    "recommendations": {"type": "array", "items": {"type": "string"}}
+  }
+}

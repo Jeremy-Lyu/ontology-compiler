@@ -1,0 +1,142 @@
+skill_id: "l25_mbom_extraction"
+skill_name: "MBOM与物料场景提取"
+description: "从文档中提取制造BOM（MBOM）相关的实体和关系，包括物料清单、排产计划、生产订单等场景"
+version: "1.0.0"
+domain:
+  - MANUFACTURING
+  - SUPPLY_CHAIN
+enabled: true
+
+triggers:
+  keywords:
+    - "MBOM"
+    - "物料清单"
+    - "BOM"
+    - "排产"
+    - "生产订单"
+    - "POS"
+    - "物料"
+    - "零部件"
+    - "生产计划"
+    - "制造"
+  regex_patterns:
+    - "^BOM[\\s_-]?[0-9]+$"
+    - "^MBOM[\\s_-]?[0-9]+$"
+    - "^生产订单[\\s_-]?[0-9]+$"
+  priority: 10
+  exclusive_group: "manufacturing"
+  cost_hint: "medium"
+  requires_llm: true
+  candidate_keywords:
+    - "物料"
+    - "零部件"
+    - "BOM"
+
+entity_types:
+  Capability:
+    - "物料管理"
+    - "生产调度"
+    - "BOM管理"
+    - "排产优化"
+  System:
+    - "BOM系统"
+    - "生产计划系统"
+    - "物料需求计划"
+    - "MRP系统"
+  Asset:
+    - "工厂"
+    - "生产线"
+    - "仓库"
+    - "设备"
+  Process:
+    - "生产流程"
+    - "物料流转"
+    - "排产流程"
+    - "装配流程"
+  Data:
+    - "BOM数据"
+    - "物料数据"
+    - "生产数据"
+    - "排产数据"
+
+llm_prompt_template: |
+  你是一个制造业领域的本体工程师。请从以下文档内容中提取MBOM（制造物料清单）相关的实体和关系：
+
+  文档内容：
+  {document_content}
+
+  请提取以下类型的实体：
+  1. 物料项（物料编号、物料名称、规格）
+  2. BOM结构（层级关系、父子关系）
+  3. 生产订单（订单号、状态、数量）
+  4. 生产资源（生产线、设备、人员）
+  5. 排产规则（优先级、约束条件）
+
+  请输出JSON格式，包含以下字段：
+  - l25_entities: MBOM相关实体列表
+  - relationships: 实体之间的关系
+
+governance:
+  allowed_relation_types:
+    - HAS_VARIANT
+    - HAS_COMPONENT
+    - PART_OF
+    - MANUFACTURED_BY
+    - USED_IN
+    - HAS_OPERATION
+    - ROUTES_TO
+  blocked_relation_types:
+    - DERIVED_FROM
+    - TRANSFORMS_TO
+
+# T3.2 契约化三层（docs/architectures/ENTITY_CLASSIFICATION_ROADMAP.md）：
+# skill 从 prompt 片段升级为治理规则包。三层契约由
+# ontology_compiler.services.skill_contract.validate_extraction_against_contract
+# 在抽取后强制校验；violations 进入 rule_l25 角色运行记录。
+contract:
+  classification:
+    required_layers: [L1, L2]
+    noise_patterns:
+      - "^TODO"
+      - "^待定$"
+      - "^占位"
+  entity:
+    rag_required_fields: [evidence_ref]
+    required_entity_types:
+      Asset:
+        min_count: 1
+        required_fields: [meta_id, name]
+      Process:
+        min_count: 0
+        required_fields: [name]
+  relation:
+    forbidden_relation_types: [DERIVED_FROM, TRANSFORMS_TO]
+    evidence_required_relation_types: [DEPENDS_ON, USED_IN, AFFECTS]
+
+post_processing:
+  required_fields:
+    - meta_id
+    - meta_name
+    - meta_class
+    - description
+  normalization_rules:
+    - field: "meta_class"
+      allowed_values:
+        - Capability
+        - System
+        - Asset
+        - Process
+        - Data
+      default: "Concept"
+
+cross_layer_mapping:
+  L1:
+    - source: "BOM系统"
+      target: "System"
+    - source: "生产计划"
+      target: "Process"
+  L2:
+    - source: "物料管理场景"
+      target: "Capability"
+    - source: "排产场景"
+      target: "Process"

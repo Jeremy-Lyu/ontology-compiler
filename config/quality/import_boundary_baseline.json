@@ -1,0 +1,12 @@
+{
+  "^ontology_compiler($|\\.)|src.application": [
+    "ontology_compiler/services/extraction/llm_call.py:34",
+    "ontology_compiler/services/extraction/true_unified_extractor.py:133"
+  ],
+  "^ontology_compiler($|\\.)|src.infrastructure": [
+    "ontology_compiler/skills/builtin/quality_gate_skill.py:20"
+  ],
+  "^ontology_compiler($|\\.)|src.pipeline": [
+    "ontology_compiler/skills/builtin/metadata_enrichment_skill.py:21"
+  ]
+}

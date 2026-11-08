@@ -1,0 +1,128 @@
+# RAG Retrieval Contract
+# Version: 1.0.0
+# Status: ACTIVE
+# Source of Truth: src/application/rag/models.py + this schema
+#
+# Canonical contract for retrieval-side DTOs in the RAG bounded context.
+# This file complements tests/rag/test_rag_contracts_characterization.py.
+# Breaking changes require version bump + migration notes.
+
+contract_id: rag_retrieval
+contract_type: schema
+version: "1.0.0"
+status: active
+
+description: >
+  Canonical contract for RAG retrieval DTOs and query-side configuration.
+  Describes chunk records, retrieved chunks, retrieval results, graph search
+  results, rewritten queries, and core retrieval configuration defaults.
+
+fields:
+  ChunkRecord:
+    type: object
+    required: true
+    description: "Opaque retrieval chunk record used by JSONL/index persistence"
+    properties:
+      chunk_id: { type: string, required: true }
+      chunk_type: { type: string, required: true }
+      content: { type: string, required: true }
+      node_ids:
+        type: array
+        required: true
+        items: { type: string }
+      linked_node_ids:
+        type: array
+        required: true
+        items: { type: string }
+      meta: { type: object, required: true }
+      evidence: { type: object, required: false }
+
+  RetrievedChunk:
+    type: object
+    required: true
+    description: "Chunk plus retrieval score"
+    properties:
+      chunk: { type: object, required: true }
+      score: { type: number, required: true }
+
+  ChunkWithVector:
+    type: object
+    required: true
+    description: "Hybrid retrieval chunk with multiple score channels"
+    properties:
+      chunk: { type: object, required: true }
+      vector_score: { type: number, required: false, default: 0.0 }
+      keyword_score: { type: number, required: false, default: 0.0 }
+      hybrid_score: { type: number, required: false, default: 0.0 }
+
+  LLMAnswerResult:
+    type: object
+    required: true
+    description: "LLM answer payload referenced by retrieval/answer boundary tests"
+    properties:
+      answer: { type: string, required: true }
+      evidence_chunks:
+        type: array
+        required: true
+        items: { type: object }
+      confidence: { type: number, required: true }
+      model: { type: string, required: true }
+      tokens_used: { type: integer, required: false, nullable: true }
+
+  RetrievalResult:
+    type: object
+    required: true
+    description: "Merged retrieval response across local/graph/hybrid sources"
+    properties:
+      chunks:
+        type: array
+        required: true
+        items: { type: object }
+      source_type: { type: string, required: true }
+      query: { type: string, required: true }
+      topk: { type: integer, required: true }
+      execution_time_ms: { type: number, required: true }
+
+  Neo4jSearchResult:
+    type: object
+    required: true
+    description: "Graph retrieval search result"
+    properties:
+      entity_name: { type: string, required: true }
+      entity_type: { type: string, required: true }
+      description: { type: string, required: true }
+      related_entities:
+        type: array
+        required: true
+        items: { type: object }
+      scenarios:
+        type: array
+        required: true
+        items: { type: string }
+      score: { type: number, required: false, default: 0.0 }
+
+  RewrittenQuery:
+    type: object
+    required: true
+    description: "Query rewriting DTO used before retrieval"
+    properties:
+      original: { type: string, required: true }
+      rewritten: { type: string, required: true }
+      method: { type: string, required: true }
+      confidence: { type: number, required: true }
+
+  RAGConfig:
+    type: object
+    required: true
+    description: "Retrieval configuration defaults"
+    properties:
+      rag_dir: { type: string, required: false, default: "outputs/ontology/rag" }
+      model: { type: string, required: false, default: "deepseek-chat" }
+      max_context_chunks: { type: integer, required: false, default: 5 }
+      max_chunk_length: { type: integer, required: false, default: 1000 }
+      use_neo4j: { type: boolean, required: false, default: false }
+      neo4j_weight: { type: number, required: false, default: 0.3 }
+      hybrid_alpha: { type: number, required: false, default: 0.5 }
+
+contract_id: rag_retrieval
+contract_version: "1.0.0"

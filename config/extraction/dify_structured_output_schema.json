@@ -1,0 +1,105 @@
+{
+  "type": "object",
+  "properties": {
+    "L0_entities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "meta_id": {"type": "string"},
+          "meta_class": {"type": "string"},
+          "name": {"type": "string"},
+          "description": {"type": "string"},
+          "domain": {"type": "string"},
+          "status": {"type": "string"},
+          "evidence": {"type": "string"}
+        },
+        "required": ["meta_id", "meta_class", "name", "evidence"]
+      }
+    },
+    "L1_entities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "meta_id": {"type": "string"},
+          "meta_class": {"type": "string"},
+          "name": {"type": "string"},
+          "description": {"type": "string"},
+          "domain": {"type": "string"},
+          "parent_class": {"type": "string"},
+          "status": {"type": "string"},
+          "evidence": {"type": "string"}
+        },
+        "required": ["meta_id", "meta_class", "name", "evidence"]
+      }
+    },
+    "L2_entities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "meta_id": {"type": "string"},
+          "meta_class": {"type": "string"},
+          "name": {"type": "string"},
+          "description": {"type": "string"},
+          "domain": {"type": "string"},
+          "parent_id": {"type": "string"},
+          "status": {"type": "string"},
+          "evidence": {"type": "string"}
+        },
+        "required": ["meta_id", "meta_class", "name", "evidence"]
+      }
+    },
+    "L2_5_entities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "meta_id": {"type": "string"},
+          "meta_class": {"type": "string"},
+          "name": {"type": "string"},
+          "description": {"type": "string"},
+          "domain": {"type": "string"},
+          "status": {"type": "string"},
+          "evidence": {"type": "string"}
+        },
+        "required": ["meta_id", "meta_class", "name", "evidence"]
+      }
+    },
+    "L3_entities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "meta_id": {"type": "string"},
+          "meta_class": {"type": "string"},
+          "name": {"type": "string"},
+          "description": {"type": "string"},
+          "domain": {"type": "string"},
+          "parent_id": {"type": "string"},
+          "status": {"type": "string"},
+          "evidence": {"type": "string"}
+        },
+        "required": ["meta_id", "meta_class", "name", "evidence"]
+      }
+    },
+    "relationships": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "from": {"type": "string"},
+          "to": {"type": "string"},
+          "type": {"type": "string"},
+          "description": {"type": "string"},
+          "evidence_ref": {"type": "string"},
+          "confidence": {"type": "string"}
+        },
+        "required": ["from", "to", "type", "evidence_ref"]
+      }
+    }
+  },
+  "required": ["L0_entities", "L1_entities", "L2_entities", "L2_5_entities", "L3_entities", "relationships"],
+  "additionalProperties": false
+}

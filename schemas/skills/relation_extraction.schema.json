@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ontology-unified.local/schemas/skills/relation_extraction.schema.json",
+  "title": "Relation Extraction Skill Schema",
+  "type": "object",
+  "required": ["skill_name", "skill_version", "context", "input", "output", "quality", "trace"],
+  "properties": {
+    "skill_name": {"type": "string", "const": "relation_extraction"},
+    "skill_version": {"type": "string"},
+    "context": {"$ref": "../shared/skill_envelope.schema.json#/definitions/context"},
+    "input": {
+      "type": "object",
+      "required": ["text", "entities", "allowed_relations"],
+      "properties": {
+        "text": {"type": "string"},
+        "entities": {"type": "array", "items": {"type": "object"}},
+        "allowed_relations": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "output": {
+      "type": "object",
+      "required": ["relations"],
+      "properties": {
+        "relations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["head", "tail", "type", "confidence"],
+            "properties": {
+              "head": {"type": "string"},
+              "tail": {"type": "string"},
+              "type": {"type": "string"},
+              "evidence_span": {"type": "string"},
+              "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+              "direction": {"type": "string"},
+              "relation_scope": {"type": "string"}
+            }
+          }
+        }
+      }
+    },
+    "quality": {"$ref": "../shared/skill_envelope.schema.json#/definitions/quality"},
+    "trace": {"$ref": "../shared/skill_envelope.schema.json#/definitions/trace"},
+    "warnings": {"type": "array", "items": {"$ref": "../shared/skill_envelope.schema.json#/definitions/warning"}},
+    "errors": {"type": "array", "items": {"$ref": "../shared/skill_envelope.schema.json#/definitions/error"}}
+  }
+}

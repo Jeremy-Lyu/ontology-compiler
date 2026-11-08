@@ -1,0 +1,135 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ontology-unified.local/schemas/skills/ontology-validator.schema.json",
+  "title": "Ontology Validator Skill Schema",
+  "type": "object",
+  "required": ["skill_name", "skill_version", "context", "input", "output", "quality", "trace"],
+  "properties": {
+    "skill_name": {"type": "string", "const": "ontology-validator"},
+    "skill_version": {"type": "string"},
+    "context": {"$ref": "../shared/skill_envelope.schema.json#/definitions/context"},
+    "input": {
+      "type": "object",
+      "required": ["ontology", "schema"],
+      "properties": {
+        "ontology": {
+          "type": "object",
+          "properties": {
+            "entities": {"type": "array", "items": {"type": "object"}},
+            "relations": {"type": "array", "items": {"type": "object"}},
+            "evidence": {"type": "array", "items": {"type": "object"}}
+          }
+        },
+        "schema": {
+          "type": "object",
+          "properties": {
+            "entity_types": {"type": "array", "items": {"type": "string"}},
+            "relation_types": {"type": "array", "items": {"type": "string"}},
+            "required_fields": {"type": "object"},
+            "validation_rules": {"type": "array", "items": {"type": "object"}}
+          }
+        },
+        "validation_config": {
+          "type": "object",
+          "properties": {
+            "validate_schema": {"type": "boolean", "default": true},
+            "validate_evidence": {"type": "boolean", "default": true},
+            "validate_consistency": {"type": "boolean", "default": true},
+            "validate_completeness": {"type": "boolean", "default": true}
+          }
+        }
+      }
+    },
+    "output": {
+      "type": "object",
+      "required": ["validation_result", "errors", "warnings"],
+      "properties": {
+        "validation_result": {
+          "type": "object",
+          "properties": {
+            "valid": {"type": "boolean"},
+            "validation_status": {"type": "string", "enum": ["pass", "warning", "fail"]},
+            "overall_score": {"type": "number", "minimum": 0, "maximum": 1},
+            "schema_validation": {
+              "type": "object",
+              "properties": {
+                "passed": {"type": "boolean"},
+                "score": {"type": "number", "minimum": 0, "maximum": 1},
+                "errors": {"type": "integer", "minimum": 0}
+              }
+            },
+            "evidence_validation": {
+              "type": "object",
+              "properties": {
+                "passed": {"type": "boolean"},
+                "score": {"type": "number", "minimum": 0, "maximum": 1},
+                "coverage_rate": {"type": "number", "minimum": 0, "maximum": 1},
+                "errors": {"type": "integer", "minimum": 0}
+              }
+            },
+            "consistency_validation": {
+              "type": "object",
+              "properties": {
+                "passed": {"type": "boolean"},
+                "score": {"type": "number", "minimum": 0, "maximum": 1},
+                "conflicts": {"type": "integer", "minimum": 0}
+              }
+            },
+            "completeness_validation": {
+              "type": "object",
+              "properties": {
+                "passed": {"type": "boolean"},
+                "score": {"type": "number", "minimum": 0, "maximum": 1},
+                "missing_fields": {"type": "integer", "minimum": 0}
+              }
+            }
+          },
+          "required": ["valid", "validation_status"]
+        },
+        "errors": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "error_id": {"type": "string"},
+              "error_type": {"type": "string", "enum": ["schema_violation", "missing_field", "invalid_value", "evidence_missing", "conflict", "inconsistency"]},
+              "severity": {"type": "string", "enum": ["critical", "high", "medium"]},
+              "entity_id": {"type": "string"},
+              "field": {"type": "string"},
+              "message": {"type": "string"},
+              "suggestion": {"type": "string"}
+            },
+            "required": ["error_id", "error_type", "severity", "message"]
+          }
+        },
+        "warnings": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "warning_id": {"type": "string"},
+              "warning_type": {"type": "string", "enum": ["missing_optional_field", "low_confidence", "deprecated_type", "potential_duplicate"]},
+              "entity_id": {"type": "string"},
+              "message": {"type": "string"}
+            },
+            "required": ["warning_id", "warning_type", "message"]
+          }
+        },
+        "summary": {
+          "type": "object",
+          "properties": {
+            "total_errors": {"type": "integer", "minimum": 0},
+            "total_warnings": {"type": "integer", "minimum": 0},
+            "critical_errors": {"type": "integer", "minimum": 0},
+            "high_errors": {"type": "integer", "minimum": 0},
+            "medium_errors": {"type": "integer", "minimum": 0}
+          }
+        }
+      }
+    },
+    "quality": {"$ref": "../shared/skill_envelope.schema.json#/definitions/quality"},
+    "trace": {"$ref": "../shared/skill_envelope.schema.json#/definitions/trace"},
+    "warnings": {"type": "array", "items": {"$ref": "../shared/skill_envelope.schema.json#/definitions/warning"}},
+    "errors": {"type": "array", "items": {"$ref": "../shared/skill_envelope.schema.json#/definitions/error"}}
+  }
+}

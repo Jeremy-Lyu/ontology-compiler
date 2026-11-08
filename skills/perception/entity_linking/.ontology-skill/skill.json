@@ -1,0 +1,50 @@
+{
+  "name": "entity_linking",
+  "description": "将识别出的实体链接到已有的本体库，建立实体之间的关联",
+  "command": "python src/skills/perception/entity_linking/entity_linking.py --entities <entities> --ontology <ontology_path>",
+  "script_path": "src/skills/perception/entity_linking/entity_linking.py",
+  "category": "perception",
+  "layer_scope": ["L1", "L2", "L2.5", "L3"],
+  "enabled": true,
+  "version": "2.0.0",
+  "business_domain": ["SUPPLY_CHAIN", "MANUFACTURING", "DATA_MESH", "MASTER_DATA"],
+  "args_schema": {
+    "entities": {
+      "type": "array",
+      "items": {"type": "object"},
+      "required": true,
+      "description": "待链接的实体列表"
+    },
+    "ontology_path": {
+      "type": "string",
+      "description": "本体库路径"
+    }
+  },
+  "output_schema": {
+    "links": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["source_entity_id", "target_entity_id", "link_type", "confidence"],
+        "properties": {
+          "source_entity_id": {"type": "string"},
+          "target_entity_id": {"type": "string"},
+          "link_type": {"type": "string"},
+          "confidence": {"type": "number", "minimum": 0, "maximum": 1}
+        }
+      }
+    }
+  },
+  "preconditions": ["entities must be provided"],
+  "quality_thresholds": {
+    "min_confidence": 0.75,
+    "max_conflict_count": 2,
+    "review_threshold": 0.9
+  },
+  "trace_config": {
+    "log_model_name": true,
+    "log_prompt_version": true,
+    "log_execution_time": true,
+    "log_retries": true
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "enabled": true,
+  "schedule": [
+    {
+      "name": "Daily BOM Validation",
+      "cron_expression": "0 2 * * *",
+      "target_directory": "/path/to/bom/docs",
+      "enabled": true,
+      "last_run": null,
+      "next_run": null
+    }
+  ],
+  "target_directories": [],
+  "max_concurrent_tasks": 1,
+  "notification_settings": {}
+}

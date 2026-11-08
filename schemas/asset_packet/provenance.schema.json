@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ontology-unified.local/schemas/asset_packet/provenance.schema.json",
+  "title": "Provenance Schema",
+  "type": "object",
+  "required": ["version", "run_id"],
+  "properties": {
+    "version": {"type": "string", "const": "2.0.0"},
+    "run_id": {"type": "string"},
+    "generated_at": {"type": "string", "format": "date-time"},
+    "workflow": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["step_id", "step_name", "status", "timestamp"],
+        "properties": {
+          "step_id": {"type": "string"},
+          "step_name": {"type": "string"},
+          "status": {"type": "string", "enum": ["pending", "running", "completed", "failed"]},
+          "timestamp": {"type": "string", "format": "date-time"},
+          "duration_ms": {"type": "integer", "minimum": 0},
+          "input_refs": {"type": "array", "items": {"type": "string"}},
+          "output_refs": {"type": "array", "items": {"type": "string"}},
+          "skill_name": {"type": "string"},
+          "skill_version": {"type": "string"},
+          "model_name": {"type": "string"},
+          "model_version": {"type": "string"}
+        }
+      }
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["file_path", "file_hash", "processed_at"],
+        "properties": {
+          "file_path": {"type": "string"},
+          "file_hash": {"type": "string"},
+          "file_size": {"type": "integer", "minimum": 0},
+          "mime_type": {"type": "string"},
+          "processed_at": {"type": "string", "format": "date-time"},
+          "entities_extracted": {"type": "integer", "minimum": 0},
+          "relations_extracted": {"type": "integer", "minimum": 0}
+        }
+      }
+    },
+    "rules": {
+      "type": "object",
+      "properties": {
+        "version": {"type": "string"},
+        "classification_rules": {"type": "array", "items": {"type": "string"}},
+        "relation_rules": {"type": "array", "items": {"type": "string"}},
+        "validation_rules": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "models": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "version"],
+        "properties": {
+          "name": {"type": "string"},
+          "version": {"type": "string"},
+          "call_count": {"type": "integer", "minimum": 0},
+          "total_tokens": {"type": "integer", "minimum": 0},
+          "total_cost": {"type": "number", "minimum": 0}
+        }
+      }
+    },
+    "skills": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "version"],
+        "properties": {
+          "name": {"type": "string"},
+          "version": {"type": "string"},
+          "executed_at": {"type": "string", "format": "date-time"},
+          "duration_ms": {"type": "integer", "minimum": 0},
+          "input_count": {"type": "integer", "minimum": 0},
+          "output_count": {"type": "integer", "minimum": 0}
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,494 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://example.com/ontology/ontology_packet.schema.json",
+  "title": "Ontology Packet Schema",
+  "description": "Unified output format for ontology extraction pipeline",
+  "version": "1.0.0",
+  "type": "object",
+  "required": [
+    "document",
+    "entities",
+    "relations"
+  ],
+  "properties": {
+    "document": {
+      "type": "object",
+      "description": "Source document information",
+      "required": [
+        "file_name",
+        "file_path",
+        "domain"
+      ],
+      "properties": {
+        "file_name": {
+          "type": "string"
+        },
+        "file_path": {
+          "type": "string"
+        },
+        "domain": {
+          "type": "string"
+        },
+        "document_type": {
+          "type": "string"
+        },
+        "language": {
+          "type": "string",
+          "default": "zh"
+        },
+        "size_bytes": {
+          "type": "integer"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "layer_scope": {
+      "type": "string",
+      "description": "Scope of the extraction",
+      "enum": [
+        "spec",
+        "impl",
+        "inferred"
+      ],
+      "default": "spec"
+    },
+    "entities": {
+      "type": "object",
+      "description": "Entities grouped by layer",
+      "properties": {
+        "L0": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/entity"
+          }
+        },
+        "L1": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/entity"
+          }
+        },
+        "L2": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/entity"
+          }
+        },
+        "L2.5": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/entity"
+          }
+        },
+        "L3": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/entity"
+          }
+        }
+      }
+    },
+    "relations": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/relation"
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/evidence"
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "description": "Provenance information for traceability",
+      "properties": {
+        "extraction_time": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "extractor_version": {
+          "type": "string"
+        },
+        "llm_model": {
+          "type": "string"
+        },
+        "prompt_version": {
+          "type": "string"
+        },
+        "skills_used": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "agent_name": {
+          "type": "string"
+        },
+        "confidence_threshold": {
+          "type": "number"
+        },
+        "retries": {
+          "type": "integer"
+        }
+      }
+    },
+    "quality": {
+      "type": "object",
+      "description": "Quality metrics for the extraction",
+      "properties": {
+        "entity_completeness": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "relation_validity": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "evidence_coverage": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "duplicate_rate": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "conflict_count": {
+          "type": "integer"
+        }
+      }
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "severity": {
+            "type": "string",
+            "enum": [
+              "info",
+              "warning",
+              "error"
+            ]
+          },
+          "entity_id": {
+            "type": "string"
+          },
+          "relation_id": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "assumptions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "definitions": {
+    "entity": {
+      "type": "object",
+      "description": "Standardized ontology entity",
+      "required": [
+        "id",
+        "name",
+        "layer",
+        "type"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique stable identifier"
+        },
+        "code": {
+          "type": "string",
+          "description": "Business code/identifier"
+        },
+        "name": {
+          "type": "string",
+          "description": "Entity name"
+        },
+        "layer": {
+          "type": "string",
+          "enum": [
+            "L0",
+            "L1",
+            "L2",
+            "L2.5",
+            "L3"
+          ],
+          "description": "Ontology layer"
+        },
+        "layer_scope": {
+          "type": "string",
+          "enum": [
+            "spec",
+            "impl",
+            "inferred"
+          ],
+          "default": "spec",
+          "description": "Scope of this entity"
+        },
+        "type": {
+          "type": "string",
+          "description": "Main class type (Capability/System/Actor/Asset/Data/Process/Concept/BusinessScenario/MappingRule/BusinessRule/ValidationRule)"
+        },
+        "sub_type": {
+          "type": "string",
+          "description": "Subclass type"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "active",
+            "deprecated",
+            "proposed",
+            "draft",
+            "ghost",
+            "archived"
+          ],
+          "default": "active",
+          "description": "Entity status"
+        },
+        "parent_id": {
+          "type": "string",
+          "description": "Parent entity ID"
+        },
+        "description": {
+          "type": "string",
+          "description": "Entity description"
+        },
+        "domain": {
+          "type": "string",
+          "description": "Business domain"
+        },
+        "source_file": {
+          "type": "string",
+          "description": "Source document file name"
+        },
+        "source_span": {
+          "type": "string",
+          "description": "Source location (page, line range)"
+        },
+        "evidence_ref": {
+          "type": "string",
+          "description": "Evidence reference"
+        },
+        "version": {
+          "type": "string",
+          "default": "1.0",
+          "description": "Entity version"
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "default": 0.8,
+          "description": "Confidence score"
+        },
+        "attributes": {
+          "type": "object",
+          "description": "Additional attributes as key-value pairs"
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Alternative names"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Classification tags"
+        },
+        "relations_summary": {
+          "type": "object",
+          "description": "Summary of relations involving this entity"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "t1_planned_switch_date": {
+          "type": "string",
+          "description": "T1 计划切换日 — business planned switch date (valid-time axis 1)."
+        },
+        "t2_supplier_delivery_date": {
+          "type": "string",
+          "description": "T2 供应商供货日 — supplier delivery date (valid-time axis 2)."
+        },
+        "t3_actual_install_date": {
+          "type": "string",
+          "description": "T3 实际装车日 — actual install/VIN-build date (valid-time axis 3)."
+        },
+        "valid_from": {
+          "type": "string",
+          "description": "Version interval start (business valid time)."
+        },
+        "valid_to": {
+          "type": "string",
+          "description": "Version interval end (business valid time)."
+        }
+      }
+    },
+    "relation": {
+      "type": "object",
+      "description": "Standardized ontology relation",
+      "required": [
+        "source_id",
+        "target_id",
+        "relation_type"
+      ],
+      "properties": {
+        "source_id": {
+          "type": "string",
+          "description": "Source entity ID"
+        },
+        "target_id": {
+          "type": "string",
+          "description": "Target entity ID"
+        },
+        "relation_type": {
+          "type": "string",
+          "description": "Relation type (must be in whitelist)"
+        },
+        "source_cq": {
+          "type": "string",
+          "description": "Competency Question this relation serves (e.g. CQ-MBOM-001). T2.3 CQ provenance registry: relations without it are counted as dead relations."
+        },
+        "layer_scope": {
+          "type": "string",
+          "enum": [
+            "spec",
+            "impl",
+            "inferred"
+          ],
+          "default": "spec",
+          "description": "Scope of this relation"
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "default": 0.8,
+          "description": "Confidence score"
+        },
+        "evidence_ref": {
+          "type": "string",
+          "description": "Evidence reference"
+        },
+        "effective_from": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Effective start date"
+        },
+        "effective_to": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Effective end date (null means ongoing)"
+        },
+        "provenance": {
+          "type": "string",
+          "enum": [
+            "llm",
+            "skill",
+            "rule",
+            "inferred"
+          ],
+          "default": "llm",
+          "description": "Source of this relation"
+        },
+        "description": {
+          "type": "string",
+          "description": "Relation description"
+        },
+        "attributes": {
+          "type": "object",
+          "description": "Additional attributes"
+        }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "description": "Evidence for entity or relation",
+      "required": [
+        "id",
+        "text",
+        "document"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string"
+        },
+        "document": {
+          "type": "string"
+        },
+        "position": {
+          "type": "object",
+          "properties": {
+            "page": {
+              "type": "integer"
+            },
+            "start_line": {
+              "type": "integer"
+            },
+            "end_line": {
+              "type": "integer"
+            },
+            "start_char": {
+              "type": "integer"
+            },
+            "end_char": {
+              "type": "integer"
+            }
+          }
+        },
+        "version": {
+          "type": "string"
+        },
+        "entity_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "relation_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

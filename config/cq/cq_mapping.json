@@ -1,0 +1,36 @@
+{
+  "version": "v1",
+  "description": "M3 验证闭环：种子 CQ ↔ regression 样本绑定（CQ_PIPELINE_IMPLEMENTATION_PLAN.md §9-M3）。C-Notice 场景（CQ-0001/0002/0003）暂无对应回归样本，标记 unbound，待补文档。",
+  "bindings": [
+    {
+      "cq_id": "CQ-0001",
+      "sample_id": null,
+      "status": "unbound",
+      "note": "C-Notice 线束变更场景无对应回归样本；'受影响'口径待业务确认（见 seed open_questions）"
+    },
+    {
+      "cq_id": "CQ-0002",
+      "sample_id": null,
+      "status": "unbound",
+      "note": "C-Notice 影响范围（Part -> Model-Config）无对应回归样本，待补文档"
+    },
+    {
+      "cq_id": "CQ-0003",
+      "sample_id": null,
+      "status": "unbound",
+      "note": "bi-temporal 双层时间口径待业务确认（installation_time < effective_time），需时间切片样本"
+    },
+    {
+      "cq_id": "CQ-0004",
+      "sample_id": "mbom-du-v2",
+      "status": "bound",
+      "note": "MBOM/DU/Part 层级场景：query_path 与 golden_semantic（MBOM、BOM、MASTER DATA）对齐，HAS_PART/DERIVED_FROM 已入样本关系断言"
+    },
+    {
+      "cq_id": "CQ-0005",
+      "sample_id": "production-inventory-md",
+      "status": "bound",
+      "note": "Cycle Stock vs Safety Stock 条件过滤场景：Inventory/Safety Stock 已入 golden_semantic 实体断言"
+    }
+  ]
+}

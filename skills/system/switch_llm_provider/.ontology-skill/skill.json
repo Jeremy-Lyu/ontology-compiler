@@ -1,0 +1,118 @@
+{
+  "name": "switch_llm_provider",
+  "description": "Quickly switch local LLM provider overrides",
+  "command": "python scripts/switch_llm_provider.py <provider>",
+  "script_path": "scripts/switch_llm_provider.py",
+  "category": "ops",
+  "enabled": true,
+  "args_schema": {
+    "provider": {
+      "type": "string",
+      "required": true,
+      "enum": [
+        "deepseek",
+        "dify"
+      ]
+    }
+  },
+  "layer_scope": [
+    "L0",
+    "L1",
+    "L2",
+    "L2.5",
+    "L3"
+  ],
+  "version": "2.0.0",
+  "business_domain": [
+    "SUPPLY_CHAIN",
+    "MANUFACTURING",
+    "DATA_MESH",
+    "MASTER_DATA"
+  ],
+  "output_schema": {
+    "type": "object",
+    "required": [
+      "switch_result",
+      "current_provider"
+    ],
+    "properties": {
+      "switch_result": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "success"
+        ]
+      },
+      "current_provider": {
+        "type": "object",
+        "properties": {
+          "provider": {
+            "type": "string"
+          },
+          "model_name": {
+            "type": "string"
+          },
+          "api_base": {
+            "type": "string"
+          },
+          "timeout_ms": {
+            "type": "integer"
+          },
+          "max_retries": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "provider"
+        ]
+      },
+      "connection_test": {
+        "type": "object",
+        "properties": {
+          "tested": {
+            "type": "boolean"
+          },
+          "success": {
+            "type": "boolean"
+          },
+          "latency_ms": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "error_message": {
+            "type": "string"
+          }
+        }
+      },
+      "previous_provider": {
+        "type": "object",
+        "properties": {
+          "provider": {
+            "type": "string"
+          },
+          "model_name": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "quality_thresholds": {},
+  "trace_config": {
+    "log_model_name": false,
+    "log_prompt_version": false,
+    "log_execution_time": true,
+    "log_retries": false
+  }
+}

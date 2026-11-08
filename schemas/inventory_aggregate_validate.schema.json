@@ -1,0 +1,197 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ontology-unified.local/schemas/inventory_aggregate_validate.schema.json",
+  "title": "Inventory Aggregate Validate",
+  "type": "object",
+  "required": [
+    "generated_at",
+    "validation",
+    "total_runs",
+    "success_runs",
+    "runs_with_warnings",
+    "totals",
+    "layered_quality",
+    "runs"
+  ],
+  "properties": {
+    "generated_at": {"type": "string"},
+    "validation": {
+      "type": "object",
+      "required": [
+        "schema_validation_enabled",
+        "catalog_validation",
+        "preflight",
+        "warning_breakdown"
+      ],
+      "properties": {
+        "schema_validation_enabled": {"type": "boolean"},
+        "catalog_validation": {
+          "type": "object",
+          "required": [
+            "enabled",
+            "domain_conflict_report",
+            "global_conflict_report",
+            "blocking_conflicts",
+            "warning_conflicts",
+            "info_conflicts"
+          ],
+          "properties": {
+            "enabled": {"type": "boolean"},
+            "domain_conflict_report": {"type": "string"},
+            "global_conflict_report": {"type": "string"},
+            "blocking_conflicts": {"type": "integer"},
+            "warning_conflicts": {"type": "integer"},
+            "info_conflicts": {"type": "integer"}
+          },
+          "additionalProperties": true
+        },
+        "preflight": {
+          "type": "object",
+          "required": [
+            "total_runs",
+            "runs_from_manifest",
+            "runs_synthesized",
+            "artifact_checks",
+            "artifact_ok",
+            "artifact_missing_fields",
+            "artifact_resolve_success_rate"
+          ],
+          "properties": {
+            "total_runs": {"type": "integer"},
+            "runs_from_manifest": {"type": "integer"},
+            "runs_synthesized": {"type": "integer"},
+            "artifact_checks": {"type": "integer"},
+            "artifact_ok": {"type": "integer"},
+            "artifact_missing_fields": {"type": "integer"},
+            "artifact_resolve_success_rate": {"type": "number"}
+          },
+          "additionalProperties": true
+        },
+        "warning_breakdown": {
+          "type": "object",
+          "required": ["path", "schema", "status", "data"],
+          "properties": {
+            "path": {"type": "integer"},
+            "schema": {"type": "integer"},
+            "status": {"type": "integer"},
+            "data": {"type": "integer"}
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "total_runs": {"type": "integer"},
+    "success_runs": {"type": "integer"},
+    "runs_with_warnings": {"type": "integer"},
+    "totals": {
+      "type": "object",
+      "required": ["nodes", "instances", "relationships", "llm_calls", "total_tokens"],
+      "properties": {
+        "nodes": {"type": "integer"},
+        "instances": {"type": "integer"},
+        "relationships": {"type": "integer"},
+        "llm_calls": {"type": "number"},
+        "total_tokens": {"type": "number"}
+      },
+      "additionalProperties": true
+    },
+    "layered_quality": {
+      "type": "object",
+      "required": ["l1", "l2"],
+      "properties": {
+        "l1": {
+          "type": "object",
+          "required": ["avg_node_completeness", "avg_evidence_coverage", "total_rule_conflicts"],
+          "properties": {
+            "avg_node_completeness": {"type": "number"},
+            "avg_evidence_coverage": {"type": "number"},
+            "total_rule_conflicts": {"type": "integer"}
+          },
+          "additionalProperties": true
+        },
+        "l2": {
+          "type": "object",
+          "required": ["avg_stale_ratio", "avg_binding_valid_ratio", "avg_refresh_sla_ratio"],
+          "properties": {
+            "avg_stale_ratio": {"type": "number"},
+            "avg_binding_valid_ratio": {"type": "number"},
+            "avg_refresh_sla_ratio": {"type": "number"}
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "runs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "run_id",
+          "topic_id",
+          "domain",
+          "source_folder",
+          "source_fingerprint",
+          "status",
+          "started_at",
+          "finished_at",
+          "nodes",
+          "instances",
+          "relationships",
+          "llm_calls",
+          "total_tokens",
+          "report",
+          "data_source",
+          "l1_quality",
+          "l2_quality",
+          "warnings"
+        ],
+        "properties": {
+          "run_id": {"type": "string"},
+          "topic_id": {"type": "string"},
+          "domain": {"type": "string"},
+          "source_folder": {"type": "string"},
+          "source_fingerprint": {"type": "string"},
+          "status": {"type": "string"},
+          "started_at": {"type": ["string", "null"]},
+          "finished_at": {"type": ["string", "null"]},
+          "nodes": {"type": "integer"},
+          "instances": {"type": "integer"},
+          "relationships": {"type": "integer"},
+          "llm_calls": {"type": "number"},
+          "total_tokens": {"type": "number"},
+          "report": {"type": ["string", "null"]},
+          "data_source": {"type": "string"},
+          "l1_quality": {
+            "type": "object",
+            "required": ["evidence_coverage", "rule_conflicts", "node_completeness"],
+            "properties": {
+              "evidence_coverage": {"type": "number"},
+              "rule_conflicts": {"type": "integer"},
+              "node_completeness": {"type": "number"}
+            },
+            "additionalProperties": true
+          },
+          "l2_quality": {
+            "type": "object",
+            "required": ["stale_ratio", "binding_valid_ratio", "refresh_sla_ratio"],
+            "properties": {
+              "stale_ratio": {"type": "number"},
+              "binding_valid_ratio": {"type": "number"},
+              "refresh_sla_ratio": {"type": "number"}
+            },
+            "additionalProperties": true
+          },
+          "warnings": {
+            "type": "array",
+            "items": {"type": "string"}
+          }
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": true
+}
+

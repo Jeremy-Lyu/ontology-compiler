@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ontology-unified.local/schemas/skills/cleanup-comp-runs.schema.json",
+  "title": "Cleanup Compilation Runs Skill Schema",
+  "type": "object",
+  "required": ["skill_name", "skill_version", "context", "input", "output", "quality", "trace"],
+  "properties": {
+    "skill_name": {"type": "string", "const": "cleanup-comp-runs"},
+    "skill_version": {"type": "string"},
+    "context": {"$ref": "../shared/skill_envelope.schema.json#/definitions/context"},
+    "input": {
+      "type": "object",
+      "properties": {
+        "run_ids": {"type": "array", "items": {"type": "string"}},
+        "age_threshold_days": {"type": "integer", "minimum": 0},
+        "status_filter": {"type": "string", "enum": ["completed", "failed", "cancelled", "all"]},
+        "retention_policy": {
+          "type": "object",
+          "properties": {
+            "keep_latest_n": {"type": "integer", "minimum": 0},
+            "keep_failed": {"type": "boolean", "default": false},
+            "keep_with_errors": {"type": "boolean", "default": true}
+          }
+        },
+        "dry_run": {"type": "boolean", "default": false}
+      }
+    },
+    "output": {
+      "type": "object",
+      "required": ["cleanup_result", "summary"],
+      "properties": {
+        "cleanup_result": {
+          "type": "object",
+          "properties": {
+            "success": {"type": "boolean"},
+            "dry_run": {"type": "boolean"},
+            "message": {"type": "string"}
+          },
+          "required": ["success"]
+        },
+        "runs_cleaned": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "run_id": {"type": "string"},
+              "status": {"type": "string"},
+              "created_at": {"type": "string", "format": "date-time"},
+              "files_deleted": {"type": "integer", "minimum": 0},
+              "size_freed_bytes": {"type": "integer", "minimum": 0}
+            },
+            "required": ["run_id"]
+          }
+        },
+        "runs_kept": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "run_id": {"type": "string"},
+              "reason": {"type": "string"}
+            },
+            "required": ["run_id", "reason"]
+          }
+        },
+        "summary": {
+          "type": "object",
+          "properties": {
+            "total_runs_found": {"type": "integer", "minimum": 0},
+            "total_runs_cleaned": {"type": "integer", "minimum": 0},
+            "total_runs_kept": {"type": "integer", "minimum": 0},
+            "total_files_deleted": {"type": "integer", "minimum": 0},
+            "total_size_freed_bytes": {"type": "integer", "minimum": 0},
+            "errors": {"type": "integer", "minimum": 0}
+          }
+        }
+      }
+    },
+    "quality": {"$ref": "../shared/skill_envelope.schema.json#/definitions/quality"},
+    "trace": {"$ref": "../shared/skill_envelope.schema.json#/definitions/trace"},
+    "warnings": {"type": "array", "items": {"$ref": "../shared/skill_envelope.schema.json#/definitions/warning"}},
+    "errors": {"type": "array", "items": {"$ref": "../shared/skill_envelope.schema.json#/definitions/error"}}
+  }
+}

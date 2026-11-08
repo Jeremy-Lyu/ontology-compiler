@@ -1,0 +1,69 @@
+# Quality Gate Configuration
+# D-4 Implementation 2026-05-10: Unified quality configuration for Judge and QualityHelpers
+
+version: "1.0"
+
+# Quality grade thresholds
+quality_grades:
+  bronze:
+    min_confidence: 0.6
+    description: "Minimum acceptable quality"
+  silver:
+    min_confidence: 0.8
+    description: "Good quality with minor issues"
+  gold:
+    min_confidence: 0.95
+    description: "High quality ready for production"
+
+# RIGOR extraction configuration
+rigor:
+  max_iterations: 5
+  convergence_threshold: 0.95
+  min_improvement_threshold: 0.01
+  early_stop_confidence: 0.98
+  
+# Validation weights
+validation_weights:
+  node_completeness: 0.4
+  relationship_validity: 0.3
+  metadata_completeness: 0.2
+  domain_consistency: 0.1
+
+# Online quality gate (IntegratorJudge) settings
+online_quality_gate:
+  enabled: true
+  reject_below_bronze: true
+  warn_below_silver: true
+  auto_refine_below_silver: true
+  max_refine_attempts: 2
+
+# Offline quality gate (QualityHelpers) settings
+offline_quality_gate:
+  enabled: true
+  aggregate_threshold: 0.75
+  issue_severity_weights:
+    critical: 1.0
+    high: 0.8
+    medium: 0.5
+    low: 0.2
+
+# Pipeline v4 Smart Refinement Thresholds
+# Added 2026-06-02: Configuration for Hybrid Pipeline v4 smart refinement
+smart_refinement:
+  enabled: true
+  # Entity count thresholds - trigger refinement if below
+  min_entities:
+    L1: 3
+    L2: 3
+    L2_5: 5
+  # Document length threshold - trigger chunk-based refinement if exceeded
+  max_doc_length: 8000
+  # Quality score threshold (0.0-1.0) - trigger refinement if below
+  min_quality_score: 0.75
+  # Incomplete entity ratio threshold - trigger if more than X% incomplete
+  max_incomplete_ratio: 0.30
+  # Layer-specific quality multipliers
+  layer_weights:
+    L1: 1.0
+    L2: 1.2
+    L2_5: 1.5

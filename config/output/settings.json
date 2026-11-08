@@ -1,0 +1,36 @@
+{
+  "harness": {
+    "enabled": true
+  },
+  "hooks": {
+    "enabled": false,
+    "deny_exit_code": 2,
+    "timeout_seconds": 10,
+    "execution_mode": "exec",
+    "allow_shell": false,
+    "commands": [],
+    "event_commands": {
+      "PreToolUse": [],
+      "PostToolUse": []
+    }
+  },
+  "env": {
+    "files": [
+      "config/env.env",
+      "env.env",
+      "env.local.env"
+    ]
+  },
+  "pipeline": {
+    "policy_path": "config/pipeline_policy.json",
+    "default_profile": "local",
+    "default_run_id_prefix": "TBH-"
+  },
+  "paths": {
+    "outputs_root": "outputs",
+    "outputs_ontology_root": "outputs/runs/ontology",
+    "outputs_capsules_root": "outputs/capsules",
+    "outputs_logs_root": "outputs/logs"
+  },
+  "llm_provider": "dify"
+}

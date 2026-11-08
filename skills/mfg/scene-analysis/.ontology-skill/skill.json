@@ -1,0 +1,255 @@
+{
+  "name": "scene_analysis",
+  "description": "Complex BOM scenario analysis using 3-layer framework: field profiling, precision JOIN analysis, and RAG synthesis",
+  "command": "python scripts/diagnostics/run_scene_analysis.py --scenario <scenario>",
+  "script_path": "scripts/diagnostics/run_scene_analysis.py",
+  "category": "workflow",
+  "enabled": true,
+  "args_schema": {
+    "scenario": {
+      "type": "string",
+      "required": true,
+      "description": "Scenario name (e.g., 'bom_mrp', 'c_note_changes')"
+    },
+    "layer": {
+      "type": "string",
+      "required": false,
+      "enum": [
+        "1",
+        "2",
+        "3",
+        "all"
+      ],
+      "default": "all",
+      "description": "Analysis layer to run: 1=field profiling, 2=precision JOIN, 3=RAG synthesis, all=full pipeline"
+    }
+  },
+  "layer_scope": [
+    "L1",
+    "L2",
+    "L2.5",
+    "L3"
+  ],
+  "version": "2.0.0",
+  "business_domain": [
+    "SUPPLY_CHAIN",
+    "MANUFACTURING",
+    "DATA_MESH",
+    "MASTER_DATA"
+  ],
+  "output_schema": {
+    "type": "object",
+    "required": [
+      "scene_graph",
+      "entities",
+      "relations",
+      "evidence"
+    ],
+    "properties": {
+      "scene_graph": {
+        "type": "object",
+        "properties": {
+          "scene_id": {
+            "type": "string"
+          },
+          "scene_name": {
+            "type": "string"
+          },
+          "scene_type": {
+            "type": "string",
+            "enum": [
+              "manufacturing",
+              "warehouse",
+              "logistics",
+              "assembly",
+              "quality_control"
+            ]
+          },
+          "location": {
+            "type": "string"
+          },
+          "equipment": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "equipment_id": {
+                  "type": "string"
+                },
+                "equipment_name": {
+                  "type": "string"
+                },
+                "equipment_type": {
+                  "type": "string"
+                },
+                "location": {
+                  "type": "string"
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "operational",
+                    "idle",
+                    "maintenance",
+                    "fault"
+                  ]
+                }
+              },
+              "required": [
+                "equipment_id",
+                "equipment_name"
+              ]
+            }
+          },
+          "processes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "process_id": {
+                  "type": "string"
+                },
+                "process_name": {
+                  "type": "string"
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "pending",
+                    "in_progress",
+                    "completed"
+                  ]
+                },
+                "start_time": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "end_time": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              },
+              "required": [
+                "process_id",
+                "process_name"
+              ]
+            }
+          },
+          "spatial_relations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "relation_type": {
+                  "type": "string",
+                  "enum": [
+                    "NEAR",
+                    "BEHIND",
+                    "IN_FRONT_OF",
+                    "ABOVE",
+                    "BELOW",
+                    "CONNECTED_TO"
+                  ]
+                },
+                "from": {
+                  "type": "string"
+                },
+                "to": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "relation_type",
+                "from",
+                "to"
+              ]
+            }
+          },
+          "temporal_relations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "relation_type": {
+                  "type": "string",
+                  "enum": [
+                    "BEFORE",
+                    "AFTER",
+                    "SIMULTANEOUS",
+                    "DURING"
+                  ]
+                },
+                "from": {
+                  "type": "string"
+                },
+                "to": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "relation_type",
+                "from",
+                "to"
+              ]
+            }
+          }
+        },
+        "required": [
+          "scene_id",
+          "scene_name"
+        ]
+      },
+      "entities": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      },
+      "relations": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      },
+      "evidence": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      },
+      "summary": {
+        "type": "object",
+        "properties": {
+          "total_equipment": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "total_processes": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "total_spatial_relations": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "total_temporal_relations": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "analysis_coverage": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          }
+        }
+      }
+    }
+  },
+  "quality_thresholds": {},
+  "trace_config": {
+    "log_model_name": false,
+    "log_prompt_version": false,
+    "log_execution_time": true,
+    "log_retries": false
+  }
+}

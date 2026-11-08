@@ -1,0 +1,39 @@
+# Core dependencies
+pydantic>=2.0.0           # Data validation and models
+typing-extensions>=4.0   # Type hints backport
+aiofiles>=23.0            # Async file operations
+httpx>=0.24.0             # Async HTTP client (LLM API calls)
+
+# Web framework
+fastapi>=0.100.0          # FastAPI web framework
+uvicorn>=0.23.0           # ASGI server for FastAPI
+
+# Testing framework
+pytest>=7.0               # Unit test framework
+pytest-asyncio>=0.21.0    # Async test support
+pytest-cov>=4.0           # Code coverage reporting
+
+# File parsing - PDF (both parsers used for fallback)
+pdfplumber>=0.10.0        # Primary PDF parser (better text extraction)
+PyPDF2>=3.0.0             # Fallback PDF parser (for complex PDFs)
+
+# File parsing - Office documents
+python-docx>=1.0.0        # .docx (Word documents)
+python-pptx>=0.6.21       # .pptx (PowerPoint presentations)
+openpyxl>=3.1.0           # .xlsx (Excel modern format)
+xlrd==1.2.0               # .xls (Excel legacy format - pinned for stability)
+
+# LLM integration
+openai>=1.0.0             # OpenAI-compatible client (used for DeepSeek API)
+requests>=2.31.0          # llm_provider.py / dify_client.py HTTP client
+jieba>=0.42.1             # chunk_indexing.tokenize Chinese segmentation (Phase B retrieval)
+
+# Data processing
+pandas>=2.0.0             # Excel output, data analysis, aggregation
+jsonschema>=4.23.0        # JSON schema validation (L1/L2/manifest validation)
+
+# Optional: Development tools (install with: pip install -r requirements-dev.txt)
+# pre-commit>=3.0.0         # Pre-commit hooks framework
+# black>=23.0              # Code formatter
+# flake8>=7.0              # Linter
+# mypy>=1.0                # Type checker

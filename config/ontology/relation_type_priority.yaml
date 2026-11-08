@@ -1,0 +1,133 @@
+# Relation Type Priority Table (P2-9: 关系类型优先级表)
+# 标准化所有关系类型，消除UNKNOWN和近义重复
+# version: 1.0
+# date: 2026-08-03
+
+# Canonical relation types with priority levels
+# priority: 1 = critical (structural), 2 = important (semantic), 3 = supplementary
+canonical_types:
+  - type: "CONTAINS"
+    priority: 1
+    description: "父→子包含关系（BOM/组织架构/系统组成）"
+    direction: "parent → child"
+    aliases: ["HAS_CHILD", "INCLUDES", "COMPOSED_OF", "HAS_PART"]
+    valid_layers: ["L0→L1", "L1→L2", "L2→L2.5", "L2→L2", "L1→L1", "L0→L2"]
+
+  - type: "BELONGS_TO"
+    priority: 1
+    description: "子→父归属关系（反向CONTAINS）"
+    direction: "child → parent"
+    aliases: ["PART_OF", "MEMBER_OF", "CHILD_OF"]
+    valid_layers: ["L2→L1", "L2.5→L2", "L3→L2", "L1→L0", "L2→L0"]
+
+  - type: "DEPENDS_ON"
+    priority: 1
+    description: "功能依赖关系（系统/流程依赖）"
+    direction: "dependent → dependency"
+    aliases: ["REQUIRES", "NEEDS", "USES_SERVICE_OF"]
+    valid_layers: ["L2→L2", "L1→L1", "L2→L1"]
+
+  - type: "USES"
+    priority: 2
+    description: "使用关系（系统使用数据/工具）"
+    direction: "user → used"
+    aliases: ["UTILIZES", "EMPLOYS", "OPERATES"]
+    valid_layers: ["L2→L2", "L2→L2.5", "L1→L2"]
+
+  - type: "GENERATES"
+    priority: 2
+    description: "生成关系（流程/系统生成数据）"
+    direction: "producer → product"
+    aliases: ["PRODUCES", "CREATES", "OUTPUTS"]
+    valid_layers: ["L2→L2", "L2→L2.5"]
+
+  - type: "SUPPLIES"
+    priority: 2
+    description: "供应关系（供应商→零件）"
+    direction: "supplier → part"
+    aliases: ["CALL_OFF", "PROVIDES", "DELIVERS"]
+    valid_layers: ["L2→L2", "L2→L2.5"]
+
+  - type: "IMPLEMENTS"
+    priority: 2
+    description: "实现关系（系统实现功能）"
+    direction: "system → capability"
+    aliases: ["REALIZES", "EXECUTES", "PERFORMS"]
+    valid_layers: ["L2→L1", "L2→L2"]
+
+  - type: "RELATED_TO"
+    priority: 3
+    description: "通用关联（无明确层级方向）"
+    direction: "any → any"
+    aliases: ["ASSOCIATED_WITH", "LINKED_TO", "REFERENCES", "CONNECTS_TO"]
+    valid_layers: ["any → any"]
+
+  - type: "ROUTED_TO"
+    priority: 2
+    description: "路由关系（BOM→工位）"
+    direction: "item → station"
+    aliases: ["ASSIGNED_TO", "ALLOCATED_TO"]
+    valid_layers: ["L2→L2", "L2→L2.5"]
+
+  - type: "ASSEMBLED_IN"
+    priority: 2
+    description: "装配关系（零件→VIN）"
+    direction: "part → vehicle"
+    aliases: ["INSTALLED_IN", "MOUNTED_ON"]
+    valid_layers: ["L2→L2", "L2→L3"]
+
+  - type: "MANAGES"
+    priority: 2
+    description: "管理关系（系统管理实体）"
+    direction: "manager → managed"
+    aliases: ["CONTROLS", "ADMINISTATES", "OVERSEES"]
+    valid_layers: ["L2→L2", "L2→L2.5"]
+
+  - type: "CONSUMES"
+    priority: 2
+    description: "消费关系（系统消费数据）"
+    direction: "consumer → data"
+    aliases: ["READS", "ACCESSES", "RETRIEVES"]
+    valid_layers: ["L2→L2", "L2→L2.5"]
+
+# Type normalization rules
+normalization:
+  # All these map to CONTAINS
+  has_child: "CONTAINS"
+  includes: "CONTAINS"
+  composed_of: "CONTAINS"
+  has_part: "CONTAINS"
+  
+  # All these map to BELONGS_TO
+  part_of: "BELONGS_TO"
+  member_of: "BELONGS_TO"
+  child_of: "BELONGS_TO"
+  
+  # All these map to DEPENDS_ON
+  requires: "DEPENDS_ON"
+  needs: "DEPENDS_ON"
+  
+  # All these map to RELATED_TO (catch-all)
+  associated_with: "RELATED_TO"
+  linked_to: "RELATED_TO"
+  references: "RELATED_TO"
+  
+  # UNKNOWN handling
+  unknown: "RELATED_TO"
+  "": "RELATED_TO"
+
+# Priority order for conflict resolution
+# When two entities have multiple relationships, higher priority wins
+priority_order:
+  - "CONTAINS"
+  - "BELONGS_TO"
+  - "DEPENDS_ON"
+  - "IMPLEMENTS"
+  - "USES"
+  - "GENERATES"
+  - "SUPPLIES"
+  - "ROUTED_TO"
+  - "ASSEMBLED_IN"
+  - "MANAGES"
+  - "CONSUMES"
+  - "RELATED_TO"

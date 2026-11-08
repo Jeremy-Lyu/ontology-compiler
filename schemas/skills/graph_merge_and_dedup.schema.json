@@ -1,0 +1,146 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ontology-unified.local/schemas/skills/graph_merge_and_dedup.schema.json",
+  "title": "Graph Merge and Dedup Skill Schema",
+  "type": "object",
+  "required": ["skill_name", "skill_version", "context", "input", "output", "quality", "trace"],
+  "properties": {
+    "skill_name": {"type": "string", "const": "graph_merge_and_dedup"},
+    "skill_version": {"type": "string"},
+    "context": {"$ref": "../shared/skill_envelope.schema.json#/definitions/context"},
+    "input": {
+      "type": "object",
+      "required": ["sources"],
+      "properties": {
+        "sources": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "source_id": {"type": "string"},
+              "source_type": {"type": "string", "enum": ["file", "run", "skill_output", "external"]},
+              "nodes": {"type": "array", "items": {"type": "object"}},
+              "edges": {"type": "array", "items": {"type": "object"}},
+              "evidence": {"type": "array", "items": {"type": "object"}},
+              "priority": {"type": "integer", "minimum": 1, "maximum": 10, "default": 5}
+            },
+            "required": ["source_id", "nodes", "edges"]
+          }
+        },
+        "merge_strategy": {
+          "type": "string",
+          "enum": ["latest", "highest_confidence", "consensus", "priority_based"],
+          "default": "highest_confidence"
+        },
+        "dedupe_config": {
+          "type": "object",
+          "properties": {
+            "name_similarity_threshold": {"type": "number", "minimum": 0, "maximum": 1, "default": 0.85},
+            "enable_fuzzy_matching": {"type": "boolean", "default": true},
+            "keep_evidence": {"type": "boolean", "default": true},
+            "merge_attributes": {"type": "boolean", "default": true}
+          }
+        },
+        "conflict_resolution": {
+          "type": "string",
+          "enum": ["auto", "human_review", "throw"],
+          "default": "auto"
+        }
+      }
+    },
+    "output": {
+      "type": "object",
+      "required": ["merged_nodes", "merged_edges", "merged_evidence", "conflicts", "merge_log"],
+      "properties": {
+        "merged_nodes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {"type": "string"},
+              "type": {"type": "string"},
+              "name": {"type": "string"},
+              "canonical_id": {"type": "string"},
+              "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+              "sources": {"type": "array", "items": {"type": "string"}},
+              "merged_from": {"type": "array", "items": {"type": "string"}},
+              "attributes": {"type": "object"},
+              "layer": {"type": "string"},
+              "evidence_refs": {"type": "array", "items": {"type": "string"}}
+            },
+            "required": ["id", "type", "name"]
+          }
+        },
+        "merged_edges": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {"type": "string"},
+              "type": {"type": "string"},
+              "head": {"type": "string"},
+              "tail": {"type": "string"},
+              "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+              "sources": {"type": "array", "items": {"type": "string"}},
+              "merged_from": {"type": "array", "items": {"type": "string"}},
+              "evidence_refs": {"type": "array", "items": {"type": "string"}}
+            },
+            "required": ["id", "type", "head", "tail"]
+          }
+        },
+        "merged_evidence": {
+          "type": "array",
+          "items": {"$ref": "../shared/evidence.schema.json"}
+        },
+        "conflicts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "conflict_id": {"type": "string"},
+              "conflict_type": {"type": "string", "enum": ["duplicate", "attribute_conflict", "relation_conflict", "type_conflict"]},
+              "items": {"type": "array", "items": {"type": "object"}},
+              "resolution_status": {"type": "string", "enum": ["resolved", "pending", "escalated"]},
+              "resolution_action": {"type": "string"},
+              "resolved_by": {"type": "string"},
+              "resolved_at": {"type": "string", "format": "date-time"}
+            },
+            "required": ["conflict_id", "conflict_type", "items"]
+          }
+        },
+        "merge_log": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "timestamp": {"type": "string", "format": "date-time"},
+              "action": {"type": "string", "enum": ["created", "merged", "deleted", "updated", "conflict"]},
+              "item_id": {"type": "string"},
+              "item_type": {"type": "string", "enum": ["node", "edge", "evidence"]},
+              "details": {"type": "object"},
+              "source": {"type": "string"}
+            },
+            "required": ["timestamp", "action", "item_id", "item_type"]
+          }
+        },
+        "summary": {
+          "type": "object",
+          "properties": {
+            "total_input_nodes": {"type": "integer", "minimum": 0},
+            "total_input_edges": {"type": "integer", "minimum": 0},
+            "merged_nodes_count": {"type": "integer", "minimum": 0},
+            "merged_edges_count": {"type": "integer", "minimum": 0},
+            "duplicates_removed": {"type": "integer", "minimum": 0},
+            "conflicts_found": {"type": "integer", "minimum": 0},
+            "conflicts_resolved": {"type": "integer", "minimum": 0},
+            "evidence_merged": {"type": "integer", "minimum": 0}
+          }
+        }
+      }
+    },
+    "quality": {"$ref": "../shared/skill_envelope.schema.json#/definitions/quality"},
+    "trace": {"$ref": "../shared/skill_envelope.schema.json#/definitions/trace"},
+    "warnings": {"type": "array", "items": {"$ref": "../shared/skill_envelope.schema.json#/definitions/warning"}},
+    "errors": {"type": "array", "items": {"$ref": "../shared/skill_envelope.schema.json#/definitions/error"}}
+  }
+}

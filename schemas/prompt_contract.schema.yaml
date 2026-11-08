@@ -1,0 +1,105 @@
+# Prompt Contract
+# Version: 1.0.0
+# Status: ACTIVE
+# Source of Truth: config/prompts/ + src/infrastructure/llm/prompt_profile_selector.py
+#
+# This file is the canonical contract for prompt profiles.
+# All prompt definitions and profile selections should conform to this schema.
+# Breaking changes require version bump + migration notes.
+
+contract_id: prompt_contract
+contract_type: schema
+version: "1.0.0"
+status: active
+
+description: >
+  Canonical contract for prompt profiles, variables, and token budgets.
+  Defines how prompt templates are versioned and how they map to document types.
+
+fields:
+  profile_id:
+    type: string
+    required: true
+    description: "Unique prompt profile identifier"
+
+  version:
+    type: string
+    required: true
+    description: "Prompt profile version"
+
+  description:
+    type: string
+    required: true
+    description: "Human-readable description of the profile"
+
+  doc_types:
+    type: array
+    required: false
+    description: "Supported document types"
+    items:
+      type: string
+
+  business_domains:
+    type: array
+    required: false
+    description: "Supported business domains"
+    items:
+      type: string
+
+  template_name:
+    type: string
+    required: true
+    description: "Underlying template name"
+
+  variables:
+    type: object
+    required: true
+    description: "Prompt variables and their defaults"
+    properties:
+      base:
+        type: object
+      domain:
+        type: object
+      task:
+        type: object
+      schema_hint:
+        type: object
+      document:
+        type: object
+
+  token_budget:
+    type: object
+    required: true
+    description: "Token budget for this prompt profile"
+    properties:
+      max_prompt_tokens:
+        type: integer
+      max_completion_tokens:
+        type: integer
+      total_budget:
+        type: integer
+      temperature:
+        type: number
+
+  fallback_profile:
+    type: string
+    required: false
+    description: "Fallback profile when current profile cannot be used"
+
+  high_dimensional_context:
+    type: boolean
+    required: false
+    default: false
+    description: "Whether this profile should enable high-dimensional context"
+
+  contract_id:
+    type: string
+    required: true
+    default: "prompt_contract"
+    description: "Contract identifier"
+
+  contract_version:
+    type: string
+    required: true
+    default: "1.0.0"
+    description: "Contract version"

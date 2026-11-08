@@ -1,0 +1,172 @@
+{
+  "name": "generate_ontology_patch",
+  "description": "Generate ontology patches with evidence tracking and approval digests",
+  "command": "python scripts/generate_ontology_patch.py --delta-dir <delta_dir> --output <output>",
+  "script_path": "scripts/generate_ontology_patch.py",
+  "category": "ontology",
+  "enabled": true,
+  "args_schema": {
+    "delta_dir": {
+      "type": "string",
+      "required": true,
+      "description": "Path to delta directory containing ontology changes"
+    },
+    "output": {
+      "type": "string",
+      "required": true,
+      "description": "Output path for generated patch file"
+    },
+    "runs_root": {
+      "type": "string",
+      "required": false,
+      "description": "Path to pipeline runs root for evidence tracking"
+    },
+    "dry_run": {
+      "type": "boolean",
+      "required": false,
+      "description": "Generate patch without applying"
+    }
+  },
+  "layer_scope": [
+    "L0",
+    "L1",
+    "L2",
+    "L2.5",
+    "L3"
+  ],
+  "version": "2.0.0",
+  "business_domain": [
+    "SUPPLY_CHAIN",
+    "MANUFACTURING",
+    "DATA_MESH",
+    "MASTER_DATA"
+  ],
+  "output_schema": {
+    "type": "object",
+    "required": [
+      "patch",
+      "rollback_patch",
+      "validation_result"
+    ],
+    "properties": {
+      "patch": {
+        "type": "object",
+        "properties": {
+          "patch_id": {
+            "type": "string"
+          },
+          "patch_version": {
+            "type": "string"
+          },
+          "base_version_id": {
+            "type": "string"
+          },
+          "target_version_id": {
+            "type": "string"
+          },
+          "operations": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "metadata": {
+            "type": "object",
+            "properties": {
+              "created_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "author": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "change_count": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          }
+        },
+        "required": [
+          "patch_id",
+          "operations"
+        ]
+      },
+      "rollback_patch": {
+        "type": "object",
+        "properties": {
+          "rollback_id": {
+            "type": "string"
+          },
+          "operations": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          }
+        }
+      },
+      "validation_result": {
+        "type": "object",
+        "properties": {
+          "valid": {
+            "type": "boolean"
+          },
+          "backward_compatible": {
+            "type": "boolean"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "warnings": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          }
+        }
+      },
+      "summary": {
+        "type": "object",
+        "properties": {
+          "total_operations": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "add_count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "remove_count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "update_count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "rename_count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "rollback_available": {
+            "type": "boolean"
+          }
+        }
+      }
+    }
+  },
+  "quality_thresholds": {},
+  "trace_config": {
+    "log_model_name": true,
+    "log_prompt_version": true,
+    "log_execution_time": true,
+    "log_retries": true
+  }
+}

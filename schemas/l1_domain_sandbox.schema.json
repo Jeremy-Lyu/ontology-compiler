@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ontology-unified.local/schemas/l1_domain_sandbox.schema.json",
+  "title": "L1 Domain Sandbox",
+  "type": "object",
+  "required": ["schema_version", "meta", "sandbox", "quality"],
+  "properties": {
+    "schema_version": {"type": "string"},
+    "meta": {
+      "type": "object",
+      "required": ["run_id", "topic_id", "domain", "source_folder", "generated_at"],
+      "properties": {
+        "run_id": {"type": "string"},
+        "topic_id": {"type": "string"},
+        "domain": {"type": "string"},
+        "source_folder": {"type": "string"},
+        "generated_at": {"type": "string"}
+      },
+      "additionalProperties": true
+    },
+    "sandbox": {
+      "type": "object",
+      "required": ["domain", "role", "objects", "relationships", "rules", "actions", "evidence"],
+      "properties": {
+        "domain": {"type": "string"},
+        "role": {"type": "string"},
+        "objects": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "meta_id": {"type": "string"},
+              "meta_name": {"type": "string"},
+              "meta_class": {
+                "type": "string",
+                "enum": ["Capability", "System", "Actor", "Asset", "Data", "Process"]
+              },
+              "meta_subclass": {"type": "string"}
+            },
+            "required": ["meta_id", "meta_name", "meta_class"]
+          }
+        },
+        "relationships": {"type": "array"},
+        "rules": {"type": "array"},
+        "actions": {"type": "array"},
+        "evidence": {
+          "type": "object",
+          "required": ["coverage", "with_evidence", "total_objects"],
+          "properties": {
+            "coverage": {"type": "number"},
+            "with_evidence": {"type": "integer"},
+            "total_objects": {"type": "integer"}
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "quality": {
+      "type": "object",
+      "required": ["node_count", "relationship_count", "evidence_coverage", "rule_conflicts", "node_completeness"],
+      "properties": {
+        "node_count": {"type": "integer"},
+        "relationship_count": {"type": "integer"},
+        "evidence_coverage": {"type": "number"},
+        "rule_conflicts": {"type": "integer"},
+        "node_completeness": {"type": "number"}
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}
+

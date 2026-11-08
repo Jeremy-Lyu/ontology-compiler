@@ -1,0 +1,150 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ontology-unified.local/schemas/skills/publish_or_rollback.schema.json",
+  "title": "Publish or Rollback Skill Schema",
+  "type": "object",
+  "required": ["skill_name", "skill_version", "context", "input", "output", "quality", "trace"],
+  "properties": {
+    "skill_name": {"type": "string", "const": "publish_or_rollback"},
+    "skill_version": {"type": "string"},
+    "context": {"$ref": "../shared/skill_envelope.schema.json#/definitions/context"},
+    "input": {
+      "type": "object",
+      "required": ["artifact", "manifest"],
+      "properties": {
+        "artifact": {
+          "type": "object",
+          "properties": {
+            "artifact_id": {"type": "string"},
+            "artifact_type": {"type": "string", "enum": ["ontology_packet", "graph", "entities", "relations", "evidence", "report"]},
+            "data": {"type": "object"},
+            "version": {"type": "string"},
+            "quality_score": {"type": "number", "minimum": 0, "maximum": 1},
+            "review_status": {"type": "string", "enum": ["pending", "approved", "rejected", "partial"]},
+            "reviewer_ids": {"type": "array", "items": {"type": "string"}},
+            "review_comments": {"type": "array", "items": {"type": "string"}}
+          },
+          "required": ["artifact_id", "artifact_type", "data"]
+        },
+        "manifest": {
+          "type": "object",
+          "properties": {
+            "run_id": {"type": "string"},
+            "pipeline_id": {"type": "string"},
+            "input_files": {"type": "array", "items": {"type": "string"}},
+            "input_file_hashes": {"type": "array", "items": {"type": "string"}},
+            "timestamp": {"type": "string", "format": "date-time"},
+            "pipeline_version": {"type": "string"},
+            "rule_version": {"type": "string"},
+            "model_version": {"type": "string"},
+            "environment": {"type": "string", "enum": ["development", "staging", "production"]},
+            "previous_version": {"type": "string"},
+            "change_summary": {"type": "object"}
+          },
+          "required": ["run_id", "pipeline_id", "timestamp"]
+        },
+        "publish_options": {
+          "type": "object",
+          "properties": {
+            "publish_mode": {"type": "string", "enum": ["full", "incremental", "dry_run"], "default": "full"},
+            "enable_rollback": {"type": "boolean", "default": true},
+            "rollback_strategy": {"type": "string", "enum": ["previous_version", "backup_before_publish", "none"], "default": "backup_before_publish"},
+            "publish_to_registry": {"type": "boolean", "default": true},
+            "update_indexes": {"type": "boolean", "default": true},
+            "notify_subscribers": {"type": "boolean", "default": true}
+          }
+        }
+      }
+    },
+    "output": {
+      "type": "object",
+      "required": ["status", "published_artifact"],
+      "properties": {
+        "status": {"type": "string", "enum": ["published", "rollback", "dry_run", "failed"]},
+        "published_artifact": {
+          "type": "object",
+          "properties": {
+            "artifact_id": {"type": "string"},
+            "version": {"type": "string"},
+            "published_at": {"type": "string", "format": "date-time"},
+            "published_by": {"type": "string"},
+            "storage_path": {"type": "string"},
+            "registry_url": {"type": "string"},
+            "index_status": {"type": "string", "enum": ["pending", "updating", "completed", "failed"]},
+            "change_count": {
+              "type": "object",
+              "properties": {
+                "new_entities": {"type": "integer", "minimum": 0},
+                "updated_entities": {"type": "integer", "minimum": 0},
+                "deleted_entities": {"type": "integer", "minimum": 0},
+                "new_relations": {"type": "integer", "minimum": 0},
+                "updated_relations": {"type": "integer", "minimum": 0},
+                "deleted_relations": {"type": "integer", "minimum": 0},
+                "new_evidence": {"type": "integer", "minimum": 0}
+              }
+            }
+          },
+          "required": ["artifact_id", "version", "published_at"]
+        },
+        "rollback_package": {
+          "type": "object",
+          "properties": {
+            "rollback_id": {"type": "string"},
+            "previous_version": {"type": "string"},
+            "backup_path": {"type": "string"},
+            "backup_created_at": {"type": "string", "format": "date-time"},
+            "rollback_reason": {"type": "string"},
+            "rollback_steps": {"type": "array", "items": {"type": "string"}}
+          }
+        },
+        "dry_run_result": {
+          "type": "object",
+          "properties": {
+            "estimated_changes": {"type": "object"},
+            "conflicts_detected": {"type": "array", "items": {"type": "string"}},
+            "validation_errors": {"type": "array", "items": {"type": "string"}},
+            "publish_approved": {"type": "boolean"}
+          }
+        },
+        "publish_log": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "timestamp": {"type": "string", "format": "date-time"},
+              "step": {"type": "string"},
+              "status": {"type": "string", "enum": ["started", "completed", "failed"]},
+              "details": {"type": "object"}
+            },
+            "required": ["timestamp", "step", "status"]
+          }
+        },
+        "error_details": {
+          "type": "object",
+          "properties": {
+            "error_code": {"type": "string"},
+            "error_message": {"type": "string"},
+            "error_step": {"type": "string"},
+            "retryable": {"type": "boolean"}
+          }
+        },
+        "notifications": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "recipient": {"type": "string"},
+              "channel": {"type": "string", "enum": ["email", "slack", "webhook", "api"]},
+              "status": {"type": "string", "enum": ["pending", "sent", "failed"]}
+            },
+            "required": ["recipient", "channel"]
+          }
+        }
+      }
+    },
+    "quality": {"$ref": "../shared/skill_envelope.schema.json#/definitions/quality"},
+    "trace": {"$ref": "../shared/skill_envelope.schema.json#/definitions/trace"},
+    "warnings": {"type": "array", "items": {"$ref": "../shared/skill_envelope.schema.json#/definitions/warning"}},
+    "errors": {"type": "array", "items": {"$ref": "../shared/skill_envelope.schema.json#/definitions/error"}}
+  }
+}

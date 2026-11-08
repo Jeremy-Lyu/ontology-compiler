@@ -1,0 +1,29 @@
+{
+  "name": "run_ontology_rag_validate",
+  "description": "Run ontology RAG deep validation for operations analysis",
+  "command": "python scripts/diagnostics/run_ops_deep_rag.py",
+  "script_path": "scripts/diagnostics/run_ops_deep_rag.py",
+  "category": "rag",
+  "enabled": true,
+  "args_schema": {},
+  "layer_scope": [
+    "L2",
+    "L2.5",
+    "L3"
+  ],
+  "version": "2.0.0",
+  "business_domain": [
+    "SUPPLY_CHAIN",
+    "MANUFACTURING",
+    "DATA_MESH",
+    "MASTER_DATA"
+  ],
+  "output_schema": {},
+  "quality_thresholds": {},
+  "trace_config": {
+    "log_model_name": false,
+    "log_prompt_version": false,
+    "log_execution_time": true,
+    "log_retries": false
+  }
+}

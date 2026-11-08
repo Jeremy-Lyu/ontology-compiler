@@ -1,0 +1,63 @@
+{
+  "name": "relation_rewrite",
+  "description": "将 RELATED_TO 等弱关系重写为具体语义关系，遵循关系类型优先级表（C-1 确定式实现，零 LLM 成本）",
+  "command": "python -m ontology_compiler.skills.builtin.relation_rewrite_skill",
+  "script_path": "ontology_compiler/skills/builtin/relation_rewrite_skill.py",
+  "category": "pipeline_stage",
+  "layer_scope": ["L0", "L1", "L2", "L2.5", "L3"],
+  "stages": ["relationship"],
+  "enabled": true,
+  "version": "1.0.0",
+  "business_domain": ["SUPPLY_CHAIN", "MANUFACTURING", "ENTERPRISE"],
+  "priority": "high",
+  "trigger_conditions": {
+    "stage": "relationship",
+    "after_stage": "relationship_validation",
+    "when_related_to_share_gt": 0.05
+  },
+  "args_schema": {
+    "relationships": {
+      "type": "array",
+      "required": true,
+      "description": "待重写的关系列表"
+    },
+    "entities": {
+      "type": "array",
+      "required": true,
+      "description": "实体列表（含 layer 信息）"
+    },
+    "rules_config": {
+      "type": "string",
+      "default": "config/ontology/relationship_rules.yaml",
+      "description": "关系治理规则配置路径"
+    }
+  },
+  "output_schema": {
+    "rewritten_relationships": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["source_id", "target_id", "relation_type", "rewrite_reason"]
+      }
+    },
+    "rewrite_count": {"type": "integer"},
+    "unrewritten_count": {"type": "integer"},
+    "related_to_share_before": {"type": "number"},
+    "related_to_share_after": {"type": "number"}
+  },
+  "preconditions": [
+    "relationships must be non-empty",
+    "entities must contain layer information"
+  ],
+  "quality_thresholds": {
+    "max_related_to_share_after": 0.05,
+    "min_rewrite_confidence": 0.6
+  },
+  "trace_config": {
+    "log_rewrite_count": true,
+    "log_related_to_share": true,
+    "log_execution_time": true
+  },
+  "source_of_truth": "ontology_compiler/services/relation_governance.py",
+  "priority_table": "docs/RELATION_TYPE_PRIORITY_TABLE.md"
+}

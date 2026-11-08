@@ -1,0 +1,86 @@
+"""RAG-related domain models and helpers.
+
+Stable domain grouping for RAG and canonical transformation boundary types.
+"""
+from ..fragment import Fragment, FragmentNode, FragmentInstance, FragmentRelationship
+from ..five_layer_adapter import (
+    FiveLayerAdapter,
+    create_five_layer_from_existing_data,
+    get_layer_mapping_summary,
+)
+from ..five_layer_architecture import (
+    FiveLayerType,
+    LayerMetadata,
+    RawEvidence,
+    CandidateEntity,
+    CandidateRelation,
+    CanonicalEntityLayer,
+    CanonicalRelationLayer,
+    BusinessRelation,
+    SemanticCluster,
+    CrossFileEvidence,
+    FolderRelation,
+    L0LayerArtifact,
+    L1LayerArtifact,
+    L2LayerArtifact,
+    L2_5LayerArtifact,
+    L3LayerArtifact,
+    ArtifactMapping,
+    FiveLayerArchitecture,
+)
+from ..adapters.fragment_to_canonical import (
+    FragmentToCanonicalAdapter,
+    SchemaValidationError,
+    fragment_to_canonical,
+    batch_fragments_to_canonical,
+)
+from ..enums import (
+    LayerType,
+    OntologyRelationType,
+    OntologyEntityType,
+    CanonicalStatus,
+    EntityType,
+    RelationType,
+    AttrValueType,
+    PipelinePhase,
+)
+
+__all__ = [
+    "Fragment",
+    "FragmentNode",
+    "FragmentInstance",
+    "FragmentRelationship",
+    "FiveLayerAdapter",
+    "create_five_layer_from_existing_data",
+    "get_layer_mapping_summary",
+    "FiveLayerType",
+    "LayerMetadata",
+    "RawEvidence",
+    "CandidateEntity",
+    "CandidateRelation",
+    "CanonicalEntityLayer",
+    "CanonicalRelationLayer",
+    "BusinessRelation",
+    "SemanticCluster",
+    "CrossFileEvidence",
+    "FolderRelation",
+    "L0LayerArtifact",
+    "L1LayerArtifact",
+    "L2LayerArtifact",
+    "L2_5LayerArtifact",
+    "L3LayerArtifact",
+    "ArtifactMapping",
+    "FiveLayerArchitecture",
+    "FragmentToCanonicalAdapter",
+    "SchemaValidationError",
+    "fragment_to_canonical",
+    "batch_fragments_to_canonical",
+    "LayerType",
+    "OntologyRelationType",
+    "OntologyEntityType",
+    "CanonicalStatus",
+    "EntityType",
+    "RelationType",
+    "AttrValueType",
+    "PipelinePhase",
+]

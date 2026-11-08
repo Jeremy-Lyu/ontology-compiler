@@ -1,0 +1,42 @@
+{
+  "name": "multi_agent_analysis",
+  "description": "Multi-Agent complex scenario analysis combining RAG knowledge retrieval, data validation (Layer 1/2), and LLM synthesis for production planning and material management",
+  "command": "python scripts/multi_agent_cli.py auto \"<query>\" [--save]",
+  "script_path": "scripts/multi_agent_cli.py",
+  "category": "workflow",
+  "enabled": true,
+  "args_schema": {
+    "query": {
+      "type": "string",
+      "required": true,
+      "description": "Analysis question (e.g., '如何设计排产物料数据模型')"
+    },
+    "save": {
+      "type": "boolean",
+      "required": false,
+      "default": false,
+      "description": "Save analysis report to outputs/multi_agent_analysis/"
+    }
+  },
+  "layer_scope": [
+    "L1",
+    "L2",
+    "L2.5",
+    "L3"
+  ],
+  "version": "2.0.0",
+  "business_domain": [
+    "SUPPLY_CHAIN",
+    "MANUFACTURING",
+    "DATA_MESH",
+    "MASTER_DATA"
+  ],
+  "output_schema": {},
+  "quality_thresholds": {},
+  "trace_config": {
+    "log_model_name": false,
+    "log_prompt_version": false,
+    "log_execution_time": true,
+    "log_retries": false
+  }
+}

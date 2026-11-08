@@ -1,0 +1,198 @@
+version: "1.0"
+name: entity_classification
+purpose: "实体分类辅助 prompt，用于在规则无法稳定判定时进行 LLM 兜底"
+status: draft
+owner: ontology_team
+
+system_prompt: |
+  你是一个本体实体分类器。你的任务是根据实体名称、上下文与证据，
+  将实体分类到指定层级和主类中。你必须严格输出 JSON，不得输出多余解释。
+
+user_template: |
+  实体名称: {name}
+  上下文: {context}
+  来源证据: {evidence}
+  候选规则: {rules}
+  已有标签: {existing_labels}
+
+output_requirements:
+  format: json
+  must_include:
+    - entity_text
+    - type
+    - layer
+    - sub_type
+    - confidence
+    - reason
+    - evidence_ref
+    - matched_rules
+    - needs_review
+    - fallback_decision
+
+output_schema:
+  type: object
+  required:
+    - entity_text
+    - type
+    - layer
+    - confidence
+    - reason
+    - evidence_ref
+    - matched_rules
+    - needs_review
+    - fallback_decision
+  properties:
+    entity_text:
+      type: string
+    type:
+      type: string
+    layer:
+      type: string
+      enum: [L0, L1, L2, L2.5, L3]
+    sub_type:
+      type: string
+    confidence:
+      type: number
+      minimum: 0
+      maximum: 1
+    reason:
+      type: string
+    evidence_ref:
+      type: string
+    matched_rules:
+      type: array
+      items:
+        type: string
+    needs_review:
+      type: boolean
+    fallback_decision:
+      type: string
+      enum: [auto_accept, manual_review, llm_vote, reject]
+
+classification_policy:
+  first_try:
+    - rule_match
+    - context_disambiguation
+  fallback:
+    - llm_vote
+    - manual_review
+  thresholds:
+    auto_accept: 0.85
+    manual_review_low: 0.60
+    manual_review_high: 0.85
+
+prompt_rules:
+  - "必须优先依据输入证据进行分类"
+  - "若证据不足，应明确说明不确定性"
+  - "不得为了给出答案而虚构分类理由"
+  - "若多个类型均可能，选择最符合本质用途的类型"
+  - "遇到系统、平台、工具、组织、资产、文档、流程等常见类别时，优先使用规范中的主类定义"
+
+examples:
+  - input:
+      name: "Product Structures"
+      context: "This capability covers product structure definition and documentation"
+      evidence: "doc:12-18"
+      rules: "capability_rule"
+      existing_labels: []
+    output:
+      entity_text: "Product Structures"
+      type: "Capability"
+      layer: "L0"
+      sub_type: "Domain"
+      confidence: 0.96
+      reason: "该词描述的是业务能力域，而不是系统、组织或具体资产"
+      evidence_ref: "doc:12-18"
+      matched_rules: ["capability_rule"]
+      needs_review: false
+      fallback_decision: "auto_accept"
+
+  - input:
+      name: "KDP"
+      context: "KDP is used to manage engineering documents and workflows"
+      evidence: "doc:34-40"
+      rules: "system_rule"
+      existing_labels: []
+    output:
+      entity_text: "KDP"
+      type: "System"
+      layer: "L0"
+      sub_type: "Enterprise_Platform"
+      confidence: 0.94
+      reason: "该词指向一个承载业务流程的平台系统"
+      evidence_ref: "doc:34-40"
+      matched_rules: ["system_rule"]
+      needs_review: false
+      fallback_decision: "auto_accept"
+
+  - input:
+      name: "BOM Release Process Flow"
+      context: "Step-by-step workflow for releasing BOM data to downstream systems"
+      evidence: "doc:56-62"
+      rules: "rule_business_scenario"
+      existing_labels: []
+    output:
+      entity_text: "BOM Release Process Flow"
+      type: "BusinessScenario"
+      layer: "L2"
+      sub_type: "Scenario"
+      confidence: 0.88
+      reason: "该词描述的是一个具体的业务流程场景，包含步骤和工作流"
+      evidence_ref: "doc:56-62"
+      matched_rules: ["rule_business_scenario"]
+      needs_review: false
+      fallback_decision: "auto_accept"
+
+  - input:
+      name: "Part Numbering Rule"
+      context: "Defines the format and validation rules for part number assignment"
+      evidence: "doc:78-84"
+      rules: "rule_business_rule_l2"
+      existing_labels: []
+    output:
+      entity_text: "Part Numbering Rule"
+      type: "BusinessRule"
+      layer: "L2"
+      sub_type: "LogicRule"
+      confidence: 0.85
+      reason: "该词描述的是业务规则，定义了零件编号的格式和验证逻辑"
+      evidence_ref: "doc:78-84"
+      matched_rules: ["rule_business_rule_l2"]
+      needs_review: false
+      fallback_decision: "auto_accept"
+
+  - input:
+      name: "PN to VIN Mapping Rule"
+      context: "Maps part numbers to vehicle identification numbers for traceability"
+      evidence: "doc:95-101"
+      rules: "rule_mapping_rule_l25"
+      existing_labels: []
+    output:
+      entity_text: "PN to VIN Mapping Rule"
+      type: "MappingRule"
+      layer: "L2.5"
+      sub_type: "MappingRule"
+      confidence: 0.87
+      reason: "该词描述的是一个映射规则，用于在不同标识符之间建立关联"
+      evidence_ref: "doc:95-101"
+      matched_rules: ["rule_mapping_rule_l25"]
+      needs_review: false
+      fallback_decision: "auto_accept"
+
+  - input:
+      name: "Change_Order_AO_998"
+      context: "Specific change order instance for engineering modification"
+      evidence: "doc:112-118"
+      rules: "rule_instance_l3"
+      existing_labels: []
+    output:
+      entity_text: "Change_Order_AO_998"
+      type: "Data"
+      layer: "L3"
+      sub_type: "Record_Instance"
+      confidence: 0.78
+      reason: "该词是一个具体的实例记录，包含编号和类型标识，属于最终实例层"
+      evidence_ref: "doc:112-118"
+      matched_rules: ["rule_instance_l3"]
+      needs_review: true
+      fallback_decision: "manual_review"

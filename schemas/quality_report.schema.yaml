@@ -1,0 +1,115 @@
+# Quality Report Contract
+# Version: 1.0.0
+# Status: ACTIVE
+# Source of Truth: src/domain/models/quality_report.py + this schema
+
+contract_id: quality_report
+contract_type: schema
+version: "1.0.0"
+status: active
+
+description: >
+  Canonical contract for quality assessment reports.
+  Used by pipeline audit, governance gates, and regression checks.
+
+fields:
+  grade:
+    type: string
+    required: true
+    enum: [UNKNOWN, F, D, C, B, A, S, PLATINUM]
+
+  score:
+    type: integer
+    required: true
+    min: 0
+    max: 100
+
+  quality_level:
+    type: string
+    required: false
+    default: UNKNOWN
+
+  passed:
+    type: boolean
+    required: false
+    default: false
+
+  issues:
+    type: list
+    required: false
+    item_type: string
+
+  warnings:
+    type: list
+    required: false
+    item_type: string
+
+  l1_score:
+    type: number
+    required: false
+
+  l2_score:
+    type: number
+    required: false
+
+  scores:
+    type: dict
+    required: false
+    description: Per-dimension quality scores.
+
+  rule_scores:
+    type: list
+    required: false
+    item_contract: rule_score
+
+  failed_rules:
+    type: list
+    required: false
+    item_type: string
+    description: Derived from rule_scores.
+
+  passed_rules:
+    type: list
+    required: false
+    item_type: string
+    description: Derived from rule_scores.
+
+  execution_time_ms:
+    type: number
+    required: false
+    default: 0.0
+
+  generated_at:
+    type: string
+    required: false
+    description: ISO timestamp.
+
+  metadata:
+    type: dict
+    required: false
+    description: Additional quality metadata.
+
+sub_contracts:
+  rule_score:
+    fields:
+      rule_id:
+        type: string
+        required: true
+      score:
+        type: number
+        required: true
+      weight:
+        type: number
+        required: true
+      passed:
+        type: boolean
+        required: true
+      issues:
+        type: list
+        required: false
+        item_type: string
+
+deprecated:
+  legacy_fields:
+    - qualityLevel
+  migration_notes: "Use quality_level (snake_case). GOLD/SILVER/BRONZE mapped to A/B/C."

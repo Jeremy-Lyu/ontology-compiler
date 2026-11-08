@@ -1,0 +1,41 @@
+{
+  "name": "human_review_queue",
+  "description": "管理人工审核队列，跟踪审核状态和结果",
+  "command": "python src/skills/business_orchestration/human_review_queue/human_review_queue.py --items <items>",
+  "script_path": "src/skills/business_orchestration/human_review_queue/human_review_queue.py",
+  "category": "business_orchestration",
+  "layer_scope": ["L2", "L2.5", "L3"],
+  "enabled": true,
+  "version": "2.0.0",
+  "business_domain": ["SUPPLY_CHAIN", "MANUFACTURING", "DATA_MESH", "MASTER_DATA"],
+  "args_schema": {
+    "items": {
+      "type": "array",
+      "items": {"type": "object"},
+      "required": true,
+      "description": "待审核的项目列表"
+    },
+    "review_type": {
+      "type": "string",
+      "default": "quality",
+      "description": "审核类型"
+    }
+  },
+  "output_schema": {
+    "approved": {"type": "array", "items": {"type": "object"}},
+    "rejected": {"type": "array", "items": {"type": "object"}},
+    "pending": {"type": "array", "items": {"type": "object"}},
+    "comments": {"type": "array", "items": {"type": "object"}},
+    "review_timestamp": {"type": "string"}
+  },
+  "preconditions": ["items must be provided"],
+  "quality_thresholds": {
+    "review_threshold": 1.0
+  },
+  "trace_config": {
+    "log_model_name": false,
+    "log_prompt_version": false,
+    "log_execution_time": true,
+    "log_retries": false
+  }
+}

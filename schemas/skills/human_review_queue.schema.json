@@ -1,0 +1,143 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ontology-unified.local/schemas/skills/human_review_queue.schema.json",
+  "title": "Human Review Queue Skill Schema",
+  "type": "object",
+  "required": ["skill_name", "skill_version", "context", "input", "output", "quality", "trace"],
+  "properties": {
+    "skill_name": {"type": "string", "const": "human_review_queue"},
+    "skill_version": {"type": "string"},
+    "context": {"$ref": "../shared/skill_envelope.schema.json#/definitions/context"},
+    "input": {
+      "type": "object",
+      "required": ["review_items"],
+      "properties": {
+        "review_items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "item_id": {"type": "string"},
+              "item_type": {"type": "string", "enum": ["node", "edge", "evidence", "rule", "scenario"]},
+              "item_data": {"type": "object"},
+              "issue_type": {"type": "string", "enum": ["low_confidence", "missing_evidence", "duplicate", "conflict", "incomplete", "schema_violation", "critical_conflict", "ambiguous_mapping"]},
+              "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+              "priority": {"type": "string", "enum": ["high", "medium", "low"]},
+              "evidence_context": {"type": "object"},
+              "source_file": {"type": "string"},
+              "line_range": {"type": "array", "items": {"type": "integer"}},
+              "retry_count": {"type": "integer", "minimum": 0, "default": 0}
+            },
+            "required": ["item_id", "item_type", "issue_type"]
+          }
+        },
+        "queue_config": {
+          "type": "object",
+          "properties": {
+            "max_queue_size": {"type": "integer", "minimum": 1, "default": 100},
+            "priority_threshold": {"type": "string", "enum": ["high", "medium", "low"], "default": "medium"},
+            "max_retries_before_escalation": {"type": "integer", "minimum": 0, "default": 2},
+            "auto_assign_rules": {"type": "array", "items": {"type": "object"}}
+          }
+        },
+        "assignees": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "assignee_id": {"type": "string"},
+              "name": {"type": "string"},
+              "role": {"type": "string", "enum": ["reviewer", "domain_expert", "admin"]},
+              "domain_expertise": {"type": "array", "items": {"type": "string"}},
+              "max_tasks": {"type": "integer", "minimum": 1, "default": 20}
+            },
+            "required": ["assignee_id", "name", "role"]
+          }
+        }
+      }
+    },
+    "output": {
+      "type": "object",
+      "required": ["review_tasks", "queued_items", "escalated_items"],
+      "properties": {
+        "review_tasks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "task_id": {"type": "string"},
+              "item_id": {"type": "string"},
+              "item_type": {"type": "string", "enum": ["node", "edge", "evidence", "rule", "scenario"]},
+              "issue_type": {"type": "string"},
+              "priority": {"type": "string", "enum": ["high", "medium", "low"]},
+              "assignee_id": {"type": "string"},
+              "assignee_name": {"type": "string"},
+              "due_date": {"type": "string", "format": "date-time"},
+              "evidence_context": {"type": "object"},
+              "source_file": {"type": "string"},
+              "line_range": {"type": "array", "items": {"type": "integer"}},
+              "review_url": {"type": "string"},
+              "status": {"type": "string", "enum": ["pending", "in_progress", "completed", "escalated"]},
+              "created_at": {"type": "string", "format": "date-time"},
+              "instructions": {"type": "string"},
+              "expected_actions": {"type": "array", "items": {"type": "string", "enum": ["approve", "reject", "modify", "merge", "escalate", "skip"]}}
+            },
+            "required": ["task_id", "item_id", "item_type", "priority", "status"]
+          }
+        },
+        "queued_items": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "escalated_items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "item_id": {"type": "string"},
+              "item_type": {"type": "string"},
+              "reason": {"type": "string"},
+              "escalated_to": {"type": "string"},
+              "escalated_at": {"type": "string", "format": "date-time"}
+            },
+            "required": ["item_id", "item_type", "reason"]
+          }
+        },
+        "queue_summary": {
+          "type": "object",
+          "properties": {
+            "total_items_received": {"type": "integer", "minimum": 0},
+            "total_tasks_created": {"type": "integer", "minimum": 0},
+            "total_queued": {"type": "integer", "minimum": 0},
+            "total_escalated": {"type": "integer", "minimum": 0},
+            "tasks_by_priority": {
+              "type": "object",
+              "properties": {
+                "high": {"type": "integer", "minimum": 0},
+                "medium": {"type": "integer", "minimum": 0},
+                "low": {"type": "integer", "minimum": 0}
+              }
+            },
+            "tasks_by_assignee": {"type": "object"}
+          }
+        },
+        "assignments": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "assignee_id": {"type": "string"},
+              "task_ids": {"type": "array", "items": {"type": "string"}},
+              "count": {"type": "integer", "minimum": 0}
+            },
+            "required": ["assignee_id", "task_ids"]
+          }
+        }
+      }
+    },
+    "quality": {"$ref": "../shared/skill_envelope.schema.json#/definitions/quality"},
+    "trace": {"$ref": "../shared/skill_envelope.schema.json#/definitions/trace"},
+    "warnings": {"type": "array", "items": {"$ref": "../shared/skill_envelope.schema.json#/definitions/warning"}},
+    "errors": {"type": "array", "items": {"$ref": "../shared/skill_envelope.schema.json#/definitions/error"}}
+  }
+}

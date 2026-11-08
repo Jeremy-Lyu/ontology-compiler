@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ontology-unified.local/schemas/skills/ontology-merger.schema.json",
+  "title": "Ontology Merger Skill Schema",
+  "type": "object",
+  "required": ["skill_name", "skill_version", "context", "input", "output", "quality", "trace"],
+  "properties": {
+    "skill_name": {"type": "string", "const": "ontology-merger"},
+    "skill_version": {"type": "string"},
+    "context": {"$ref": "../shared/skill_envelope.schema.json#/definitions/context"},
+    "input": {
+      "type": "object",
+      "required": ["sources"],
+      "properties": {
+        "sources": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "source_id": {"type": "string"},
+              "entities": {"type": "array", "items": {"type": "object"}},
+              "relations": {"type": "array", "items": {"type": "object"}},
+              "evidence": {"type": "array", "items": {"type": "object"}},
+              "priority": {"type": "integer", "minimum": 1},
+              "trust_level": {"type": "number", "minimum": 0, "maximum": 1}
+            },
+            "required": ["source_id", "entities"]
+          }
+        },
+        "merge_rules": {
+          "type": "object",
+          "properties": {
+            "canonical_identity_rules": {"type": "array", "items": {"type": "object"}},
+            "conflict_resolution_strategy": {"type": "string", "enum": ["highest_trust", "most_recent", "consensus", "manual"]},
+            "preserve_provenance": {"type": "boolean", "default": true},
+            "remove_duplicates": {"type": "boolean", "default": true}
+          }
+        }
+      }
+    },
+    "output": {
+      "type": "object",
+      "required": ["merged_ontology", "conflicts", "merge_summary"],
+      "properties": {
+        "merged_ontology": {
+          "type": "object",
+          "properties": {
+            "ontology_id": {"type": "string"},
+            "entities": {"type": "array", "items": {"type": "object"}},
+            "relations": {"type": "array", "items": {"type": "object"}},
+            "evidence": {"type": "array", "items": {"type": "object"}},
+            "merged_sources": {"type": "array", "items": {"type": "string"}}
+          },
+          "required": ["ontology_id", "entities", "relations"]
+        },
+        "conflicts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "conflict_id": {"type": "string"},
+              "type": {"type": "string", "enum": ["identity", "attribute", "relation", "schema"]},
+              "entities": {"type": "array", "items": {"type": "string"}},
+              "sources": {"type": "array", "items": {"type": "string"}},
+              "status": {"type": "string", "enum": ["resolved", "unresolved", "pending_review"]},
+              "resolution": {"type": "object"}
+            },
+            "required": ["conflict_id", "type"]
+          }
+        },
+        "merge_summary": {
+          "type": "object",
+          "properties": {
+            "total_sources": {"type": "integer", "minimum": 0},
+            "total_entities": {"type": "integer", "minimum": 0},
+            "total_relations": {"type": "integer", "minimum": 0},
+            "duplicates_removed": {"type": "integer", "minimum": 0},
+            "conflicts_resolved": {"type": "integer", "minimum": 0},
+            "conflicts_pending": {"type": "integer", "minimum": 0},
+            "merge_coverage": {"type": "number", "minimum": 0, "maximum": 1}
+          }
+        }
+      }
+    },
+    "quality": {"$ref": "../shared/skill_envelope.schema.json#/definitions/quality"},
+    "trace": {"$ref": "../shared/skill_envelope.schema.json#/definitions/trace"},
+    "warnings": {"type": "array", "items": {"$ref": "../shared/skill_envelope.schema.json#/definitions/warning"}},
+    "errors": {"type": "array", "items": {"$ref": "../shared/skill_envelope.schema.json#/definitions/error"}}
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "name": "publish_or_rollback",
+  "description": "发布本体资产到目标系统，或在失败时执行回滚",
+  "command": "python src/skills/business_orchestration/publish_or_rollback/publish_or_rollback.py --data <data> --target <target>",
+  "script_path": "src/skills/business_orchestration/publish_or_rollback/publish_or_rollback.py",
+  "category": "business_orchestration",
+  "layer_scope": ["L0", "L1", "L2", "L2.5", "L3"],
+  "enabled": true,
+  "version": "2.0.0",
+  "business_domain": ["SUPPLY_CHAIN", "MANUFACTURING", "DATA_MESH", "MASTER_DATA"],
+  "args_schema": {
+    "data": {
+      "type": "object",
+      "required": true,
+      "description": "待发布的数据"
+    },
+    "target": {
+      "type": "string",
+      "required": true,
+      "description": "目标系统"
+    },
+    "dry_run": {
+      "type": "boolean",
+      "default": false,
+      "description": "是否模拟发布"
+    }
+  },
+  "output_schema": {
+    "published_artifacts": {"type": "array", "items": {"type": "string"}},
+    "rollback_package": {"type": "object"},
+    "publish_timestamp": {"type": "string"},
+    "success": {"type": "boolean"}
+  },
+  "preconditions": ["data must be validated", "target must be configured"],
+  "quality_thresholds": {
+    "review_threshold": 1.0
+  },
+  "trace_config": {
+    "log_model_name": false,
+    "log_prompt_version": false,
+    "log_execution_time": true,
+    "log_retries": true
+  }
+}

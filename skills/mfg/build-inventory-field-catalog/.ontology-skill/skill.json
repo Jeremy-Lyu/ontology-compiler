@@ -1,0 +1,173 @@
+{
+  "name": "build_inventory_field_catalog",
+  "description": "Build authoritative field catalog(s) from source CSV files",
+  "command": "python scripts/build_inventory_field_catalog.py --profile <profile>",
+  "script_path": "scripts/build_inventory_field_catalog.py",
+  "category": "catalog",
+  "enabled": true,
+  "args_schema": {
+    "profile": {
+      "type": "string",
+      "required": false,
+      "description": "Domain source profile to use"
+    },
+    "domains": {
+      "type": "string",
+      "required": false,
+      "description": "Comma-separated list of domains to process"
+    }
+  },
+  "layer_scope": [
+    "L0",
+    "L1",
+    "L2",
+    "L2.5",
+    "L3"
+  ],
+  "version": "2.0.0",
+  "business_domain": [
+    "SUPPLY_CHAIN",
+    "MANUFACTURING",
+    "DATA_MESH",
+    "MASTER_DATA"
+  ],
+  "output_schema": {
+    "type": "object",
+    "required": [
+      "field_catalog",
+      "mappings"
+    ],
+    "properties": {
+      "field_catalog": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "field_id": {
+              "type": "string"
+            },
+            "field_name": {
+              "type": "string"
+            },
+            "canonical_name": {
+              "type": "string"
+            },
+            "data_type": {
+              "type": "string",
+              "enum": [
+                "string",
+                "number",
+                "date",
+                "boolean",
+                "enum",
+                "object",
+                "array"
+              ]
+            },
+            "unit": {
+              "type": "string"
+            },
+            "validation_rules": {
+              "type": "object",
+              "properties": {
+                "min_value": {
+                  "type": "number"
+                },
+                "max_value": {
+                  "type": "number"
+                },
+                "pattern": {
+                  "type": "string"
+                },
+                "allowed_values": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "description": {
+              "type": "string"
+            },
+            "source_documents": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "confidence": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "required": [
+            "field_id",
+            "field_name",
+            "data_type"
+          ]
+        }
+      },
+      "mappings": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "source_field": {
+              "type": "string"
+            },
+            "canonical_field_id": {
+              "type": "string"
+            },
+            "mapping_confidence": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "transformation_rules": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "source_field",
+            "canonical_field_id"
+          ]
+        }
+      },
+      "summary": {
+        "type": "object",
+        "properties": {
+          "total_fields": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "new_fields": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "updated_fields": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "duplicate_fields": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "coverage_rate": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          }
+        }
+      }
+    }
+  },
+  "quality_thresholds": {},
+  "trace_config": {
+    "log_model_name": false,
+    "log_prompt_version": false,
+    "log_execution_time": true,
+    "log_retries": false
+  }
+}

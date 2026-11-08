@@ -1,0 +1,40 @@
+# Neo4j 配置 (R8)
+# 统一管理所有 Neo4j 相关配置
+
+connection:
+  uri: "bolt://localhost:7687"
+  username: "neo4j"
+  password: "12345678"
+  database: "neo4j"
+
+sync:
+  # 批处理大小
+  batch_size: 100
+  # 启用增量同步
+  enable_incremental: true
+  # 提取后自动同步
+  sync_on_extract: true
+  # 状态文件路径
+  state_file: "logs/neo4j_sync_state.json"
+
+index:
+  # 创建全文索引
+  create_fulltext_index: true
+  # 索引名称
+  fulltext_index_name: "ontology_fulltext"
+  # 索引节点类型
+  indexed_labels:
+    - "OntologyNode"
+    - "L2Scenario"
+    - "L2Logic"
+    - "L2Definition"
+
+search:
+  # 默认返回数量
+  default_top_k: 10
+  # 图扩展跳数
+  default_hops: 1
+  # 混合搜索权重
+  hybrid_weights:
+    vector: 0.7
+    graph: 0.85

@@ -1,0 +1,221 @@
+# ============================================================
+# Entity Alias Dictionary for Multi-Strategy Entity Resolution
+# ============================================================
+# Format:
+# - canonical: "<标准名称>"
+# variants: ["变体1", "变体2", ...]
+# meta_class: "<可选: 限定 meta_class>"
+# ============================================================
+
+aliases:
+ - canonical: "MASTER DATA"
+ variants: ["Master Data", "Master Data Management", "MDM", "主数据", "主数据管理"]
+ meta_class: "System"
+
+ - canonical: "VSM"
+ variants: ["Value Stream Mapping", "Value Stream Map", "价值流图", "价值流映射"]
+ meta_class: "Data"
+
+ - canonical: "Cycle Stock"
+ variants: ["Cycle Inventory", "周转库存", "循环库存", "周转存货", "周期性库存"]
+ meta_class: "Data"
+
+ - canonical: "Safety Stock"
+ variants: ["Safety Inventory", "安全库存", "安全存货", "缓冲库存"]
+ meta_class: "Data"
+
+
+ - canonical: "Luqiao"
+ variants: ["Luqiao Plant", "VCTZ", "Luqiao", "VCLQ", "Luqiao Plant Assembly"]
+ meta_class: "Asset"
+
+ - canonical: "Chengdu"
+ variants: ["Chengdu Plant", "VCTD", "Chengdu"]
+ meta_class: "Asset"
+
+ - canonical: "Daqing"
+ variants: ["Daqing Plant", "VCDQ"]
+ meta_class: "Asset"
+
+ - canonical: "Taizhou"
+ variants: ["Taizhou Plant", "VCTZ2"]
+ meta_class: "Asset"
+
+ - canonical: "Olofstrom"
+ variants: ["Olofstrom Plant", "VCO", "Olofstrom"]
+ meta_class: "Asset"
+
+ - canonical: "Skovde"
+ variants: ["Skovde Plant", "VCS", "Skovde"]
+ meta_class: "Asset"
+
+ - canonical: "Torslanda"
+ variants: ["Torslanda Plant", "VCT", "Torslanda", "Gothenburg Plant"]
+ meta_class: "Asset"
+
+ - canonical: "Umea"
+ variants: ["Umea Plant", "VCTU"]
+ meta_class: "Asset"
+
+ - canonical: "Ghent"
+ variants: ["Ghent Plant", "VCG", "Ghent"]
+ meta_class: "Asset"
+
+ - canonical: "Gent"
+ variants: ["Gent Plant", "VCG2"]
+ meta_class: "Asset"
+
+ # --- Systems ---
+ - canonical: "Chimas"
+ variants: ["CHIMAS", "Chimas System", "C-HIMAS", "Sit Chimas", "Chimas Production", "Chimas Warehouse"]
+ meta_class: "System"
+
+ - canonical: "Production Control System"
+ variants: ["PCS", "Production Control", "PC System", "Production Control Systems", "ProdCtrl"]
+ meta_class: "System"
+
+ - canonical: "GOB"
+ variants: ["Global Order BOM", "GOB System", "Global Order Bill of Materials", "GOB Tool"]
+ meta_class: "System"
+
+ - canonical: "DIVE"
+ variants: ["DIVE System", "DIVE Tool", "Digital Integration for Vehicle Engineering"]
+ meta_class: "System"
+
+ - canonical: "VIVA"
+ variants: ["VIVA System", "VIVA Tool", "Integrated Vehicle Architecture"]
+ meta_class: "System"
+
+ - canonical: "VVRS"
+ variants: ["VVRS System", "VVRS Tool", "Vehicle Requirements System"]
+ meta_class: "System"
+
+ - canonical: "SPD"
+ variants: ["SPD System", "SPD Tool", "System Product Development", "Product Development System"]
+ meta_class: "System"
+
+ - canonical: "KPM"
+ variants: ["KPM System", "KPM Tool", "Knowledge Project Management"]
+ meta_class: "System"
+
+ - canonical: "LIMS"
+ variants: ["LIMS System", "Laboratory Information Management System"]
+ meta_class: "System"
+
+ - canonical: "DMS"
+ variants: ["DMS System", "Document Management System", "Document Management"]
+ meta_class: "System"
+
+ # --- BOM Types ---
+ - canonical: "BOM"
+ variants: ["Bill of Materials", "BOM表", "BOM清单", "物料清单"]
+ meta_class: "Data"
+
+
+ variants: ["Engineering BOM", "EBOM_Structure", "E-BOM", "Engineering Bill of Materials", "Engineering BOM Structure", "EBOM Structure"]
+ meta_class: "Data"
+
+ - canonical: "MBOM"
+ variants: ["Manufacturing BOM", "MBOM_Structure", "M-BOM", "Manufacturing Bill of Materials", "Manufacturing BOM Structure", "MBOM Structure"]
+ meta_class: "Data"
+
+ - canonical: "SBOM"
+ variants: ["Service BOM", "SBOM_Structure", "Service Bill of Materials"]
+ meta_class: "Data"
+
+ - canonical: "TBOM"
+ variants: ["Test BOM", "TBOM_Structure", "Test Bill of Materials"]
+ meta_class: "Data"
+
+ - canonical: "Production Inventory Benchmark"
+ variants: ["Production Inventory Benchmark 2025"]
+ meta_class: "Capability"
+
+
+ - canonical: "Goods Reception"
+ variants: ["Inbound Delivery", "Goods Receipt", "GR Process", "Goods Reception Process", "Goods Receive"]
+ meta_class: "Process"
+
+ - canonical: "Material Transactions"
+ variants: ["Material Transaction", "Material Movement", "Goods Movement", "Material Movement Process"]
+ meta_class: "Process"
+
+ - canonical: "Cycle Counting"
+ variants: ["Cycle Count", "Physical Inventory Count", "Inventory Counting", "Stock Counting"]
+ meta_class: "Process"
+
+ - canonical: "Scrap Part"
+ variants: ["Scrapping", "Scrap", "Part Scrapping", "Sub Assembly Scrapping", "Scrap Process"]
+ meta_class: "Asset"
+
+ - canonical: "Colli Handling"
+ variants: ["Colli", "Colli Process", "Container Handling"]
+ meta_class: "Process"
+
+ - canonical: "DSRP"
+ variants: ["DSRP Process", "Demand Supply Requirements Planning", "Supply Planning"]
+ meta_class: "Process"
+
+ - canonical: "Line Replenishment"
+ variants: ["Replenishment", "Replenishment Process", "Line Feed", "Material Replenishment"]
+ meta_class: "Process"
+
+ - canonical: "Storage Movement"
+ variants: ["Movement", "Storage Movement Process", "WM Movement", "Warehouse Movement"]
+ meta_class: "Process"
+
+ - canonical: "BOP"
+ variants: ["BOP Process", "Bill of Process", "BOP Management", "BOP System"]
+ meta_class: "Process"
+
+ # --- Data Entities ---
+ - canonical: "Part Address"
+ variants: ["Part Number", "Part No", "Part ID", "Material Number", "Part Address Structure"]
+ meta_class: "Data"
+
+ - canonical: "Change Note"
+ variants: ["Change Note Entity", "CNote", "ECN", "Engineering Change Note", "Change Note Management"]
+ meta_class: "Data"
+
+ - canonical: "Position"
+ variants: ["Physical Position", "Position Physical", "Position Structure"]
+ meta_class: "Data"
+
+ - canonical: "Part Usage"
+ variants: ["Part Usage Information", "Part Usage Structure", "Component Usage"]
+ meta_class: "Data"
+
+ - canonical: "PII"
+ variants: ["PII Knowledge", "Product Information Integration", "PII Data"]
+ meta_class: "Data"
+
+ # --- Planning ---
+ - canonical: "Production Planning"
+ variants: ["PP", "Production Plan", "Manufacturing Planning", "Production Plan Process"]
+ meta_class: "Process"
+
+ - canonical: "Material Requirements Planning"
+ variants: ["MRP", "Material Planning", "Requirements Planning", "MRP Process"]
+ meta_class: "Process"
+
+ - canonical: "Project Planning"
+ variants: ["Project and Milestone Planning", "Project Plan", "Milestone Planning"]
+ meta_class: "Process"
+
+ # --- Quality ---
+ - canonical: "VIR"
+ variants: ["VIR Report", "VIR Process", "Vehicle Inspection Report"]
+ meta_class: "Process"
+
+ - canonical: "Quality Management"
+ variants: ["QM", "Quality Process", "Quality Control"]
+ meta_class: "Process"
+
+ # --- Actors ---
+ - canonical: "Config Manager"
+ variants: ["Configuration Manager", "Config Management", "CM Role"]
+ meta_class: "Actor"
+
+ - canonical: "Planner"
+ variants: ["Production Planner", "Manufacturing Planner", "MRP Planner"]
+ meta_class: "Actor"

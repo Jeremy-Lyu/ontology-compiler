@@ -1,0 +1,152 @@
+# LLM Call Contract
+# Version: 1.0.0
+# Status: ACTIVE
+# Source of Truth: src/application/services/llm_monitor.py + this schema
+#
+# This file is the canonical contract for LLM call records.
+# All LLM call tracking must conform to this schema.
+# Breaking changes require version bump + migration notes.
+
+contract_id: llm_call
+contract_type: schema
+version: "1.0.0"
+status: active
+
+description: >
+  Canonical contract for LLM call records.
+  Describes each LLM invocation, including provider, model, tokens,
+  duration, truncation status, error classification, and degradation flags.
+
+fields:
+  call_id:
+    type: string
+    required: true
+    description: "Unique identifier for this LLM call"
+
+  stage:
+    type: string
+    required: true
+    description: "Pipeline stage that triggered this call"
+    enum:
+      - preflight
+      - extract
+      - normalize
+      - validate
+      - dedup
+      - relationship
+      - merge
+      - audit
+      - export
+      - agent
+      - other
+
+  provider:
+    type: string
+    required: true
+    description: "LLM provider name"
+
+  model:
+    type: string
+    required: true
+    description: "LLM model name"
+
+  prompt_tokens:
+    type: integer
+    required: false
+    default: 0
+    description: "Number of prompt tokens consumed"
+
+  completion_tokens:
+    type: integer
+    required: false
+    default: 0
+    description: "Number of completion tokens consumed"
+
+  total_tokens:
+    type: integer
+    required: false
+    default: 0
+    description: "Total tokens consumed (prompt + completion)"
+
+  cost_estimate:
+    type: number
+    required: false
+    default: 0.0
+    description: "Estimated cost in USD"
+
+  duration_ms:
+    type: integer
+    required: false
+    default: 0
+    description: "Call duration in milliseconds"
+
+  success:
+    type: boolean
+    required: true
+    default: true
+    description: "Whether the call succeeded"
+
+  truncation_reason:
+    type: string
+    required: false
+    default: "none"
+    enum:
+      - none
+      - max_tokens
+      - content_length
+      - timeout
+      - error
+    description: "Reason for output truncation if any"
+
+  error_type:
+    type: string
+    required: false
+    default: "none"
+    enum:
+      - none
+      - timeout
+      - truncation
+      - parse_error
+      - auth_error
+      - rate_limit
+      - network_error
+      - schema_validation
+      - empty_output
+      - unknown
+    description: "Unified failure classification"
+
+  error_message:
+    type: string
+    required: false
+    default: ""
+    description: "Detailed error message"
+
+  prompt_hash:
+    type: string
+    required: false
+    default: ""
+    description: "SHA-256 hash of prompt content (first 16 chars)"
+
+  degraded_mode:
+    type: boolean
+    required: false
+    default: false
+    description: "Whether degraded mode was triggered"
+
+  degraded_reason:
+    type: string
+    required: false
+    default: ""
+    description: "Reason for degraded mode activation"
+
+  contract_id:
+    type: string
+    required: true
+    default: "llm_call"
+    description: "Contract identifier"
+
+  contract_version:
+    type: string
+    required: true
+    default: "1.0.0"
+    description: "Contract version"

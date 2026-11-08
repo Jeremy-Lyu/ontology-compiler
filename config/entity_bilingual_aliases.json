@@ -1,0 +1,19 @@
+{
+  "version": "1.0",
+  "_comment": "RAG retrieval-only bilingual aliases (canonical master entity name -> Chinese/variant aliases). Consumed exclusively by src/application/rag/master_ontology_adapter.py to enrich rag chunk keywords so Chinese business terms can match English-named entities. Kept separate from config/entity_aliases.json, which feeds the extract/entity-resolution chain and must not be affected by retrieval-only vocabulary.",
+  "aliases": [
+    {"canonical": "MASTER DATA", "match": ["Master Data Management", "Master Data"], "aliases": ["主数据", "主数据管理", "MDM"]},
+    {"canonical": "MBOM", "aliases": ["制造BOM", "制造物料清单", "生产BOM"]},
+    {"canonical": "BOM", "aliases": ["物料清单", "BOM表", "BOM清单"]},
+    {"canonical": "EBOM", "aliases": ["工程BOM", "设计BOM"]},
+    {"canonical": "Inventory", "aliases": ["库存", "存货", "仓储", "库存管理"]},
+    {"canonical": "Production", "aliases": ["生产", "制造", "生产制造"]},
+    {"canonical": "Benchmark", "aliases": ["基准", "对标", "基线", "标杆"]},
+    {"canonical": "Safety Stock", "aliases": ["安全库存", "安全存货", "缓冲库存"]},
+    {"canonical": "Cycle Stock", "aliases": ["周转库存", "循环库存", "周转存货", "周期性库存"]},
+    {"canonical": "Quality", "aliases": ["质量", "品质", "质量管理", "品质管理"]},
+    {"canonical": "ATACQ", "aliases": ["高级微调质量"]},
+    {"canonical": "incoming material quality reporting", "aliases": ["来料质量报告"]},
+    {"canonical": "VSM", "aliases": ["价值流图", "价值流分析", "价值流映射"]}
+  ]
+}

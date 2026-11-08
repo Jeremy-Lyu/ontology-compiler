@@ -1,0 +1,132 @@
+# Conflict Rules Configuration
+# D-4 Implementation 2026-06-02: Externalized conflict detection rules for ConflictEngine
+
+# Conflict type definitions
+types:
+  duplicate_node:
+    code: "DUP-001"
+    severity: high
+    description: "Duplicate node with same meta_id or fingerprint"
+    auto_resolvable: true
+    default_action: merge
+
+  duplicate_edge:
+    code: "DUP-002"
+    severity: medium
+    description: "Duplicate relationship between same source/target"
+    auto_resolvable: true
+    default_action: deduplicate
+
+  metadata_drift:
+    code: "DRIFT-001"
+    severity: medium
+    description: "Node metadata changed between versions"
+    auto_resolvable: false
+    default_action: manual_review
+
+  schema_violation:
+    code: "SCHEMA-001"
+    severity: critical
+    description: "Entity violates schema constraints"
+    auto_resolvable: false
+    default_action: reject
+
+  relationship_conflict:
+    code: "REL-001"
+    severity: high
+    description: "Conflicting relationships for same source"
+    auto_resolvable: true
+    default_action: priority_merge
+
+  domain_mismatch:
+    code: "DOM-001"
+    severity: low
+    description: "Entity domain does not match expected"
+    auto_resolvable: true
+    default_action: update_domain
+
+# Detection rules
+detection_rules:
+  node_duplication:
+    enabled: true
+    strategy: fingerprint
+    fingerprint_fields:
+      - meta_id
+      - meta_name
+      - source_file
+    similarity_threshold: 0.95
+
+  edge_duplication:
+    enabled: true
+    strategy: composite_key
+    key_fields:
+      - source
+      - predicate
+      - target
+
+  metadata_drift:
+    enabled: true
+    strategy: version_compare
+    tracked_fields:
+      - meta_name
+      - meta_class
+      - meta_subclass
+      - attributes
+
+  schema_validation:
+    enabled: true
+    strategy: schema_catalog
+    catalog_path: "config/schema_catalog.yaml"
+
+  relationship_conflict:
+    enabled: true
+    strategy: cardinality_check
+    max_outgoing_per_predicate: 10
+    max_incoming_per_predicate: 100
+
+  domain_consistency:
+    enabled: true
+    strategy: domain_registry
+    registry_path: "config/domain_registry.yaml"
+
+# Resolution strategies
+resolution_strategies:
+  merge:
+    description: "Merge duplicate entities, keeping most complete version"
+    priority_fields:
+      - completeness_score
+      - timestamp
+      - source_reliability
+
+  deduplicate:
+    description: "Remove exact duplicates, keep first occurrence"
+    preserve_order: true
+
+  priority_merge:
+    description: "Merge based on priority rules"
+    priority_rules:
+      - field: source_system
+        values: ["PLM", "ERP", "LEGACY"]
+      - field: confidence
+        min_value: 0.8
+
+  update_domain:
+    description: "Update entity domain to match majority"
+    vote_threshold: 0.6
+
+# Rule weights for conflict scoring
+scoring_weights:
+  duplicate_node: 1.0
+  duplicate_edge: 0.5
+  metadata_drift: 0.7
+  schema_violation: 1.5
+  relationship_conflict: 1.0
+  domain_mismatch: 0.3
+
+# Auto-resolution thresholds
+auto_resolution:
+  enabled: true
+  max_severity: medium
+  confidence_threshold: 0.85
+  batch_size: 100
+  dry_run: false

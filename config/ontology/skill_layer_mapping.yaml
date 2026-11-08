@@ -1,0 +1,394 @@
+version: "1.0"
+domain: automotive_ontology
+name: skill_layer_mapping
+status: draft
+owner: ontology_team
+
+layer_definitions:
+  L0:
+    name: core_class
+    description: "业务本体主类"
+    skill_capabilities:
+      - "entity_classification"
+      - "relation_type_detection"
+      - "core_semantic_extraction"
+    compatible_skills:
+      - "basic_entity_extraction"
+      - "relation_classifier"
+  
+  L1:
+    name: standard_subclass
+    description: "标准子类"
+    skill_capabilities:
+      - "sub_type_refinement"
+      - "hierarchy_builder"
+      - "domain_specific_classification"
+    compatible_skills:
+      - "domain_entity_extraction"
+      - "hierarchy_extractor"
+  
+  L2:
+    name: business_scenario
+    description: "业务细分层：业务场景、流程上下文、角色情境"
+    skill_capabilities:
+      - "scenario_identification"
+      - "use_case_extraction"
+      - "contextual_analysis"
+    compatible_skills:
+      - "scenario_extractor"
+      - "use_case_analyzer"
+  
+  L2.5:
+    name: transition_mapping
+    description: "过渡层/映射层：规则、约束、映射逻辑"
+    skill_capabilities:
+      - "rule_extraction"
+      - "mapping_generation"
+      - "validation_rule_detection"
+      - "transformation_logic"
+    compatible_skills:
+      - "rule_extractor"
+      - "mapping_generator"
+      - "validation_rule_detector"
+  
+  L3:
+    name: instance_action
+    description: "最终实例层/最末级动作层"
+    skill_capabilities:
+      - "instance_identification"
+      - "action_extraction"
+      - "workflow_step_detection"
+    compatible_skills:
+      - "instance_extractor"
+      - "action_detector"
+
+skill_registry:
+  - skill_id: "l25_mbom_extraction"
+    skill_name: "MBOM与物料场景提取"
+    layer_target: L2.5
+    primary_layer: L2.5
+    secondary_layers:
+      - L0
+      - L1
+      - L2
+    capabilities:
+      - "rule_extraction"
+      - "mapping_generation"
+      - "domain_specific_classification"
+    priority: 10
+    domain_tags:
+      - MANUFACTURING
+      - SUPPLY_CHAIN
+    trigger_keywords:
+      - "MBOM"
+      - "物料清单"
+      - "BOM"
+      - "排产"
+      - "生产订单"
+    output_entity_types:
+      - Capability
+      - System
+      - Asset
+      - Process
+    allowed_relation_types:
+      - HAS_VARIANT
+      - HAS_COMPONENT
+      - PART_OF
+      - MANUFACTURED_BY
+      - USED_IN
+      - HAS_OPERATION
+      - ROUTES_TO
+    blocked_relation_types:
+      - DERIVED_FROM
+      - TRANSFORMS_TO
+
+  - skill_id: "l25_logistics_extraction"
+    skill_name: "物流与供应链场景提取"
+    layer_target: L2.5
+    primary_layer: L2.5
+    secondary_layers:
+      - L1
+      - L2
+    capabilities:
+      - "rule_extraction"
+      - "mapping_generation"
+      - "scenario_identification"
+    priority: 8
+    domain_tags:
+      - SUPPLY_CHAIN
+    trigger_keywords:
+      - "物流"
+      - "库存"
+      - "物料移动"
+      - "kanban"
+      - "warehouse"
+      - "STO"
+    output_entity_types:
+      - Asset
+      - Process
+      - Capability
+    allowed_relation_types:
+      - HAS_MOVEMENT
+      - STORED_AT
+      - TRANSFERS_TO
+      - REPLENISHES
+      - PART_OF
+      - USED_BY
+    blocked_relation_types:
+      - MANUFACTURED_BY
+      - HAS_OPERATION
+
+  - skill_id: "basic_entity_extraction"
+    skill_name: "基础实体提取"
+    layer_target: L0
+    primary_layer: L0
+    secondary_layers:
+      - L1
+    capabilities:
+      - "entity_classification"
+      - "relation_type_detection"
+      - "core_semantic_extraction"
+    priority: 20
+    domain_tags:
+      - GENERAL
+    trigger_keywords:
+      - "系统"
+      - "能力"
+      - "组织"
+      - "资产"
+      - "流程"
+      - "数据"
+    output_entity_types:
+      - Capability
+      - System
+      - Actor
+      - Asset
+      - Data
+      - Process
+      - Concept
+    allowed_relation_types:
+      - SUBSUMES
+      - DECOMPOSES_TO
+      - CONTAINS
+      - HAS_PART
+      - PART_OF
+      - INSTANCE_OF
+
+  - skill_id: "domain_entity_extraction"
+    skill_name: "领域实体提取"
+    layer_target: L1
+    primary_layer: L1
+    secondary_layers:
+      - L0
+    capabilities:
+      - "sub_type_refinement"
+      - "hierarchy_builder"
+      - "domain_specific_classification"
+    priority: 15
+    domain_tags:
+      - GENERAL
+    trigger_keywords:
+      - "子系统"
+      - "模块"
+      - "功能"
+      - "组件"
+    output_entity_types:
+      - Domain
+      - SubDomain
+      - Actionable
+      - Enterprise_Platform
+      - Microservice_App
+      - Internal_Department
+      - Business_Function
+      - Product_Definition
+      - Software_Asset
+      - Business_Process
+
+  - skill_id: "scenario_extractor"
+    skill_name: "场景提取器"
+    layer_target: L2
+    primary_layer: L2
+    secondary_layers:
+      - L1
+      - L2.5
+    capabilities:
+      - "scenario_identification"
+      - "use_case_extraction"
+      - "contextual_analysis"
+    priority: 12
+    domain_tags:
+      - GENERAL
+    trigger_keywords:
+      - "场景"
+      - "用例"
+      - "case"
+      - "scenario"
+      - "流程"
+    output_entity_types:
+      - BusinessScenario
+      - Scenario
+      - UseCase
+      - Definition
+      - BusinessRule
+
+  - skill_id: "rule_extractor"
+    skill_name: "规则提取器"
+    layer_target: L2.5
+    primary_layer: L2.5
+    secondary_layers:
+      - L2
+    capabilities:
+      - "rule_extraction"
+      - "validation_rule_detection"
+    priority: 11
+    domain_tags:
+      - GENERAL
+    trigger_keywords:
+      - "规则"
+      - "约束"
+      - "映射"
+      - "验证"
+    output_entity_types:
+      - MappingRule
+      - ValidationRule
+      - RuleSet
+      - Constraint
+
+  - skill_id: "mapping_generator"
+    skill_name: "映射生成器"
+    layer_target: L2.5
+    primary_layer: L2.5
+    secondary_layers:
+      - L2
+      - L3
+    capabilities:
+      - "mapping_generation"
+      - "transformation_logic"
+    priority: 9
+    domain_tags:
+      - GENERAL
+    trigger_keywords:
+      - "映射"
+      - "转换"
+      - "对应"
+      - "关联"
+    output_entity_types:
+      - MappingRule
+      - TransformRule
+      - MappingSet
+
+  - skill_id: "instance_extractor"
+    skill_name: "实例提取器"
+    layer_target: L3
+    primary_layer: L3
+    secondary_layers:
+      - L2.5
+    capabilities:
+      - "instance_identification"
+      - "action_extraction"
+    priority: 7
+    domain_tags:
+      - GENERAL
+    trigger_keywords:
+      - "实例"
+      - "记录"
+      - "工单"
+      - "操作"
+    output_entity_types:
+      - Unique_Instance
+      - Workflow_Instance
+      - Action_Instance
+
+layer_skill_matrix:
+  L0:
+    - basic_entity_extraction
+  L1:
+    - domain_entity_extraction
+    - basic_entity_extraction
+  L2:
+    - scenario_extractor
+    - domain_entity_extraction
+  L2.5:
+    - mbom_extraction
+    - logistics_extraction
+    - rule_extractor
+    - mapping_generator
+  L3:
+    - instance_extractor
+    - mapping_generator
+
+skill_layer_flow:
+  steps:
+    - layer: L0
+      skills:
+        - basic_entity_extraction
+      output_to: L1
+    
+    - layer: L1
+      skills:
+        - domain_entity_extraction
+      output_to: L2
+    
+    - layer: L2
+      skills:
+        - scenario_extractor
+      output_to: L2.5
+    
+    - layer: L2.5
+      skills:
+        - rule_extractor
+        - mapping_generator
+        - mbom_extraction
+        - logistics_extraction
+      output_to: L3
+    
+    - layer: L3
+      skills:
+        - instance_extractor
+      output_to: final
+
+governance_rules:
+  - rule_id: skill_layer_boundary
+    description: "技能只能在指定层级上运行"
+    condition: "skill.layer_target == entity.layer"
+    action: "allow"
+    violation_action: "warn"
+
+  - rule_id: cross_layer_validation
+    description: "跨层级输出必须经过验证"
+    condition: "skill.secondary_layers contains entity.layer"
+    action: "validate"
+    violation_action: "block"
+
+  - rule_id: relation_type_filter
+    description: "技能只能产生允许的关系类型"
+    condition: "relation.type in skill.allowed_relation_types"
+    action: "allow"
+    violation_action: "reject"
+
+  - rule_id: entity_type_filter
+    description: "技能只能输出指定的实体类型"
+    condition: "entity.type in skill.output_entity_types"
+    action: "allow"
+    violation_action: "warn"
+
+skill_activation_rules:
+  - rule_id: keyword_match
+    description: "当文档包含技能的触发关键词时激活"
+    condition: "document contains any of skill.trigger_keywords"
+    activation_probability: 0.85
+
+  - rule_id: domain_match
+    description: "当文档领域与技能领域匹配时激活"
+    condition: "document.domain intersects skill.domain_tags"
+    activation_probability: 0.90
+
+  - rule_id: layer_requirement
+    description: "当前处理层级必须是技能的目标层级"
+    condition: "current_layer in skill.layer_target or skill.secondary_layers"
+    activation_probability: 1.0
+
+  - rule_id: priority_order
+    description: "高优先级技能优先激活"
+    condition: "skill.priority > other_skill.priority"
+    activation_probability: 0.95

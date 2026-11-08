@@ -1,0 +1,802 @@
+---
+# Report Static Text Configuration (P1-7 Refactoring)
+# Separates static markdown content from rendering logic
+
+templates:
+  l2_business_scenarios:
+    header: "# L2 Business Scenarios"
+    meta_fields:
+      - label: "Generated at"
+        key: "generated_at"
+      - label: "run_id"
+        key: "run_id"
+        format: "code"
+      - label: "topic_id"
+        key: "topic_id"
+        format: "code"
+      - label: "domain"
+        key: "domain"
+        format: "code"
+      - label: "source_folder"
+        key: "source_folder"
+        format: "code"
+    sections:
+      - title: "Business summary"
+        key: "business_summary"
+        list_format: true
+      - title: "Process steps"
+        key: "process_steps"
+        list_format: true
+      - title: "Data entities"
+        key: "data_entities"
+        list_format: true
+      - title: "Business rules"
+        key: "business_rules"
+        list_format: true
+      - title: "KPIs"
+        key: "kpis"
+        list_format: true
+      - title: "Evidence"
+        key: "evidence"
+        list_format: true
+      - title: "Risks"
+        key: "risks"
+        list_format: true
+
+core_results:
+  header: "# CORE RESULTS"
+  sections:
+    summary:
+      title: "## Summary"
+      metrics:
+        - label: "nodes"
+          key: "nodes"
+        - label: "instances"
+          key: "instances"
+        - label: "relationships"
+          key: "relationships"
+    quality:
+      title: "**Quality Metrics**"
+      metrics:
+        - label: "grade"
+          key: "grade"
+          format: "code"
+        - label: "l1_score"
+          key: "l1_score"
+        - label: "l2_score"
+          key: "l2_score"
+        - label: "warnings"
+          key: "warnings"
+          format: "count"
+    input_profile:
+      title: "## Input profile"
+      fields:
+        - label: "primary_type"
+          key: "primary_type"
+          format: "code"
+        - label: "has_pdf"
+          key: "has_pdf"
+          format: "code"
+        - label: "has_doc"
+          key: "has_doc"
+          format: "code"
+        - label: "has_excel"
+          key: "has_excel"
+          format: "code"
+    llm_usage:
+      title: "## LLM usage"
+      fields:
+        - label: "llm_calls"
+          key: "llm_calls"
+        - label: "prompt_tokens"
+          key: "prompt_tokens"
+        - label: "completion_tokens"
+          key: "completion_tokens"
+        - label: "total_tokens"
+          key: "total_tokens"
+        - label: "cost"
+          key: "cost"
+    sections:
+      key_objects:
+        title: "## Key objects (L1)"
+        max_items: 15
+      key_relationships:
+        title: "## Key relationships (L1)"
+        max_items: 20
+      l2_scenarios:
+        title: "## L2 business scenarios"
+        max_items: 5
+    extraction_scorecard:
+      title: "## 提取评分 (Extraction Scorecard)"
+      table_headers:
+        - "维度"
+        - "得分"
+        - "评级"
+      dimensions:
+        - id: "coverage"
+          name: "证据覆盖度"
+          weight: 0.20
+        - id: "scale"
+          name: "本体规模"
+          weight: 0.25
+        - id: "depth"
+          name: "语义深度"
+          weight: 0.25
+        - id: "diversity"
+          name: "来源多样性"
+          weight: 0.15
+        - id: "l1"
+          name: "L1质量分"
+          weight: 0.15
+    briefing:
+      title: "## 简报 (Briefing)"
+      thresholds:
+        high_scale: 20
+        medium_scale: 5
+        min_rigor_iterations: 2
+    artifacts:
+      title: "## Artifacts"
+      keys:
+        - "manifest"
+        - "l1"
+        - "l2"
+        - "l2_scenarios_md"
+        - "core_results_md"
+    manual_checklist:
+      title: "## 人工检查清单（每次文件夹运行后）"
+      items:
+        - "**结构完整**：确认 `analysis_manifest.json`、`L1_DOMAIN_SANDBOX.json`、`L2_OPERATIONAL_INSTANCES.json`、`CORE_RESULTS.md` 均存在。"
+        - "**运行状态**：`status=SUCCESS`，并记录 warning 数量与原因（如 fast/smoke/max_files）。"
+        - "**来源正确**：L1/L2 中 `source_file`/`instance_source` 指向本次目标文件夹，未串到无关目录。"
+        - "**语义抽样**：抽查 ≥3 个对象、≥3 条关系，确认业务语义与方向正确。"
+        - "**L1/L2 一致性**：L2 实例能回溯到 L1 概念或证据来源，不出现孤儿实例。"
+        - "**规模合理**：nodes/instances/relationships 与输入文件数量、内容复杂度匹配（避免异常激增/归零）。"
+    guard_check:
+      title: "## Guard 验收通过（操作步骤）"
+      steps:
+        - description: "生成 patch dry-run 报告（含 evidence + rollback）"
+          command: "python scripts/generate_ontology_patch.py --operations-json <ops.json> --reason <reason> --requested-by <id> --l1 <L1路径> --l2 <L2路径> --manifest <manifest路径> --simulate-rollback --profile local"
+        - description: "执行 guard"
+          command: "python scripts/run_pipeline_orchestrator.py --stages guard --profile local"
+      criteria:
+        - "patch dry-run `result.status == DRY_RUN_SUCCESS`"
+        - "`evidence_summary` 必填字段齐全"
+        - "operation 级证据覆盖（`operation_evidence_coverage == 1.0`）"
+        - "`rollback_simulation_ok == true`"
+    publish_to_master:
+      title: "## 发布到 Master（publish_delta_to_master.py）"
+      prerequisite: "必须有 delta JSON，且具备 DID 审批签名。"
+      steps:
+        - description: "执行发布"
+          command: "python scripts/publish_delta_to_master.py --delta <delta.json> --requested-by <subject_id> --approval-signature <didsig:...>"
+        - description: "发布脚本会自动做：校验签名、备份主文件、合并 delta、写发布日志"
+
+# Score thresholds for grading
+score_thresholds:
+  stars:
+    max: 5
+  grades:
+    A: 0.85
+    B: 0.70
+    C: 0.50
+    D: 0.0
+
+# Risk matrix entries (domain analysis report)
+risk_matrix:
+  title: "## 六、主要问题点与风险矩阵"
+  table_headers:
+    - "风险等级"
+    - "问题"
+    - "涉及节点"
+    - "业务影响"
+    - "建议措施"
+  risks:
+    - level: "🔴 高"
+      problem: "EBOM→MBOM同步延迟"
+      nodes: "EngineeringChange→PLM_Integration→Manufacturing_BOM"
+      impact: "物料错领/返工"
+      action: "PLM-KDP同步SLA≤4h，超时冻结工单"
+    - level: "🔴 高"
+      problem: "BOM版本与工单脱节"
+      nodes: "BOMVersion↔ProductionOrder"
+      impact: "MRP计算错误，备料偏差"
+      action: "工单下发时强制校验BOM版本有效性"
+    - level: "🔴 高"
+      problem: "PLM-KDP数据断层"
+      nodes: "PLM_Integration→KDP_System"
+      impact: "工厂KDP数据滞后，工序指令过时"
+      action: "实现PLM-KDP实时双向同步"
+    - level: "🟡 中"
+      problem: "序列件追溯断链"
+      nodes: "Part_Instance↔Quality_Event↔NCR"
+      impact: "质量问题无法追溯到零件批次"
+      action: "QualityEvent强制绑定Part_Instance"
+    - level: "🟡 中"
+      problem: "设备BOE与BOP脱节"
+      nodes: "BillOfEquipment↔BillOfOperations"
+      impact: "产能规划偏差"
+      action: "BOP工序变更自动触发BOE审查"
+    - level: "🟡 中"
+      problem: "GoodsInTransit影响排产"
+      nodes: "GoodsInTransit→ProductionSchedule"
+      impact: "排产偏差"
+      action: "供应商ASN实时同步在途状态"
+    - level: "🟡 中"
+      problem: "多工厂ProductionVersion混用"
+      nodes: "ProductionVersionSpec"
+      impact: "MRP选错BOM/Routing"
+      action: "工单创建时自动验证工厂+版本组合"
+    - level: "🟢 低"
+      problem: "BOM-CAD几何偏差"
+      nodes: "Engineering_BOM↔CAD"
+      impact: "实物与BOM不一致"
+      action: "建立CAD-BOM一致性自动校验"
+    - level: "🟢 低"
+      problem: "看板信号数字化不足"
+      nodes: "KanbanDemandPoint"
+      impact: "手动补料延迟"
+      action: "推行电子e-Kanban"
+
+# Business scenarios (domain analysis report)
+business_scenarios:
+  title: "## 七、可执行业务分析场景"
+  scenarios:
+    - id: "change_impact"
+      name: "工程变更影响范围分析（Change Impact Analysis）"
+      trigger: "Engineering Change发起，BOM中某零件被替换/修改"
+      diagram: |
+        Engineering Change
+            ↓ triggers_new_version
+        BOM Version (V_new)
+            ↓ referenced_by
+        ProductionOrder（所有引用旧版本的未完成工单）← 需重新下发或修订
+            ↓ has_operations
+        RoutingStep × N（受影响工序）
+            ↓ assignedTo
+        WorkCenter（需要重新排产的工作中心）
+            ↓ impacts
+        ProductionSchedule（需要调整的班次/产线）
+      output: "受影响工单清单 | 工作中心停线风险热力图 | 物料库存过渡计划"
+    - id: "material_traceability"
+      name: "物料追溯（Material Traceability）"
+      trigger: "客户投诉/召回，需要定位某批次零件的所有实物去向"
+      diagram: |
+        Quality_Event / NCR（质量问题）
+            ↓ linked_to
+        Part_Instance（问题序列件/批次件）
+            ↓ is_output_of
+        Production_Run（哪批生产执行）
+            ↓ fulfills
+        Work_Order（工单号）
+            ↓ references
+        Manufacturing_BOM（使用的MBOM版本）
+            ↓ is_basis_for
+        Engineering_BOM（设计来源） / Raw_Material_Lot（原材料批次→供应商）
+      output: "问题零件批次清单 | MBOM版本归因 | 供应商批次追溯报告"
+    - id: "capacity_bottleneck"
+      name: "产能瓶颈分析（Capacity Bottleneck Analysis）"
+      trigger: "生产交期延误，需要找出瓶颈工序"
+      diagram: |
+        ProductionSchedule（计划负荷）
+            ↓ allocates_orders_to
+        WorkCenter × N（各工作中心负荷）
+            ↓ compare_with
+        ShiftSchedule × WorkCenter.capacity（可用产能）
+            ↓ identify
+        瓶颈WorkCenter（负荷率 > 85%）
+            ↓ drill_down
+        RoutingStep → BillOfOperations（哪些产品经过瓶颈工序）
+      output: "工作中心负荷率热力图 | 瓶颈工序TOP10 | 产线平衡优化建议"
+    - id: "plm_sync_health"
+      name: "PLM-MES同步健康度监控（PLM Sync Health）"
+      trigger: "日常运维巡检，确认PLM变更是否及时落地工厂"
+      diagram: |
+        Engineering Change（PLM已审批，含生效日期）
+            ↓ should_trigger
+        PLM_Integration（同步任务，记录同步时间戳）
+            ↓ should_update
+        BOM Version in KDP_System（工厂侧版本）
+            ↓ validate: KDP版本 == PLM最新版本?
+            ├── 一致 → 健康
+            └── 不一致 → 延迟天数 = 今天 - ECN生效日期 → 告警
+      output: "同步延迟分布直方图 | 超SLA变更清单 | 工厂BOM偏差报告"
+    - id: "supply_chain_visibility"
+      name: "供应链可见性仪表盘（Supply Chain Visibility）"
+      trigger: "计划员需要实时掌握物料到位情况"
+      diagram: |
+        Supplier × N
+            ↓ suppliesMaterial
+        GoodsInTransit（在途状态实时）
+            ↓ influences_production_readiness
+        MaterialRequirement（哪些工单哪些物料有缺口）
+            ↓ staged_at
+        Kitting_Delivery_Point（备料状态）
+            ↓ enables_or_blocks
+        ProductionSchedule（受影响班次）
+      output: "实时物料到位率 | 缺料风险预警 | 供应商准时率排名"
+    - id: "equipment_oee"
+      name: "设备OEE分析（Equipment Effectiveness）"
+      trigger: "设备效率分析"
+      diagram: |
+        WorkCenter / MachineTool
+            ├── ProductionRun（实际产出 vs 计划 → Performance Rate）
+            ├── QualityCheckEvent（合格率 → Quality Rate）
+            └── ShiftSchedule（计划运行 vs 停机 → Availability）
+            OEE = Availability × Performance × Quality
+      output: "设备OEE排名 | 停机原因Pareto图 | 预测性维保建议"
+
+# Domain entity reference tables
+entity_reference:
+  title: "## 五、关键领域实体速查"
+  tables:
+    bom_versions:
+      title: "### 5.1 BOM版本系列（EBOM → MBOM）"
+      description: "多工厂、多版本的BOM管理"
+      columns: ["实体", "BOM类型/属性", "对应MBOM工厂", "业务用途"]
+      rows:
+        - ["Engineering_BOM", "EBOM（设计BOM）", "——", "研发阶段，设计意图"]
+        - ["Manufacturing_BOM", "MBOM（制造BOM）", "Plant_XXX", "工厂制造执行，含工艺/物流"]
+        - ["BOM_Version", "版本号（date-based）", "Plant关联", "追溯特定日期物料清单"]
+        - ["ProductionVersionSpec", "生产版本规格", "工厂+版本组合", "MRP选BOM/Routing依据"]
+    bom_nodes:
+      title: "### 5.2 BOM节点实例（层级与替代料）"
+      description: "BOM行项目的关键属性"
+      columns: ["属性", "含义", "业务用途"]
+      rows:
+        - ["层级（level）", "物料在BOM树中的深度", "成本卷积、MRP展开顺序"]
+        - ["替代料（alt flag）", "是否为替代件", "缺料时切换来源"]
+        - ["消耗点（issue point）", "物料从库存进入在制的位置", "拉动补料、线边仓设计"]
+        - ["生效/失效日期", "版本有效期控制", "ECN切换点"]
+    process_time_types:
+      title: "### 5.3 工艺时间类型（RoutingStep）"
+      description: "排产与产能计算的基础"
+      columns: ["时间类型", "含义", "业务用途"]
+      rows:
+        - ["准备时间", "换型/换线时间(分钟)", "排产计划"]
+        - ["运行时间", "单件加工时间", "节拍计算"]
+        - ["机器时间", "设备占用时间", "OEE分析"]
+        - ["人工时间", "操作工工时", "人力成本核算"]
+    part_instance:
+      title: "### 5.4 Part_Instance — 序列化零件实例"
+      description: "零件级追溯的关键"
+      columns: ["属性", "含义", "业务用途"]
+      rows:
+        - ["序列号/批次号", "唯一物理标识", "零件级追溯"]
+        - ["关联工单号", "生产工单", "追溯到BOM版本"]
+        - ["工序履历", "经过的每道工序记录", "工艺符合性验证"]
+        - ["质检结果", "各检验点测量值", "质量追溯"]
+        - ["当前状态", "在制/合格/报废/返工", "库存管理"]
+    engineering_change:
+      title: "### 5.5 Engineering Change — 工程变更单"
+      description: "变更管理的核心"
+      columns: ["属性", "含义", "业务用途"]
+      rows:
+        - ["变更类型", "设计/物料/工艺/设备", "影响范围判断"]
+        - ["生效日期", "工厂切入日期", "BOM行项目有效期控制"]
+        - ["影响范围", "物料/工序/设备", "变更影响评估"]
+        - ["审批状态", "起草/审批/实施/关闭", "变更管控"]
+        - ["库存处理策略", "消耗完再切/立即切/报废旧件", "库存过渡"]
+    goods_in_transit:
+      title: "### 5.6 GoodsInTransit — 在途库存"
+      description: "供应链可见性的关键"
+      columns: ["属性", "含义", "业务用途"]
+      rows:
+        - ["状态", "dispatched/inTransit/delayed/arrived/received", "实时可见性"]
+        - ["供应商", "发货方", "供应商准时率KPI"]
+        - ["预计到货日", "ETA", "排产风险预警"]
+        - ["物料编号/数量", "在途物料明细", "MRP可用量计算"]
+
+# Ontology health assessment
+ontology_health:
+  title: "## 九、本体健康度评估与改进建议"
+  sections:
+    advantages:
+      title: "### 9.1 优势"
+      items:
+        - "**概念丰富**：{node_count}个节点，覆盖BOM/BOP/BOE/MES/PLM/质量/物流全域"
+        - "**关系密集**：{rel_count}条关系，平均每节点{avg_rel:.1f}条关系"
+        - "**来源可信**：{src_pct}%节点有文件证据追溯"
+        - "**RIGOR精化有效**：LLM多轮迭代，概念定义准确、属性描述专业"
+    improvements:
+      title: "### 9.2 待改进项"
+      items:
+        - "**节点去重**：存在近义重复节点（如`Work_Order`/`WorkOrder`/`ProductionOrder`），建议开启ontology合并去重（merge deduplication）"
+        - "**source_file缺失**：约{missing_src_pct}%节点无来源文件，为LLM推断，建议增加文档覆盖"
+        - "**L2 Scenarios为空**：当前未生成业务场景，建议补充场景定义规则"
+        - "**谓词不统一**：关系谓词命名存在多种风格，建议建立统一谓词词典"
+    next_run:
+      title: "### 9.3 下次运行建议"
+      items:
+        - "重点深析 `MBOM DU concept v2`（2026-01-18最新）的Delivery Unit数据结构"
+        - "深入解析 `SB0721 MEP MBOM part update` 和 `SB711 MLM Plant process` 更新流程"
+        - "加入 `Car-MES Applications` 的MES系统集成架构详析"
+        - "开启 `--publish-shared` 将本次结果合并到Master Ontology"
+
+# Document evidence timeline
+document_evidence:
+  title: "## 八、证据文档时间线（L2实例）"
+  description: "共 **{doc_count}** 份源文档，覆盖制造BOM体系演进历史："
+  table_headers: ["文档名称", "类型", "日期/版本", "说明"]
+
+# Business process flows (ASCII diagrams)
+business_process_flows:
+  title: "## 四、核心业务流程分析"
+  flows:
+    ebom_to_mbom:
+      title: "### 4.1 EBOM → MBOM → 生产执行主链"
+      diagram: |
+        【研发/工程】              【制造工程】               【生产计划】             【车间/MES】
+             │                         │                          │                       │
+        Engineering_BOM  ─is_basis_for→ Manufacturing_BOM ─references→ Work_Order / ProductionOrder
+             │                         │                          │                       │
+         BOMLineItem             BillOfOperations          ProductionSchedule       RoutingStep×N
+         (物料+数量+有效期)       (工序/工时/工作中心)        (时间轴排产)          (按工序分配WorkCenter)
+             │                         │                          │                       │
+         Engineering Change  →    BOMVersion更新           MaterialRequirement      ProductionRun
+         (ECN触发版本升级)       (PLM Integration同步)       (MRP计算物料需求)      (实际产出/报废)
+                                   │                          │                       │
+                              BOE清单更新             InventoryTransaction    QualityCheckEvent
+                             (设备/工具规格)            (领料/收货)             (检测→合格/NCR)
+      key_relationships: true
+    plm_change_sync:
+      title: "### 4.2 PLM变更同步流程（Engineering Change → BOM → KDP）"
+      diagram: |
+        Engineering Change（工程变更申请/审批/签发）
+            │ triggers_new_version
+            ▼
+        BOM Version（新版本：含ECN号、有效起始日期、BOM替代方案）
+            │ PLM_Integration（TC PLM → KDP / ERP 数据同步）
+            ├── 推送至 KDP（MES工单管理）
+            └── 推送至 ERP（MRP/PP模块）
+                      │
+                      ▼
+        Production Order（新工单引用新BOM版本 + ProductionVersionSpecification）
+            │ validates_via
+            ▼
+        ProductionVersionSpec（BOM替代方案 + Routing组 + 批量范围有效性校验）
+      warning: "**风险**：PLM Integration延迟 → KDP已下发工单仍引用旧BOM → 物料错领/返工\n**建议**：设置PLM-KDP同步SLA ≤4小时，超时触发告警并冻结相关工单"
+    material_supply:
+      title: "### 4.3 物料供应与看板拉动流程（JIT / Kanban）"
+      diagram: |
+        Supplier（供应商）
+            │ suppliesMaterial
+            ▼
+        GoodsInTransit（在途库存：dispatched/inTransit/delayed/arrived/received）
+            │ influences_production_readiness
+            ▼
+        CAP_L2_4_1_INBOUND_LOGISTICS → tracks_shipment_status → GoodsInTransit
+            │（到货确认）
+            ▼
+        InventoryTransaction（收货入库）── fulfills → MaterialRequirement
+            │ stages_at
+            ▼
+        Kitting_Delivery_Point（工厂内JIT备料暂存点）
+            │ kanban_pull_signal
+            ▼
+        KanbanDemandPoint（看板信号点）── triggers → 上游补料
+            │
+            ▼
+        ProductionRun（消耗物料 → 产出成品）
+    quality_traceability:
+      title: "### 4.4 质量管理与零件追溯闭环"
+      diagram: |
+        ProductionRun（生产执行批次）
+            │ is_output_of ←── Part_Instance（序列件/批次件，唯一SN/Lot#）
+            │                       │ is_subject_of
+            │                       ▼
+            │              Quality_Event / QualityCheckEvent（检测活动）
+            │                       │
+            │             ┌─────────┴──────────┐
+            │          合格（Pass）           不合格（Fail）
+            │             │                    │
+            │        下道工序/入库      Non-Conformance / NCR
+            │                           │
+            │               ┌───────────┼───────────┐
+            │            报废(Scrap)  返工(Rework)  让步(UAI)
+            │                           │
+            │            QualityInspection ─validatesOutput→ ManufacturingOrder
+            └──────────────────────────────────────（追溯闭环）
+    mbom_du:
+      title: "### 4.5 MBOM DU（Delivery Unit）新架构（2026最新）"
+      description: "基于 `MBOM DU concept v2.pptx`（2026-01-18），MBOM正在引入Delivery Unit概念，将MBOM物料结构与物流交付单元对齐，提升供应链端到端可见性。"
+      diagram: |
+        EBOM（产品设计结构）
+            │ is_basis_for
+            ▼
+        MBOM（制造物料清单）
+            │ organized_into
+            ▼
+        Delivery Unit (DU)（物流交付单元，与包装/运输单元对齐）
+            │ tracked_via
+            ▼
+        GoodsInTransit / KanbanDemandPoint（可视化在途/备料实时状态）
+
+# Domain entity attribute reference tables
+entity_attributes:
+  title: "## 五、核心概念属性深析"
+  entities:
+    bill_of_materials_line_item:
+      title: "### 5.1 BillOfMaterialsLineItem — BOM最细粒度单元"
+      columns: ["属性", "含义", "业务用途"]
+      rows:
+        - ["物料编号", "子件SAP/KDP料号", "MRP计算物料需求"]
+        - ["单位用量", "每父件需要的子件数", "精确备料"]
+        - ["计量单位", "EA/KG/M", "库存管理"]
+        - ["报废系数", "工艺损耗%", "成本核算/备料多发"]
+        - ["有效起止日期", "BOM行项目生效/失效日", "工程变更管理"]
+        - ["项目类别", "L=存量/N=非存量/T=文本", "库存策略"]
+        - ["ECN号", "触发变更的EC单号", "变更追溯"]
+    production_version_spec:
+      title: "### 5.2 ProductionVersionSpecification — 生产版本规格"
+      columns: ["属性", "含义", "业务用途"]
+      rows:
+        - ["BOM替代方案", "同一物料的多个BOM版本", "多工厂/产线适配"]
+        - ["Routing组", "绑定特定工艺路线", "确定加工路径"]
+        - ["批量范围 Min/Max", "经济批量", "排产优化"]
+        - ["有效日期", "版本起止日", "工程变更切入控制"]
+        - ["工厂代码", "适用工厂", "多工厂差异化管理"]
+    routing_step:
+      title: "### 5.3 RoutingStep — 工序单元"
+      columns: ["属性", "含义", "业务用途"]
+      rows:
+        - ["工序号", "10/20/30...顺序", "工序排列"]
+        - ["工作中心", "执行工序的机台/工位", "产能分配"]
+        - ["控制键", "PP01内部/PP03检验", "工序类型控制"]
+        - ["准备时间", "换型/换线时间(分钟)", "排产计划"]
+        - ["运行时间", "单件加工时间", "节拍计算"]
+        - ["机器时间", "设备占用时间", "OEE分析"]
+        - ["人工时间", "操作工工时", "人力成本核算"]
+    part_instance:
+      title: "### 5.4 Part_Instance — 序列化零件实例"
+      columns: ["属性", "含义", "业务用途"]
+      rows:
+        - ["序列号/批次号", "唯一物理标识", "零件级追溯"]
+        - ["关联工单号", "生产工单", "追溯到BOM版本"]
+        - ["工序履历", "经过的每道工序记录", "工艺符合性验证"]
+        - ["质检结果", "各检验点测量值", "质量追溯"]
+        - ["当前状态", "在制/合格/报废/返工", "库存管理"]
+    engineering_change:
+      title: "### 5.5 Engineering Change — 工程变更单"
+      columns: ["属性", "含义", "业务用途"]
+      rows:
+        - ["变更类型", "设计/物料/工艺/设备", "影响范围判断"]
+        - ["生效日期", "工厂切入日期", "BOM行项目有效期控制"]
+        - ["影响范围", "物料/工序/设备", "变更影响评估"]
+        - ["审批状态", "起草/审批/实施/关闭", "变更管控"]
+        - ["库存处理策略", "消耗完再切/立即切/报废旧件", "库存过渡"]
+    goods_in_transit:
+      title: "### 5.6 GoodsInTransit — 在途库存"
+      columns: ["属性", "含义", "业务用途"]
+      rows:
+        - ["状态", "dispatched/inTransit/delayed/arrived/received", "实时可见性"]
+        - ["供应商", "发货方", "供应商准时率KPI"]
+        - ["预计到货日", "ETA", "排产风险预警"]
+        - ["物料编号/数量", "在途物料明细", "MRP可用量计算"]
+
+# Domain classification mapping (grouping objects by meta_class)
+domain_classification:
+  title: "## 二、核心概念体系（按业务域分类）"
+  description: "共提取 **{node_count}** 个领域概念，分为 **{group_count}** 个业务域："
+  default_group: "Other"
+  groups:
+    BOM:
+      keywords:
+        - "BillOfMaterials"
+        - "ProductStructure"
+        - "Product Structure"
+        - "BillOfMaterialsLine"
+        - "BillOfMaterialsDocument"
+        - "EngineeringBOM"
+        - "ManufacturingBOM"
+    BOP / Routing:
+      keywords:
+        - "ProcessDefinition"
+        - "BillOfProcess"
+        - "BillOfOperations"
+        - "ProcessStep"
+        - "RoutingStep"
+        - "Routing"
+        - "ProcessMap"
+        - "Visualization"
+        - "ManufacturingRouting"
+        - "ManufacturingOperation"
+        - "Operation"
+        - "Production Process"
+    BOE / Equipment:
+      keywords:
+        - "BillOfEquipment"
+        - "ResourceSpecification"
+        - "MachineTool"
+        - "ProductionMachine"
+        - "ManufacturingEquipment"
+        - "Production Equipment"
+    Production Execution:
+      keywords:
+        - "ProductionOrder"
+        - "ManufacturingOrder"
+        - "WorkOrder"
+        - "ManufacturingExecution"
+        - "ProductionEvent"
+        - "BatchRun"
+        - "ProductionRun"
+        - "Order"
+    Scheduling:
+      keywords:
+        - "ProductionSchedule"
+        - "Schedule"
+        - "ShiftSchedule"
+        - "ManufacturingSchedule"
+    Work Center / Resource:
+      keywords:
+        - "WorkCenter"
+        - "ProductionCell"
+        - "ProductionLine"
+        - "ManufacturingResource"
+        - "Production Resource"
+        - "Resource"
+        - "ManufacturingLocation"
+        - "Location"
+        - "Manufacturing_Logistics_Point"
+    Material / Inventory:
+      keywords:
+        - "Material"
+        - "InventoryItem"
+        - "InventoryTransaction"
+        - "MaterialMovement"
+        - "MaterialRequirement"
+        - "Requirement"
+        - "InventoryState"
+        - "Inventory_Status"
+        - "Material Lot"
+        - "Inbound_Material"
+    Quality:
+      keywords:
+        - "QualityRecord"
+        - "QualityEvent"
+        - "QualityInspection"
+        - "Quality Control Activity"
+        - "NonConformance"
+        - "NonConformanceReport"
+        - "Non-Conformance"
+        - "Quality Issue"
+        - "Inspection"
+        - "Nonconformance"
+        - "QualityCheckEvent"
+        - "Report"
+    Traceability & Version:
+      keywords:
+        - "TraceableItem"
+        - "SerializedPart"
+        - "VersionInstance"
+        - "Version"
+        - "ManufacturingDocument"
+        - "Document"
+        - "EngineeringDocument"
+    PLM / Change:
+      keywords:
+        - "PLMIntegration"
+        - "EngineeringChange"
+        - "DataSynchronizationProcess"
+        - "ManufacturingProcess"
+        - "ManufacturingEvent"
+        - "ProductChangeOrder"
+        - "BOMPartTypeDescriptionsPDF"
+    Logistics / Supply:
+      keywords:
+        - "Supplier"
+        - "ExternalParty"
+        - "KanbanDemandPoint"
+        - "GoodsInTransit"
+        - "PullSignalPoint"
+    Human:
+      keywords:
+        - "HumanResource"
+        - "ProductionWorker"
+        - "Operator"
+    Systems:
+      keywords:
+        - "ManufacturingExecutionSystem"
+        - "ProductionOrderManagementSystem"
+        - "ShopFloorExecutionSystem"
+
+# Key relationship predicates for evidence-backed relationships
+key_predicates:
+  - "is_basis_for"
+  - "references"
+  - "has_operations"
+  - "executes"
+  - "generates"
+  - "fulfills"
+  - "defines_components"
+  - "validatesOutput"
+  - "feedsDataTo"
+  - "suppliesMaterial"
+
+# Data Analysis Report Templates (P4 Migration - 2026-05-30)
+# Migrated from orchestrator.py hardcoded rendering
+data_analysis:
+  header: "# 数据分析报告 (Data Analysis Report)"
+  description: "基于CSV/Excel数据的自动化业务分析"
+  sections:
+    overview:
+      title: "## 一、分析概览"
+      metrics:
+        - label: "分析ID"
+          key: "analysis_id"
+          format: "code"
+        - label: "执行时间"
+          key: "executed_at"
+        - label: "数据源"
+          key: "data_source"
+        - label: "记录数"
+          key: "record_count"
+    summary_stats:
+      title: "## 二、统计摘要"
+      description: "关键指标统计："
+    findings:
+      title: "## 三、关键发现"
+      description: "数据模式与异常识别："
+    recommendations:
+      title: "## 四、业务建议"
+      description: "基于分析结果的可执行建议："
+    data_quality:
+      title: "## 五、数据质量评估"
+      checks:
+        - label: "完整性"
+          key: "completeness"
+        - label: "一致性"
+          key: "consistency"
+        - label: "时效性"
+          key: "timeliness"
+    footer: |
+      ---
+      *报告由 Ontology Compiler DataAnalysisOrchestrator 自动生成*
+      *模板版本: P4-2026-05-30*
+
+# Multi-Agent Iterative Analysis Report Templates (P4 Migration)
+# Migrated from orchestrator.py _render_markdown hardcoded sections
+multi_agent_analysis:
+  header: "# 数据分析报告 (Data Analysis Report)"
+  subtitle: "Multi-Agent 迭代循环分析"
+  sections:
+    metadata:
+      title: "## 分析元数据"
+      items:
+        - label: "生成时间"
+          key: "generated_at"
+        - label: "Ontology Run"
+          key: "ontology_run_dir"
+          format: "code"
+        - label: "数据源"
+          key: "data_sources"
+        - label: "总迭代轮次"
+          key: "total_rounds"
+        - label: "最终收敛"
+          key: "converged"
+          format: "boolean"
+    user_context:
+      title: "## 用户背景"
+      description: "分析问题的业务背景"
+    core_question:
+      title: "## 核心分析问题"
+      description: "本次分析的核心问题"
+    iteration_history:
+      title: "## 迭代过程记录"
+      round_header: "### 第 {round_index} 轮 | 焦点: {focus}"
+      round_metrics:
+        - label: "置信度"
+          key: "confidence"
+          format: "percentage"
+        - label: "Verifier 裁决"
+          key: "verifier_verdict"
+          format: "code"
+      sections:
+        findings: "**Analyst 发现:**"
+        gaps: "**数据缺口:**"
+        hypotheses: "**提出的假设:**"
+        contradictions: "**发现的矛盾:**"
+        verifier_notes: "**Verifier 评语:**"
+      empty_marker: "(无)"
+    unresolved_hypotheses:
+      title: "## 未解决假设"
+      description: "以下假设在当前分析中尚未得到充分验证："

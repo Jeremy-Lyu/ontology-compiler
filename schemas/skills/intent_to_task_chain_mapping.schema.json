@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ontology-unified.local/schemas/skills/intent_to_task_chain_mapping.schema.json",
+  "title": "Intent to Task Chain Mapping Skill Schema",
+  "type": "object",
+  "required": ["skill_name", "skill_version", "context", "input", "output", "quality", "trace"],
+  "properties": {
+    "skill_name": {"type": "string", "const": "intent_to_task_chain_mapping"},
+    "skill_version": {"type": "string"},
+    "context": {"$ref": "../shared/skill_envelope.schema.json#/definitions/context"},
+    "input": {
+      "type": "object",
+      "required": ["intent"],
+      "properties": {
+        "intent": {"type": "string"},
+        "domain_context": {"type": "string"},
+        "available_skills": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "output": {
+      "type": "object",
+      "required": ["task_chain"],
+      "properties": {
+        "task_chain": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["task_id", "task_name", "task_type", "dependencies"],
+            "properties": {
+              "task_id": {"type": "string"},
+              "task_name": {"type": "string"},
+              "task_type": {"type": "string", "enum": ["required", "optional", "parallel"]},
+              "dependencies": {"type": "array", "items": {"type": "string"}},
+              "assigned_skill": {"type": "string"},
+              "description": {"type": "string"},
+              "confidence": {"type": "number", "minimum": 0, "maximum": 1}
+            }
+          }
+        },
+        "execution_strategy": {"type": "string", "enum": ["sequential", "parallel", "conditional"]},
+        "estimated_steps": {"type": "integer"}
+      }
+    },
+    "quality": {"$ref": "../shared/skill_envelope.schema.json#/definitions/quality"},
+    "trace": {"$ref": "../shared/skill_envelope.schema.json#/definitions/trace"},
+    "warnings": {"type": "array", "items": {"$ref": "../shared/skill_envelope.schema.json#/definitions/warning"}},
+    "errors": {"type": "array", "items": {"$ref": "../shared/skill_envelope.schema.json#/definitions/error"}}
+  }
+}

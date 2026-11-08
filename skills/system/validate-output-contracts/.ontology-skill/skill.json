@@ -1,0 +1,251 @@
+{
+  "name": "validate_output_contracts",
+  "description": "Validate pipeline output contracts against JSON schemas and format requirements",
+  "command": "python scripts/validate_output_contracts.py --pipeline-summary <summary_path>",
+  "script_path": "scripts/validate_output_contracts.py",
+  "category": "validation",
+  "enabled": true,
+  "args_schema": {
+    "pipeline_summary": {
+      "type": "string",
+      "required": false,
+      "description": "Path to PIPELINE_RUN_SUMMARY json file"
+    },
+    "analysis_manifest": {
+      "type": "string",
+      "required": false,
+      "description": "Path to analysis_manifest.json file"
+    },
+    "l1_domain_sandbox": {
+      "type": "string",
+      "required": false,
+      "description": "Path to L1_DOMAIN_SANDBOX.json file"
+    },
+    "l2_operational_instances": {
+      "type": "string",
+      "required": false,
+      "description": "Path to L2_OPERATIONAL_INSTANCES.json file"
+    },
+    "inventory_aggregate": {
+      "type": "string",
+      "required": false,
+      "description": "Path to INVENTORY_AGGREGATE_VALIDATE json file"
+    },
+    "business_health_view": {
+      "type": "string",
+      "required": false,
+      "description": "Path to BUSINESS_HEALTH_VIEW json file"
+    },
+    "published_changelog": {
+      "type": "string",
+      "required": false,
+      "description": "Path to published CHANGELOG.md file"
+    },
+    "exec_json": {
+      "type": "boolean",
+      "required": false,
+      "description": "Suppress logging and output only JSON"
+    }
+  },
+  "layer_scope": [
+    "L0",
+    "L1",
+    "L2",
+    "L2.5",
+    "L3"
+  ],
+  "version": "2.0.0",
+  "business_domain": [
+    "SUPPLY_CHAIN",
+    "MANUFACTURING",
+    "DATA_MESH",
+    "MASTER_DATA"
+  ],
+  "output_schema": {
+    "type": "object",
+    "required": [
+      "validation_result",
+      "violations"
+    ],
+    "properties": {
+      "validation_result": {
+        "type": "object",
+        "properties": {
+          "valid": {
+            "type": "boolean"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pass",
+              "warning",
+              "fail"
+            ]
+          },
+          "schema_validation": {
+            "type": "object",
+            "properties": {
+              "passed": {
+                "type": "boolean"
+              },
+              "errors": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          },
+          "quality_validation": {
+            "type": "object",
+            "properties": {
+              "passed": {
+                "type": "boolean"
+              },
+              "score": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              }
+            }
+          },
+          "evidence_validation": {
+            "type": "object",
+            "properties": {
+              "passed": {
+                "type": "boolean"
+              },
+              "coverage_rate": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              }
+            }
+          },
+          "semantic_validation": {
+            "type": "object",
+            "properties": {
+              "passed": {
+                "type": "boolean"
+              },
+              "entity_type_coverage": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "relationship_validity_rate": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              }
+            }
+          },
+          "trace_validation": {
+            "type": "object",
+            "properties": {
+              "passed": {
+                "type": "boolean"
+              },
+              "complete": {
+                "type": "boolean"
+              }
+            }
+          }
+        },
+        "required": [
+          "valid",
+          "status"
+        ]
+      },
+      "violations": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "violation_id": {
+              "type": "string"
+            },
+            "violation_type": {
+              "type": "string",
+              "enum": [
+                "schema_violation",
+                "missing_field",
+                "invalid_type",
+                "quality_failure",
+                "evidence_missing",
+                "trace_missing",
+                "semantic_violation",
+                "relationship_violation"
+              ]
+            },
+            "severity": {
+              "type": "string",
+              "enum": [
+                "critical",
+                "high",
+                "medium",
+                "low"
+              ]
+            },
+            "field": {
+              "type": "string"
+            },
+            "message": {
+              "type": "string"
+            },
+            "expected": {
+              "type": "string"
+            },
+            "actual": {
+              "type": "string"
+            },
+            "suggestion": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "violation_id",
+            "violation_type",
+            "severity",
+            "message"
+          ]
+        }
+      },
+      "summary": {
+        "type": "object",
+        "properties": {
+          "total_violations": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "critical_violations": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "high_violations": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "medium_violations": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "low_violations": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "contract_compliance_rate": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          }
+        }
+      }
+    }
+  },
+  "quality_thresholds": {},
+  "trace_config": {
+    "log_model_name": false,
+    "log_prompt_version": false,
+    "log_execution_time": true,
+    "log_retries": false
+  }
+}

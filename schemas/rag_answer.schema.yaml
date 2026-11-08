@@ -1,0 +1,49 @@
+# RAG Answer Contract
+# Version: 1.0.0
+# Status: ACTIVE
+# Source of Truth: src/application/rag/rag_answerer.py + this schema
+#
+# Canonical contract for deterministic answer outputs in the RAG bounded context.
+# This file complements tests/rag/test_rag_contracts_characterization.py.
+# Breaking changes require version bump + migration notes.
+
+contract_id: rag_answer
+contract_type: schema
+version: "1.0.0"
+status: active
+
+description: >
+  Canonical contract for RAG answer outputs and classification enums.
+  Describes deterministic answer payloads plus the question type enum used
+  by the answerer boundary.
+
+fields:
+  AnswerResult:
+    type: object
+    required: true
+    description: "Deterministic answer result returned by rule-based answering"
+    properties:
+      answer: { type: string, required: true }
+      evidence_node_ids:
+        type: array
+        required: true
+        items: { type: string }
+      confidence: { type: number, required: true }
+      cannot_answer_reason:
+        type: string
+        required: false
+        nullable: true
+
+  QuestionType:
+    type: string
+    required: true
+    description: "Enum contract for deterministic question routing"
+    enum:
+      - l1_children
+      - path_l1_l2
+      - l2_systems
+      - comparison
+      - unknown
+
+contract_id: rag_answer
+contract_version: "1.0.0"

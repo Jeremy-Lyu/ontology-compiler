@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ontology-unified.local/schemas/asset_packet/entities.schema.json",
+  "title": "Entities Asset Schema",
+  "type": "object",
+  "required": ["version", "entities"],
+  "properties": {
+    "version": {"type": "string", "const": "2.0.0"},
+    "generated_at": {"type": "string", "format": "date-time"},
+    "run_id": {"type": "string"},
+    "total_count": {"type": "integer", "minimum": 0},
+    "entities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "code", "name", "type", "layer", "status", "provenance"],
+        "properties": {
+          "id": {"type": "string"},
+          "code": {"type": "string"},
+          "name": {"type": "string"},
+          "type": {"type": "string"},
+          "layer": {"type": "string", "enum": ["L0", "L1", "L2", "L2.5", "L3"]},
+          "status": {"type": "string", "enum": ["active", "inactive", "draft", "deprecated"]},
+          "description": {"type": "string"},
+          "attributes": {"type": "object"},
+          "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+          "evidence_ref": {"type": "string"},
+          "provenance": {
+            "type": "object",
+            "required": ["source_file", "source_run_id", "rule_version", "model_version", "skill_version"],
+            "properties": {
+              "source_file": {"type": "string"},
+              "source_run_id": {"type": "string"},
+              "rule_version": {"type": "string"},
+              "model_version": {"type": "string"},
+              "skill_version": {"type": "string"},
+              "extracted_at": {"type": "string", "format": "date-time"},
+              "confidence": {"type": "number", "minimum": 0, "maximum": 1}
+            }
+          }
+        }
+      }
+    }
+  }
+}

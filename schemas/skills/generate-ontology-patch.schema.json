@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ontology-unified.local/schemas/skills/generate-ontology-patch.schema.json",
+  "title": "Generate Ontology Patch Skill Schema",
+  "type": "object",
+  "required": ["skill_name", "skill_version", "context", "input", "output", "quality", "trace"],
+  "properties": {
+    "skill_name": {"type": "string", "const": "generate-ontology-patch"},
+    "skill_version": {"type": "string"},
+    "context": {"$ref": "../shared/skill_envelope.schema.json#/definitions/context"},
+    "input": {
+      "type": "object",
+      "required": ["base_version", "changes"],
+      "properties": {
+        "base_version": {
+          "type": "object",
+          "properties": {
+            "version_id": {"type": "string"},
+            "timestamp": {"type": "string", "format": "date-time"}
+          },
+          "required": ["version_id"]
+        },
+        "changes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "change_id": {"type": "string"},
+              "operation": {"type": "string", "enum": ["add", "remove", "update", "rename"]},
+              "target_type": {"type": "string", "enum": ["entity", "relation", "attribute", "schema"]},
+              "target_id": {"type": "string"},
+              "data": {"type": "object"},
+              "reason": {"type": "string"},
+              "confidence": {"type": "number", "minimum": 0, "maximum": 1}
+            },
+            "required": ["change_id", "operation", "target_type", "target_id"]
+          }
+        },
+        "patch_config": {
+          "type": "object",
+          "properties": {
+            "include_rollback": {"type": "boolean", "default": true},
+            "validate_backward_compatibility": {"type": "boolean", "default": true},
+            "format": {"type": "string", "enum": ["json-patch", "diff", "custom"], "default": "json-patch"}
+          }
+        }
+      }
+    },
+    "output": {
+      "type": "object",
+      "required": ["patch", "rollback_patch", "validation_result"],
+      "properties": {
+        "patch": {
+          "type": "object",
+          "properties": {
+            "patch_id": {"type": "string"},
+            "patch_version": {"type": "string"},
+            "base_version_id": {"type": "string"},
+            "target_version_id": {"type": "string"},
+            "operations": {"type": "array", "items": {"type": "object"}},
+            "metadata": {
+              "type": "object",
+              "properties": {
+                "created_at": {"type": "string", "format": "date-time"},
+                "author": {"type": "string"},
+                "description": {"type": "string"},
+                "change_count": {"type": "integer", "minimum": 0}
+              }
+            }
+          },
+          "required": ["patch_id", "operations"]
+        },
+        "rollback_patch": {
+          "type": "object",
+          "properties": {
+            "rollback_id": {"type": "string"},
+            "operations": {"type": "array", "items": {"type": "object"}}
+          }
+        },
+        "validation_result": {
+          "type": "object",
+          "properties": {
+            "valid": {"type": "boolean"},
+            "backward_compatible": {"type": "boolean"},
+            "errors": {"type": "array", "items": {"type": "object"}},
+            "warnings": {"type": "array", "items": {"type": "object"}}
+          }
+        },
+        "summary": {
+          "type": "object",
+          "properties": {
+            "total_operations": {"type": "integer", "minimum": 0},
+            "add_count": {"type": "integer", "minimum": 0},
+            "remove_count": {"type": "integer", "minimum": 0},
+            "update_count": {"type": "integer", "minimum": 0},
+            "rename_count": {"type": "integer", "minimum": 0},
+            "rollback_available": {"type": "boolean"}
+          }
+        }
+      }
+    },
+    "quality": {"$ref": "../shared/skill_envelope.schema.json#/definitions/quality"},
+    "trace": {"$ref": "../shared/skill_envelope.schema.json#/definitions/trace"},
+    "warnings": {"type": "array", "items": {"$ref": "../shared/skill_envelope.schema.json#/definitions/warning"}},
+    "errors": {"type": "array", "items": {"$ref": "../shared/skill_envelope.schema.json#/definitions/error"}}
+  }
+}

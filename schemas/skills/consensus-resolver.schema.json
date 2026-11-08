@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ontology-unified.local/schemas/skills/consensus-resolver.schema.json",
+  "title": "Consensus Resolver Skill Schema",
+  "type": "object",
+  "required": ["skill_name", "skill_version", "context", "input", "output", "quality", "trace"],
+  "properties": {
+    "skill_name": {"type": "string", "const": "consensus-resolver"},
+    "skill_version": {"type": "string"},
+    "context": {"$ref": "../shared/skill_envelope.schema.json#/definitions/context"},
+    "input": {
+      "type": "object",
+      "required": ["candidates", "conflicts"],
+      "properties": {
+        "candidates": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "candidate_id": {"type": "string"},
+              "entity_id": {"type": "string"},
+              "entity_data": {"type": "object"},
+              "source": {"type": "string"},
+              "confidence": {"type": "number", "minimum": 0, "maximum": 1}
+            },
+            "required": ["candidate_id", "entity_id"]
+          }
+        },
+        "conflicts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "conflict_id": {"type": "string"},
+              "type": {"type": "string", "enum": ["attribute_conflict", "relation_conflict", "identity_conflict", "schema_conflict"]},
+              "entities": {"type": "array", "items": {"type": "string"}},
+              "description": {"type": "string"}
+            },
+            "required": ["conflict_id", "type", "entities"]
+          }
+        },
+        "resolution_rules": {
+          "type": "object",
+          "properties": {
+            "min_consensus_score": {"type": "number", "minimum": 0, "maximum": 1, "default": 0.7},
+            "prefer_high_confidence": {"type": "boolean", "default": true},
+            "prefer_recent_source": {"type": "boolean", "default": true},
+            "require_evidence": {"type": "boolean", "default": true}
+          }
+        }
+      }
+    },
+    "output": {
+      "type": "object",
+      "required": ["resolved_entities", "unresolved_conflicts", "consensus_summary"],
+      "properties": {
+        "resolved_entities": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "entity_id": {"type": "string"},
+              "resolved_data": {"type": "object"},
+              "resolution_strategy": {"type": "string", "enum": ["consensus", "highest_confidence", "most_recent", "manual"]},
+              "consensus_score": {"type": "number", "minimum": 0, "maximum": 1},
+              "source_candidates": {"type": "array", "items": {"type": "string"}}
+            },
+            "required": ["entity_id", "resolved_data"]
+          }
+        },
+        "unresolved_conflicts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "conflict_id": {"type": "string"},
+              "type": {"type": "string"},
+              "entities": {"type": "array", "items": {"type": "string"}},
+              "reason": {"type": "string"},
+              "review_required": {"type": "boolean", "default": true}
+            },
+            "required": ["conflict_id", "type"]
+          }
+        },
+        "consensus_summary": {
+          "type": "object",
+          "properties": {
+            "total_candidates": {"type": "integer", "minimum": 0},
+            "total_conflicts": {"type": "integer", "minimum": 0},
+            "resolved_count": {"type": "integer", "minimum": 0},
+            "unresolved_count": {"type": "integer", "minimum": 0},
+            "resolution_rate": {"type": "number", "minimum": 0, "maximum": 1},
+            "average_consensus_score": {"type": "number", "minimum": 0, "maximum": 1}
+          }
+        }
+      }
+    },
+    "quality": {"$ref": "../shared/skill_envelope.schema.json#/definitions/quality"},
+    "trace": {"$ref": "../shared/skill_envelope.schema.json#/definitions/trace"},
+    "warnings": {"type": "array", "items": {"$ref": "../shared/skill_envelope.schema.json#/definitions/warning"}},
+    "errors": {"type": "array", "items": {"$ref": "../shared/skill_envelope.schema.json#/definitions/error"}}
+  }
+}

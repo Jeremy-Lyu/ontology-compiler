@@ -1,0 +1,149 @@
+---
+# L0 Classification Rules Configuration
+# Used by true_unified_extractor.py to guide LLM in proper entity layer classification
+# This externalizes L0 classification guidance from the prompt to reduce prompt length
+
+version: "1.0"
+name: l0_classification_rules
+description: "Rules for classifying entities into L0 abstract categories"
+
+# Valid L0 classes - these are the ONLY entities that can be in L0
+valid_l0_classes:
+  - Capability
+  - System
+  - Actor
+  - Asset
+  - Data
+  - Process
+  - Concept
+  - BusinessScenario
+  - MappingRule
+  - BusinessRule
+  - ValidationRule
+
+# Examples of domain-specific names that should NOT be in L0
+# These should be classified as L2 (specific scenarios/systems/assets)
+l0_prohibited_examples:
+  - name: VIDA
+    correct_layer: L2
+    reason: "Specific system, not abstract category"
+  - name: VCATS
+    correct_layer: L2
+    reason: "Specific platform, not abstract category"
+  - name: ECU
+    correct_layer: L2
+    reason: "Specific asset, not abstract category"
+  - name: Aftersales
+    correct_layer: L2
+    reason: "Specific department, not abstract category"
+  - name: Diagnostics
+    correct_layer: L2
+    reason: "Specific capability, not abstract category"
+  - name: Production
+    correct_layer: L2
+    reason: "Specific domain, not abstract category"
+  - name: Supply Chain
+    correct_layer: L2
+    reason: "Specific domain, not abstract category"
+  - name: Product Development
+    correct_layer: L2
+    reason: "Specific domain, not abstract category"
+  - name: Electrical System
+    correct_layer: L2
+    reason: "Specific system, not abstract category"
+  - name: ProgramStrategy
+    correct_layer: L2
+    reason: "Specific concept, not abstract category"
+  - name: PMXU
+    correct_layer: L2
+    reason: "Specific organization unit, not abstract category"
+  - name: VPDS
+    correct_layer: L2
+    reason: "Specific system, not abstract category"
+  - name: Parts Management
+    correct_layer: L2
+    reason: "Specific business function, not abstract category"
+  - name: Software Download
+    correct_layer: L2
+    reason: "Specific process/operation, not abstract category"
+  - name: Fault Tracing
+    correct_layer: L2
+    reason: "Specific process/operation, not abstract category"
+  - name: Service Operations
+    correct_layer: L2
+    reason: "Specific business function, not abstract category"
+  - name: Workshop Technician
+    correct_layer: L2
+    reason: "Specific role, not abstract category"
+
+# Layer descriptions for prompt guidance
+# [REVISED] Updated layer definitions to ensure L2/L3 contain the majority of entities
+layer_descriptions:
+  L0:
+    description: "abstract categories"
+    rule: "These are GENERAL concepts, NOT specific domain instances"
+    examples: ["System", "Actor", "Process", "Data", "Asset", "Capability", "Concept"]
+  L1:
+    description: "domain subclasses"
+    examples: ["SupplyChain_System", "Manufacturing_Process", "Quality_Management", "Inventory_Asset"]
+    rule: "Abstract subtypes within a domain - ONE level below L0, NOT specific implementations"
+  L2:
+    description: "business scenarios & concrete systems"
+    examples: ["CHIMAS", "VIDA", "Aftersales", "ECU", "VPDS", "Goods Reception Process", "Kanban Order System"]
+    rule: "Specific systems, departments, processes, workflows, and business scenarios - THIS IS THE MAIN LAYER"
+    priority: "HIGH - should contain the MOST entities"
+  L2.5:
+    description: "rules/mappings"
+    examples: ["templates", "groups", "mapping rules", "business rules"]
+  L3:
+    description: "instances/records"
+    examples: ["VIDA Server 001", "ECU-ABC123", "Kanban Order #12345", "GR Document 778899"]
+    rule: "Unique identifiable objects with specific IDs or serial numbers"
+
+# Compact prompt fragment for L0 classification
+# This is inserted into the extraction prompt to guide LLM
+# [ENHANCED] STRONG L2/L3 PRIORITY - L2 must contain 70-80% of all entities
+prompt_fragment: |
+  LAYER CLASSIFICATION RULES (CRITICAL: READ CAREFULLY!):
+  
+  === L0: ABSTRACT CATEGORIES (SMALLEST LAYER - 2-10 entities MAX!) ===
+  - L0 entities MUST be EXACT matches from: {class_list}
+  - L0 is ONLY for abstract categories like "System", "Actor", "Process", "Data", "Asset", "Capability", "Concept"
+  - Domain-specific names DO NOT belong in L0! NEVER put VIDA, VCATS, ECU, VPDS, Aftersales, Production, Diagnostics, Parts Management, Fault Tracing, Service Operations, Workshop Technician in L0!
+  - L0 entities serve as parent classes for L1 entities.
+  
+  === L1: DOMAIN SUBCLASSES (SMALL LAYER - 5-15 entities!) ===
+  - L1 entities are ABSTRACT subtypes within a domain, ONE level below L0
+  - Examples: SupplyChain_System (under System), Manufacturing_Process (under Process), Quality_Management (under Process), Inventory_Asset (under Asset)
+  - L1 MUST reference L0 via parent_class
+  - STRICT RULE: SPECIFIC implementations like "CHIMAS", "VIDA", "ECU", "VPDS", "Aftersales" belong in L2, NEVER L1!
+  - L1 should be smaller than L2 (2-3x fewer entities)
+  
+  === L2: BUSINESS SCENARIOS & CONCRETE SYSTEMS (MAIN LAYER - 70-80% of ALL entities!) ===
+  - L2 is THE MOST IMPORTANT layer - MUST contain the MAJORITY of entities (70-80%)
+  - L2 contains ALL specific systems, departments, processes, workflows, and business scenarios
+  - Examples: CHIMAS, VIDA, VCATS, ECU, VPDS, Aftersales, Goods Reception Process, Kanban Order System, Software Download Process, Fault Tracing Process, Parts Management
+  - L2 MUST reference L1 via parent_id
+  - IF A DOCUMENT MENTIONS A SPECIFIC SYSTEM NAME, PROCESS NAME, DEPARTMENT NAME, OR BUSINESS SCENARIO NAME - IT GOES TO L2!
+  - Business scenarios like "Goods Reception", "Replenishment Orders", "Cycle Counting", "Storage Movement" ALWAYS go to L2!
+  - Acronyms like CHIMAS, VIDA, VCATS, ECU, VPDS ALWAYS go to L2!
+  - CamelCase names like GoodsReceptionProcess, KanbanOrderSystem ALWAYS go to L2!
+  
+  === L3: INSTANCES & RECORDS (IMPORTANT - CREATE WHEN IDs EXIST!) ===
+  - L3 contains unique identifiable objects with specific IDs, serial numbers, or document numbers
+  - Examples: VIDA Server 001, ECU-ABC123, Kanban Order #12345, GR Document 778899, VIN: YV1ZZZ99Z9Z9999999, PartNumber: 31254789
+  - L3 MUST reference L2 via parent_id
+  - If document mentions specific record IDs, serial numbers, document numbers, or unique identifiers - EXTRACT AS L3!
+  
+  === NON-NEGOTIABLE PRIORITY RULES ===
+  1. L2 MUST have MORE entities than L1 (minimum 2x more, ideally 3-5x more)
+  2. L2 MUST be the LARGEST layer (70-80% of total entities)
+  3. L1 MUST be small (abstract subtypes only)
+  4. L3 MUST be created when specific IDs exist in the document
+  5. ALWAYS check: "Is this a specific implementation?" → If YES, put in L2, NOT L1!
+  6. ALWAYS check: "Does this have a specific ID/serial number?" → If YES, put in L3!
+  
+  === EXAMPLE HIERARCHY ===
+  L0-System → L1-SupplyChain_System → L2-CHIMAS → L3-CHIMAS_Instance_001
+  L0-Process → L1-Manufacturing_Process → L2-GoodsReceptionProcess
+  L0-Actor → L1-Internal_Department → L2-Aftersales

@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ontology-unified.local/schemas/skills/entity_linking.schema.json",
+  "title": "Entity Linking Skill Schema",
+  "type": "object",
+  "required": ["skill_name", "skill_version", "context", "input", "output", "quality", "trace"],
+  "properties": {
+    "skill_name": {"type": "string", "const": "entity_linking"},
+    "skill_version": {"type": "string"},
+    "context": {"$ref": "../shared/skill_envelope.schema.json#/definitions/context"},
+    "input": {
+      "type": "object",
+      "required": ["entities"],
+      "properties": {
+        "entities": {"type": "array", "items": {"type": "object"}},
+        "candidate_ontology_nodes": {"type": "array", "items": {"type": "object"}},
+        "linking_strategy": {"type": "string", "default": "best_match_with_score"}
+      }
+    },
+    "output": {
+      "type": "object",
+      "required": ["linked_entities"],
+      "properties": {
+        "linked_entities": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "surface", "type", "ontology_id", "confidence"],
+            "properties": {
+              "id": {"type": "string"},
+              "surface": {"type": "string"},
+              "type": {"type": "string"},
+              "ontology_id": {"type": "string"},
+              "candidate_ids": {"type": "array", "items": {"type": "string"}},
+              "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+              "match_reason": {"type": "string"}
+            }
+          }
+        }
+      }
+    },
+    "quality": {"$ref": "../shared/skill_envelope.schema.json#/definitions/quality"},
+    "trace": {"$ref": "../shared/skill_envelope.schema.json#/definitions/trace"},
+    "warnings": {"type": "array", "items": {"$ref": "../shared/skill_envelope.schema.json#/definitions/warning"}},
+    "errors": {"type": "array", "items": {"$ref": "../shared/skill_envelope.schema.json#/definitions/error"}}
+  }
+}

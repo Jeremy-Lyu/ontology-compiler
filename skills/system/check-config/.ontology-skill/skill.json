@@ -1,0 +1,173 @@
+{
+  "name": "check_config",
+  "description": "Check runtime/config layering and current LLM configuration",
+  "command": "python scripts/check_config.py --show-all",
+  "script_path": "scripts/check_config.py",
+  "category": "maintenance",
+  "enabled": true,
+  "args_schema": {
+    "show_all": {
+      "type": "boolean",
+      "required": false,
+      "description": "Show all configuration sources"
+    },
+    "show_sensitive": {
+      "type": "boolean",
+      "required": false,
+      "description": "Show sensitive values (default: masks with ***)"
+    },
+    "check_llm": {
+      "type": "boolean",
+      "required": false,
+      "description": "Check LLM provider configuration"
+    }
+  },
+  "layer_scope": [
+    "L0",
+    "L1",
+    "L2",
+    "L2.5",
+    "L3"
+  ],
+  "version": "2.0.0",
+  "business_domain": [
+    "SUPPLY_CHAIN",
+    "MANUFACTURING",
+    "DATA_MESH",
+    "MASTER_DATA"
+  ],
+  "output_schema": {
+    "type": "object",
+    "required": [
+      "config_status",
+      "issues"
+    ],
+    "properties": {
+      "config_status": {
+        "type": "object",
+        "properties": {
+          "valid": {
+            "type": "boolean"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "healthy",
+              "warning",
+              "error"
+            ]
+          },
+          "config_type": {
+            "type": "string"
+          },
+          "config_path": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "valid",
+          "status"
+        ]
+      },
+      "issues": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "issue_id": {
+              "type": "string"
+            },
+            "issue_type": {
+              "type": "string",
+              "enum": [
+                "missing_config",
+                "invalid_value",
+                "missing_required_field",
+                "deprecation",
+                "incompatibility",
+                "security"
+              ]
+            },
+            "severity": {
+              "type": "string",
+              "enum": [
+                "critical",
+                "high",
+                "medium",
+                "low"
+              ]
+            },
+            "field": {
+              "type": "string"
+            },
+            "message": {
+              "type": "string"
+            },
+            "suggestion": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "issue_id",
+            "issue_type",
+            "severity",
+            "message"
+          ]
+        }
+      },
+      "skill_availability": {
+        "type": "object",
+        "properties": {
+          "total_skills": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "available_skills": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "missing_skills": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "incompatible_skills": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "summary": {
+        "type": "object",
+        "properties": {
+          "total_checks": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "passed_checks": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "failed_checks": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "warnings": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
+      }
+    }
+  },
+  "quality_thresholds": {},
+  "trace_config": {
+    "log_model_name": false,
+    "log_prompt_version": false,
+    "log_execution_time": true,
+    "log_retries": false
+  }
+}

@@ -1,0 +1,288 @@
+# Extraction Policies Configuration (PIPE-10)
+# Defines extraction strategies for different document types and domains
+# Allows switching between unified, layered, and hybrid approaches
+
+schema_version: "1.0"
+description: "抽取策略配置 - 支持统一/分层/混合三种模式"
+
+# 默认策略
+default_policy: "smart_hybrid"
+
+# 分块配置 (TextChunker 的权威配置源)
+# [OPTIMIZATION] chunk 大小需以「叠加 prompt 后的总预算」为约束：
+# - prompt 模板固定开销 ~2000 chars（schema hints + instructions）
+# - MAX_PROMPT_LENGTH=12000，超过即 compress（丢信息）
+# - max_chunk_size=6000 → 叠加模板后 ~8000，不触发压缩，且模型输出可控
+#   （实测 6834-char chunk 曾诱发 29K-token 废话响应，输入越大输出越失控）
+chunking:
+  default:
+    max_chunk_size: 12000
+    min_chunk_size: 4000
+    overlap_size: 500
+    prefer_headings: true
+    preserve_code_blocks: true
+    preserve_tables: true
+    section_merge_threshold: 0.75
+    topic_similarity_threshold: 0.35
+    min_tokens_for_independent_chunk: 250
+    max_consecutive_small_chunks: 4
+    max_total_chunks: 80
+    small_chunk_merge_limit: 4
+    semantic_boundary_preserve: true
+    chinese_support: true
+  # 不同文档类型的分块配置
+  document_types:
+    short:
+      max_chunk_size: 3000
+      min_chunk_size: 500
+      overlap_size: 200
+    medium:
+      max_chunk_size: 6000
+      min_chunk_size: 1000
+      overlap_size: 300
+    long:
+      max_chunk_size: 10000
+      min_chunk_size: 2000
+      overlap_size: 500
+    very_long:
+      max_chunk_size: 15000
+      min_chunk_size: 3000
+      overlap_size: 2000
+
+# 策略定义
+policies:
+  # 策略1: 统一提取 (最快，适合简单文档)
+  unified:
+    name: "统一提取"
+    description: "单次LLM调用提取所有层，速度最快"
+    enabled: true
+    extractor:
+      type: "UnifiedExtractor"
+      max_tokens: 8000
+      temperature: 0.3
+    layers:
+      - "L1"
+      - "L2"
+      - "L2.5"
+    refinement:
+      enabled: false
+    quality_check:
+      enabled: true
+      min_score: 0.5
+    cost_profile: "low"      # API调用次数
+    speed_profile: "fast"    # 处理速度
+    accuracy_profile: "medium"
+
+  # 策略2: 分层提取 (最准，适合复杂文档)
+  layered:
+    name: "分层提取"
+    description: "逐层提取，每层专用提示词，精度最高"
+    enabled: true
+    extractors:
+      L1:
+        type: "L1Extractor"
+        max_tokens: 4000
+        temperature: 0.2
+      L2:
+        type: "L2Extractor"
+        max_tokens: 6000
+        temperature: 0.3
+      L2.5:
+        type: "L25Extractor"
+        max_tokens: 8000
+        temperature: 0.3
+    refinement:
+      enabled: true
+      mode: "always"         # 总是精化
+    quality_check:
+      enabled: true
+      min_score: 0.7
+    cost_profile: "high"
+    speed_profile: "slow"
+    accuracy_profile: "high"
+
+  # 策略3: 智能混合 (推荐，自适应)
+  smart_hybrid:
+    name: "智能混合"
+    description: "统一提取 + 智能决策精化，平衡速度与精度"
+    enabled: true
+    default_mode: "smart"    # unified | smart | deep
+    extractor:
+      type: "UnifiedExtractor"
+      max_tokens: 8000
+      temperature: 0.3
+    refinement:
+      enabled: true
+      mode: "conditional"     # 条件触发
+      triggers:
+        min_entities_l1: 3
+        min_entities_l2: 3
+        min_entities_l2_5: 5
+        max_doc_length: 8000
+        min_quality_score: 0.75
+    layers:
+      - "L1"
+      - "L2"
+      - "L2.5"
+    quality_check:
+      enabled: true
+      min_score: 0.6
+    cost_profile: "medium"
+    speed_profile: "medium"
+    accuracy_profile: "high"
+
+  # 策略4: 深度分析 (最 thorough，适合关键文档)
+  deep_analysis:
+    name: "深度分析"
+    description: "多轮迭代提取，交叉验证，适合关键业务文档"
+    enabled: true
+    extractor:
+      type: "IterativeExtractor"
+      max_tokens: 12000
+      temperature: 0.2
+      iterations: 3
+    refinement:
+      enabled: true
+      mode: "always"
+      cross_validation: true
+    quality_check:
+      enabled: true
+      min_score: 0.8
+    cost_profile: "very_high"
+    speed_profile: "very_slow"
+    accuracy_profile: "very_high"
+
+# 文档类型策略映射
+document_policies:
+  # 短文档 (< 1000字符)
+  short:
+    max_length: 1000
+    default: "unified"
+    fallback: "layered"
+  
+  # 中等文档 (1000-5000字符)
+  medium:
+    min_length: 1000
+    max_length: 5000
+    default: "smart_hybrid"
+    fallback: "unified"
+  
+  # 长文档 (5000-20000字符)
+  long:
+    min_length: 5000
+    max_length: 20000
+    default: "smart_hybrid"
+    fallback: "layered"
+  
+  # 超长文档 (> 20000字符)
+  very_long:
+    min_length: 20000
+    default: "layered"
+    fallback: "deep_analysis"
+    preprocessing:
+      chunking: true
+      chunk_size: 15000
+      overlap: 2000
+
+# 领域特定策略
+domain_policies:
+  SUPPLY_CHAIN:
+    default: "smart_hybrid"
+    emphasis:
+      - "inventory"
+      - "logistics"
+      - "warehouse"
+    l1_keywords:
+      - "system"
+      - "platform"
+      - "module"
+    
+  MANUFACTURING:
+    default: "smart_hybrid"
+    emphasis:
+      - "bom"
+      - "production"
+      - "assembly"
+    l1_keywords:
+      - "plant"
+      - "line"
+      - "station"
+    
+  QUALITY:
+    default: "layered"
+    emphasis:
+      - "inspection"
+      - "defect"
+      - "audit"
+    l1_keywords:
+      - "check"
+      - "test"
+      - "verify"
+
+# 文件类型策略
+file_type_policies:
+  ".pptx":
+    default: "smart_hybrid"
+    notes: "PPT通常包含系统架构图，适合统一提取"
+    
+  ".pdf":
+    default: "smart_hybrid"
+    notes: "PDF可能很长，需要智能判断"
+    preprocessing:
+      extract_tables: true
+      
+  ".xlsx":
+    default: "layered"
+    notes: "Excel通常是结构化数据，适合分层提取"
+    sheet_handling: "concatenate"
+    
+  ".docx":
+    default: "smart_hybrid"
+    notes: "Word文档长度不一"
+    
+  ".md":
+    default: "unified"
+    notes: "Markdown通常是结构化文档"
+
+# 运行时策略选择规则
+selection_rules:
+  # 规则优先级 (数字越小优先级越高)
+  rules:
+    - id: "file_type_override"
+      priority: 1
+      condition: "file_type in file_type_policies"
+      action: "use file_type_policies[file_type].default"
+      
+    - id: "domain_override"
+      priority: 2
+      condition: "domain in domain_policies"
+      action: "use domain_policies[domain].default"
+      
+    - id: "length_based"
+      priority: 3
+      condition: "doc_length"
+      action: |
+        if doc_length < 1000: use "unified"
+        elif doc_length < 5000: use "smart_hybrid"
+        elif doc_length < 20000: use "layered"
+        else: use "deep_analysis"
+        
+    - id: "quality_fallback"
+      priority: 4
+      condition: "quality_score < 0.6"
+      action: "upgrade to next higher accuracy policy"
+
+# A/B测试配置 (可选)
+experiment:
+  enabled: false
+  variants:
+    - name: "control"
+      policy: "smart_hybrid"
+      traffic_percentage: 50
+    - name: "treatment"
+      policy: "unified"
+      traffic_percentage: 50
+  metrics:
+    - "accuracy"
+    - "cost"
+    - "latency"

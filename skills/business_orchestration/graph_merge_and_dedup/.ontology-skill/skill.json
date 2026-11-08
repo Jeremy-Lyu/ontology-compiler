@@ -1,0 +1,43 @@
+{
+  "name": "graph_merge_and_dedup",
+  "description": "合并多个图片段，执行去重和冲突解决，生成统一的本体图",
+  "command": "python src/skills/business_orchestration/graph_merge_and_dedup/graph_merge_and_dedup.py --graphs <graphs>",
+  "script_path": "src/skills/business_orchestration/graph_merge_and_dedup/graph_merge_and_dedup.py",
+  "category": "business_orchestration",
+  "layer_scope": ["L0", "L1", "L2", "L2.5", "L3"],
+  "enabled": true,
+  "version": "2.0.0",
+  "business_domain": ["SUPPLY_CHAIN", "MANUFACTURING", "DATA_MESH", "MASTER_DATA"],
+  "args_schema": {
+    "graphs": {
+      "type": "array",
+      "items": {"type": "object"},
+      "required": true,
+      "description": "待合并的图列表"
+    },
+    "merge_strategy": {
+      "type": "string",
+      "default": "consensus",
+      "description": "合并策略"
+    }
+  },
+  "output_schema": {
+    "merged_nodes": {"type": "array", "items": {"type": "object"}},
+    "merged_edges": {"type": "array", "items": {"type": "object"}},
+    "deduplicated_count": {"type": "integer"},
+    "resolved_conflicts": {"type": "integer"},
+    "quality_score": {"type": "number", "minimum": 0, "maximum": 1}
+  },
+  "preconditions": ["graphs must contain at least 1 graph"],
+  "quality_thresholds": {
+    "min_quality_score": 0.7,
+    "max_unresolved_conflicts": 5,
+    "review_threshold": 0.9
+  },
+  "trace_config": {
+    "log_model_name": true,
+    "log_prompt_version": true,
+    "log_execution_time": true,
+    "log_retries": true
+  }
+}

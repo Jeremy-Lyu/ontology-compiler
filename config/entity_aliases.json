@@ -1,0 +1,12 @@
+{
+  "version": "1.0",
+  "aliases": [
+    {"canonical": "IbP Tool", "aliases": ["ibp tool", "ibp", "ibp tool improvements"]},
+    {"canonical": "D&A Hub", "aliases": ["d&a hub", "da hub", "data and analytics hub"]},
+    {"canonical": "Work In Process", "aliases": ["wip", "work in process"]},
+    {"canonical": "Goods in Transit", "aliases": ["git", "goods in transit", "goods in transit (git)"]},
+    {"canonical": "Inventory Control", "aliases": ["inventory control"]},
+    {"canonical": "Inventory Optimization", "aliases": ["inventory optimization", "inventory optimization process"]},
+    {"canonical": "Inventory Management", "aliases": ["inventory management"]}
+  ]
+}
